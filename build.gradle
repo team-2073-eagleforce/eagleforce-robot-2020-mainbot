@@ -31,6 +31,7 @@ def PROP_KEY_TEAM_NUMBER = "teamNumber"
 def TEAM_NUMBER = 2073
 def DEBUG_MODE = false
 def IP_ADDRESS
+def includeDesktopSupport = true
 
 println "Team 2073 custom arguments available:"
 println "\t-P" + PROP_KEY_REMOTE_DEBUG_MODE
@@ -54,67 +55,61 @@ ext {
     println "Setting IP address to: " + IP_ADDRESS
 }
 
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project EmbeddedTools.
 deploy {
     targets {
         roboRIO("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
             team = TEAM_NUMBER
+
         }
     }
     artifacts {
         frcJavaArtifact('frcJava') {
             targets << "roborio"
-
-            jvmArgs << '-Xmx10m'      // Set more JVM Arguments. Optional.
-            debug = DEBUG_MODE        // Enable to enable java debugging on the RoboRIO. Default: false
-            debugPort = 8348            // Set the debugging port. Default: 8348
-/*
-            arguments << 'myCustomArgs' // The command-line arguments to launch your jar with. Optional.
-            robotCommand = './myOtherProgram'       // Set the contents of robotCommand. Optional, usually created depending on above values.
-*/
-            // Other values can be edited through EmbeddedTools.
-            // See https://github.com/JacisNonsense/EmbeddedTools#spec
+            // Debug can be overridden by command line, for use with VSCode
+            debug = frc.getDebugOrDefault(DEBUG_MODE)
         }
-
+        // Built in artifact to deploy arbitrary files to the roboRIO.
         fileTreeArtifact('frcStaticFileDeploy') {
             // The directory below is the local directory to deploy
             files = fileTree(dir: 'src/main/deploy')
             // Deploy to RoboRIO target, into /home/lvuser/deploy
             targets << "roborio"
             directory = '/home/lvuser/deploy'
-
         }
     }
+}
+dependencies {
+    implementation wpi.deps.wpilib()
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 
 
-    dependencies {
-        compile group: 'org.json', name: 'json', version: '20180813'
-        compile group: 'com.team2073', name: 'common-util', version: COMMON_VERSION
-        compile group: 'com.team2073', name: 'common-wpi-util', version: COMMON_VERSION
-        compile group: 'com.team2073', name: 'common-guice', version: COMMON_VERSION
-        
-        testCompile group: 'com.team2073', name: 'common-wpi-simulation', version: COMMON_VERSION
-        testCompile group: 'com.team2073', name: 'common-wpi-simulation-stubs', version: COMMON_VERSION
+    implementation wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+
+    // In Java for now, the argument must be false
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+    compile group: 'org.json', name: 'json', version: '20180813'
+    compile group: 'com.team2073', name: 'common-util', version: COMMON_VERSION
+    compile group: 'com.team2073', name: 'common-wpi-util', version: COMMON_VERSION
+    compile group: 'com.team2073', name: 'common-guice', version: COMMON_VERSION
+
+    testCompile group: 'com.team2073', name: 'common-wpi-simulation', version: COMMON_VERSION
+    testCompile group: 'com.team2073', name: 'common-wpi-simulation-stubs', version: COMMON_VERSION
+
+    testImplementation 'junit:junit:4.12'
 
 
-        compile wpi.deps.wpilib()
-        compile wpi.deps.vendor.java()
-
-        nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-        nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-    }
-
-// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
-// in order to make them all available at runtime. Also adding the manifest so WPILib
-// knows where to look for our Robot Class.
-    jar {
-        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-        manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
-    }
-
-    wrapper {
-        gradleVersion = '5.0'
-    }
-
+}
+wrapper {
+    gradleVersion = "6.0"
+}
+jar {
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }

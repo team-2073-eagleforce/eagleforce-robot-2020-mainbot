@@ -1,7 +1,10 @@
 package com.team2073.robot;
 
-public class Main {
-    public static void main(String[] args) {
+import edu.wpi.first.wpilibj.RobotBase;
 
+
+public class Main {
+    public static void main(String... args) {
+        RobotBase.startRobot(Robot::new);
     }
 }
