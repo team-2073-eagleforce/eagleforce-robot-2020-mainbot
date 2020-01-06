@@ -10,18 +10,13 @@ import edu.wpi.first.wpilibj.util.Color;
 public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
-    private Color detectedColor;
-    private String m_autoSelected;
-
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
-
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a
      * parameter. The device will be automatically initialized with default
      * parameters.
      */
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-
     private final ColorMatch m_colorMatcher = new ColorMatch();
 
     /**
@@ -32,10 +27,11 @@ public class Robot extends TimedRobot {
     private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
     private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);*/
 //    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-    private final Color kBlueTarget = ColorMatch.makeColor(60/255d, 136/255d, 107/255d);
-    private final Color kGreenTarget = ColorMatch.makeColor(88/255d, 170/255d, 67/255d);
-    private final Color kRedTarget = ColorMatch.makeColor(113/255d, 65/255d, 27/255d);
-    private final Color kYellowTarget = ColorMatch.makeColor(150/255d, 150/255d, 45/255d);
+    private final Color kBlueTarget = ColorMatch.makeColor(60 / 255d, 136 / 255d, 107 / 255d);
+    private final Color kGreenTarget = ColorMatch.makeColor(88 / 255d, 170 / 255d, 67 / 255d);
+    private final Color kRedTarget = ColorMatch.makeColor(113 / 255d, 65 / 255d, 27 / 255d);
+    private final Color kYellowTarget = ColorMatch.makeColor(150 / 255d, 150 / 255d, 45 / 255d);
+    private String m_autoSelected;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -43,6 +39,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        addColorMatch();
+    }
+
+    public void addColorMatch() {
         m_colorMatcher.addColorMatch(kBlueTarget);
         m_colorMatcher.addColorMatch(kGreenTarget);
         m_colorMatcher.addColorMatch(kRedTarget);
@@ -100,12 +100,13 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        getDetectedColor();
-        /**
-         * Run the color match algorithm on our detected color
-         */
-        String colorString;
+
+    }
+
+    public String readColor() {
+        Color detectedColor = m_colorSensor.getColor();
         ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+        String colorString;
 
         if (match.color == kBlueTarget) {
             colorString = "Blue";
@@ -118,9 +119,7 @@ public class Robot extends TimedRobot {
         } else {
             colorString = "Unknown";
         }
-        //Use this when tuning
-        //System.out.println("Red: " + m_colorSensor.getRawColor().red + "\t Green:" + m_colorSensor.getRawColor().green + "\t Blue: " + m_colorSensor.getRawColor().blue);
-        System.out.println(colorString);
+        return colorString;
     }
 
     /**
@@ -130,8 +129,4 @@ public class Robot extends TimedRobot {
     public void testPeriodic() {
     }
 
-    private Color getDetectedColor(){
-        Color detectedColor = m_colorSensor.getColor();
-        return detectedColor;
-    }
 }
