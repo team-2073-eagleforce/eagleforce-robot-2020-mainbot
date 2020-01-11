@@ -6,6 +6,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.team2073.common.periodic.PeriodicRunnable;
+import com.team2073.robot.ctx.ApplicationContext;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -16,31 +17,36 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private final ColorMatch m_colorMatcher = new ColorMatch();
     private TalonSRX talonSRX = new TalonSRX(1);
+
+
+//    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+//    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+//    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+//    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
     private Color kBlueTarget = ColorMatch.makeColor(60 / 255d, 136 / 255d, 107 / 255d);
     private Color kGreenTarget = ColorMatch.makeColor(88 / 255d, 170 / 255d, 67 / 255d);
     private Color kRedTarget = ColorMatch.makeColor(113 / 255d, 65 / 255d, 27 / 255d);
     private Color kYellowTarget = ColorMatch.makeColor(150 / 255d, 150 / 255d, 45 / 255d);
 
+    private static ApplicationContext appCtx = ApplicationContext.getInstance();
+
     @Override
     public void onPeriodic() {
-//        if (controller.getRawButton(1)) {
-//            stopOnColor("Red");
-//        }
     }
 
     private void calibrateColors() {
-       /* if (controller.getRawButton(1)) {
+        if (appCtx.getController().getRawButton(1)) {
             setColor(kRedTarget, "Red");
         }
-        if (controller.getRawButton(2)) {
+        if (appCtx.getController().getRawButton(2)) {
             setColor(kBlueTarget, "Blue");
         }
-        if (controller.getRawButton(3)) {
+        if (appCtx.getController().getRawButton(3)) {
             setColor(kGreenTarget, "Green");
         }
-        if (controller.getRawButton(4)) {
+        if (appCtx.getController().getRawButton(4)) {
             setColor(kYellowTarget, "Yellow");
-        }*/
+        }
     }
 
     public void addColorMatch() {
@@ -99,21 +105,17 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         System.out.println(colorName + " set: " + getColors(color).toString());
     }
 
-    private void motorOn() {
-        talonSRX.set(ControlMode.PercentOutput, .20);
-    }
-
-    private void motorOff() {
-        talonSRX.set(ControlMode.PercentOutput, 0);
+    private void setMotor(double output) {
+        talonSRX.set(ControlMode.PercentOutput, output);
     }
 
     private void stopOnColor(String colorName) {
         if (readColor().equals(colorName)) {
-            motorOff();
+            setMotor(20d);
         } else {
-            motorOn();
-        }
+            setMotor(0d);
     }
+}
 
 }
 

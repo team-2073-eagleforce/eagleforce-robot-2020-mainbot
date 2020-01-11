@@ -6,39 +6,14 @@ public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
 
-    /**
-     * A Rev Color Sensor V3 object is constructed with an I2C port as a
-     * parameter. The device will be automatically initialized with default
-     * parameters.
-     */
-
-    /**
-     * This function is called periodically during test mode.
-     */
-
-
-    /**
-     * Note: Any example colors should be calibrated as the user needs, these
-     * are here as a basic example.
-     */
-/*    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);*/
-//    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-
-
     private String m_autoSelected;
-
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     @Override
     public void robotInit() {
-
     }
-
-
     /**
      * This function is called every robot packet, no matter the mode. Use
      * this for items like diagnostics that you want ran during disabled,
@@ -49,9 +24,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-
     }
-
     /**
      * This autonomous (along with the chooser code above) shows how to select
      * between different autonomous modes using the dashboard. The sendable
@@ -68,7 +41,6 @@ public class Robot extends TimedRobot {
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
     }
-
     /**
      * This function is called periodically during autonomous.
      */
@@ -84,21 +56,14 @@ public class Robot extends TimedRobot {
                 break;
         }
     }
-
     /**
      * This function is called periodically during operator control.
      */
     @Override
     public void teleopPeriodic() {
-
-
     }
-
 
     @Override
     public void testPeriodic() {
-
     }
-
-
 }
