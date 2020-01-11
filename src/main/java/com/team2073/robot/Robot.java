@@ -1,24 +1,21 @@
 package com.team2073.robot;
 
-import com.revrobotics.ColorMatch;
-import com.revrobotics.ColorMatchResult;
-import com.revrobotics.ColorSensorV3;
-import com.team2073.common.datarecorder.output.DataRecordOutputHandlerCsvImpl;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.util.Color;
 
 public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
-    private final I2C.Port i2cPort = I2C.Port.kOnboard;
+
     /**
      * A Rev Color Sensor V3 object is constructed with an I2C port as a
      * parameter. The device will be automatically initialized with default
      * parameters.
      */
-    private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-    private final ColorMatch m_colorMatcher = new ColorMatch();
+
+    /**
+     * This function is called periodically during test mode.
+     */
+
 
     /**
      * Note: Any example colors should be calibrated as the user needs, these
@@ -28,14 +25,8 @@ public class Robot extends TimedRobot {
     private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
     private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);*/
 //    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-//    private final Color kBlueTarget = ColorMatch.makeColor(60 / 255d, 136 / 255d, 107 / 255d);
-//    private final Color kGreenTarget = ColorMatch.makeColor(88 / 255d, 170 / 255d, 67 / 255d);
-//    private final Color kRedTarget = ColorMatch.makeColor(113 / 255d, 65 / 255d, 27 / 255d);
-//    private final Color kYellowTarget = ColorMatch.makeColor(150 / 255d, 150 / 255d, 45 / 255d);
-    private final Color kBlueTarget = ColorMatch.makeColor(60 / 255d, 136 / 255d, 107 / 255d);
-    private final Color kGreenTarget = ColorMatch.makeColor(88 / 255d, 170 / 255d, 67 / 255d);
-    private final Color kRedTarget = ColorMatch.makeColor(113 / 255d, 65 / 255d, 27 / 255d);
-    private final Color kYellowTarget = ColorMatch.makeColor(150 / 255d, 150 / 255d, 45 / 255d);
+
+
     private String m_autoSelected;
 
     /**
@@ -44,15 +35,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        addColorMatch();
+
     }
 
-    public void addColorMatch() {
-        m_colorMatcher.addColorMatch(kBlueTarget);
-        m_colorMatcher.addColorMatch(kGreenTarget);
-        m_colorMatcher.addColorMatch(kRedTarget);
-        m_colorMatcher.addColorMatch(kYellowTarget);
-    }
 
     /**
      * This function is called every robot packet, no matter the mode. Use
@@ -105,50 +90,15 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        //System.out.println(readColor());
-        getRGBValues();
 
 
     }
 
-    public String readColor() {
-        Color detectedColor = m_colorSensor.getColor();
-        ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
-        String colorString;
 
-        if (match.color == kBlueTarget) {
-            colorString = "Blue";
-        } else if (match.color == kRedTarget) {
-            colorString = "Red";
-        } else if (match.color == kGreenTarget) {
-            colorString = "Green";
-        } else if (match.color == kYellowTarget) {
-            colorString = "Yellow";
-        } else {
-            colorString = "Unknown";
-        }
-        return colorString;
-    }
-
-    private double getRed(){
-        return (m_colorSensor.getRawColor().red) / 255d;
-    }
-
-    private double getGreen() {
-        return (m_colorSensor.getRawColor().green) / 255d;
-    }
-    private double getBlue() {
-        return (m_colorSensor.getRawColor().blue) / 255d;
-    }
-
-    private void getRGBValues() {
-        System.out.println("Red: "  + getRed()  + " \t Green: " + getGreen() +  " \t Blue: " + getBlue());
-    }
-    /**
-     * This function is called periodically during test mode.
-     */
     @Override
     public void testPeriodic() {
+
     }
+
 
 }
