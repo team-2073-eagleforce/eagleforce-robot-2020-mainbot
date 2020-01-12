@@ -18,3 +18,4 @@ gradle-app.setting
 # Except #
 !gradle-wrapper.jar
 /imgui.ini
+.idea 
