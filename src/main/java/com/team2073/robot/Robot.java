@@ -1,11 +1,14 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
-    private static final String kDefaultAuto = "Default";
-    private static final String kCustomAuto = "My Auto";
-    private String m_autoSelected;
+
+    private TalonSRX motorOne = new TalonSRX(1);
+    private TalonSRX motorTwo = new TalonSRX(4);
 
     /**
      * This function is run when the robot is first started up and should be
@@ -13,6 +16,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+        motorOne.configOpenloopRamp(1);
+        motorTwo.configOpenloopRamp(1);
+        SmartDashboard.putNumber("Voltage", 7);
     }
 
     /**
@@ -25,40 +31,15 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-
-    }
-
-    /**
-     * This autonomous (along with the chooser code above) shows how to select
-     * between different autonomous modes using the dashboard. The sendable
-     * chooser code works with the Java SmartDashboard. If you prefer the
-     * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-     * getString line to get the auto name from the text box below the Gyro
-     *
-     * <p>You can add additional auto modes by adding additional comparisons to
-     * the switch structure below with additional strings. If using the
-     * SendableChooser make sure to add them to the chooser code above as well.
-     */
-    @Override
-    public void autonomousInit() {
-        // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-        System.out.println("Auto selected: " + m_autoSelected);
-    }
-
-    /**
-     * This function is called periodically during autonomous.
-     */
-    @Override
-    public void autonomousPeriodic() {
-        switch (m_autoSelected) {
-            case kCustomAuto:
-                // Put custom auto code here
-                break;
-            case kDefaultAuto:
-            default:
-                // Put default auto code here
-                break;
+        if(isEnabled()){
+            motorOne.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Voltage", 7)/12d);
+            motorTwo.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Voltage", 7)/12d);
+            System.out.println("Voltage: " + motorOne.getMotorOutputVoltage() + "\t Amperage: " + motorOne.getStatorCurrent());
+        } else {
+            motorOne.set(ControlMode.PercentOutput, 0);
+            motorTwo.set(ControlMode.PercentOutput, 0);
         }
+
     }
 
     /**
@@ -66,6 +47,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+
 
     }
 
