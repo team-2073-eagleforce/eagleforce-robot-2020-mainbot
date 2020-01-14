@@ -1,5 +1,8 @@
 package com.team2073.robot;
 
+import com.team2073.robot.AppConstants;
+import com.team2073.robot.subsystem.HopperSubsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -11,6 +14,8 @@ import static com.team2073.robot.AppConstants.Ports.*;
 public class ApplicationContext {
 
     private static ApplicationContext instance;
+
+    //Controller
     private Joystick controller;
     private Joystick driveWheel;
     private Joystick driveStick;
@@ -27,6 +32,15 @@ public class ApplicationContext {
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
 
+
+    // Neo550
+    private CANSparkMax hopperMotor;
+
+    // Sensors
+    private DigitalInput hopperSensor;
+
+    //Subsystem
+    private HopperSubsystem hopperSubsystem;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -54,6 +68,27 @@ public class ApplicationContext {
             driveStick = new Joystick(JOYSTICK_PORT);
         }
         return driveStick;
+    }
+
+    public CANSparkMax getHopperMotor() {
+        if(hopperMotor == null) {
+            hopperMotor = new CANSparkMax(HOPPER_MOTOR_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+        }
+        return hopperMotor;
+    }
+
+    public DigitalInput getHopperSensor() {
+        if(hopperSensor == null) {
+            hopperSensor = new DigitalInput(HOPPER_SENSOR);
+        }
+        return hopperSensor;
+    }
+
+    public HopperSubsystem getHopperSubsystem() {
+        if(hopperSubsystem == null) {
+            hopperSubsystem = new HopperSubsystem();
+        }
+        return hopperSubsystem;
     }
 
     public CANSparkMax getIntakeMotor() {
