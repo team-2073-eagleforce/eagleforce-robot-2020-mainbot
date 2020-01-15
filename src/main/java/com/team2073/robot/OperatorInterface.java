@@ -42,4 +42,5 @@ public class OperatorInterface {
 
     private ControllerTriggerTrigger rightWheelButton = new ControllerTriggerTrigger(driveWheel, 3);
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
+
 }
