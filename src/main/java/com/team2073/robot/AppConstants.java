@@ -9,6 +9,9 @@ public abstract class AppConstants {
         public static final int CONTROLLER_PORT = 0;
 
         //Intake
+        public static final int TURRET_MOTOR_PORT = 0;
+
+        //Intake
         public static final int INTAKE_MOTOR_PORT = 0;
         public static final int INTAKE_SOLENOID_LEFT_PORT = 0;
         public static final int INTAKE_SOLENOID_RIGHT_PORT = 1;

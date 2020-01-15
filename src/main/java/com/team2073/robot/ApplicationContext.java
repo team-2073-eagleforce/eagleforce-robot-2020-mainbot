@@ -1,5 +1,8 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.team2073.robot.AppConstants;
+import com.team2073.robot.subsystem.TurretSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
@@ -19,6 +22,12 @@ public class ApplicationContext {
     private Joystick controller;
     private Joystick driveWheel;
     private Joystick driveStick;
+
+    //Falcon
+    private TalonFX turretMotor;
+
+    //Subsystem
+    private TurretSubsystem turretSubsystem;
 
     private CANSparkMax intakeMotor;
 
@@ -119,6 +128,20 @@ public class ApplicationContext {
             intakeSubsystem = new IntakeSubsystem();
         }
         return intakeSubsystem;
+    }
+
+    public TalonFX getTurretMotor() {
+        if(turretMotor == null) {
+            turretMotor = new TalonFX(TURRET_MOTOR_PORT);
+        }
+        return turretMotor;
+    }
+
+    public TurretSubsystem getTurretSubsystem() {
+        if(turretSubsystem == null) {
+            turretSubsystem = new TurretSubsystem();
+        }
+        return turretSubsystem;
     }
 
     public CANSparkMax getLeftMaster() {
