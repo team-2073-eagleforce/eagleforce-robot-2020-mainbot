@@ -61,6 +61,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
         }
     }
     private void reverseMotor() {
+        intakeMotor.set(-.5);
     }
 }
 
