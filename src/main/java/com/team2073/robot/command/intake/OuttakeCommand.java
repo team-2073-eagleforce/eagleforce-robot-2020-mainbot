@@ -9,7 +9,7 @@ import com.team2073.robot.subsystem.IntakeSubsystem;
 
         @Override
         protected void initializeDelegate() {
-            appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.Outtake);
+            appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.OUTTAKE);
 
         }
 

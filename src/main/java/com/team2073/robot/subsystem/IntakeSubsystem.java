@@ -17,7 +17,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
     private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
     private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
-    private IntakeState state = IntakeState.Disabled;
+    private IntakeState state = IntakeState.DISABLED;
 
     public IntakeSubsystem(){
         intakeMotor.setOpenLoopRampRate(1);
@@ -39,11 +39,11 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum IntakeState {
-        Stowed(0d),
-        Intake(1d),
-        Outtake(-.9),
-        Stop(0d),
-        Disabled(0d);
+        STOWED(0d),
+        INTAKE(1d),
+        OUTTAKE(-.9),
+        STOP(0d),
+        DISABLED(0d);
 
         private Double percent;
         IntakeState(Double percent) {

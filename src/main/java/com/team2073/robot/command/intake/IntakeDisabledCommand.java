@@ -9,7 +9,7 @@ public class IntakeDisabledCommand extends AbstractLoggingCommand {
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.Disabled);
+        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.DISABLED);
 
     }
 

@@ -18,7 +18,7 @@ public class IntakeToggleSolenoidsCommand extends AbstractLoggingCommand {
     @Override
     protected void endDelegate() {
         appCtx.getIntakeSubsystem().togglePistons(true);
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.Stowed);
+        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.STOWED);
     }
 
     @Override
