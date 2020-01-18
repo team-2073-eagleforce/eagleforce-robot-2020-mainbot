@@ -15,6 +15,6 @@ public class IntakeCommand extends AbstractLoggingCommand {
 
     @Override
     protected boolean isFinishedDelegate() {
-        return false;
+        return true;
     }
 }

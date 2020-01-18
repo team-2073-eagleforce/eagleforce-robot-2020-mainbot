@@ -58,14 +58,14 @@ public class ApplicationContext {
 
     public Solenoid getIntakeSolenoidLeft() {
         if (intakeSolenoidLeft == null) {
-            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT);
+            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT_PORT);
         }
         return intakeSolenoidLeft;
     }
 
     public Solenoid getIntakeSolenoidRight() {
         if (intakeSolenoidRight == null) {
-            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT);
+            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT_PORT);
         }
         return intakeSolenoidRight;
     }

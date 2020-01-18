@@ -4,7 +4,6 @@ import com.revrobotics.CANSparkMax;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ctx.ApplicationContext;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class IntakeSubsystem implements AsyncPeriodicRunnable {
@@ -18,7 +17,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
     private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
     private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
-    private IntakeState states = IntakeState.Disabled;
+    private IntakeState state = IntakeState.Disabled;
 
     public IntakeSubsystem(){
         intakeMotor.setOpenLoopRampRate(1);
@@ -26,17 +25,17 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
-        setPower(states.getPercent());
+        setPower(state.getPercent());
     }
     public void setPower(Double percent) {
         intakeMotor.set(percent);
     }
     public void set(IntakeState goalState) {
-        states = goalState;
+        state = goalState;
     }
     public void togglePistons(boolean value) {
         pistonLeft.set(value);
-
+        pistonRight.set(value);
     }
 
     public enum IntakeState {

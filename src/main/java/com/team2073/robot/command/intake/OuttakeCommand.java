@@ -15,6 +15,6 @@ import com.team2073.robot.subsystem.IntakeSubsystem;
 
         @Override
         protected boolean isFinishedDelegate() {
-            return false;
+            return true;
         }
     }
