@@ -55,15 +55,25 @@ public class ApplicationContext {
         }
         return intakeMotor;
     }
+
     public Solenoid getIntakeSolenoidLeft() {
         if (intakeSolenoidLeft == null) {
             intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT);
         }
         return intakeSolenoidLeft;
     }
+
     public Solenoid getIntakeSolenoidRight() {
         if (intakeSolenoidRight == null) {
             intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT);
         }
         return intakeSolenoidRight;
-}   }
+    }
+
+    public IntakeSubsystem getIntakeSubsystem() {
+        if (intakeSubsystem == null) {
+            intakeSubsystem = new IntakeSubsystem();
+        }
+        return intakeSubsystem;
+    }
+}

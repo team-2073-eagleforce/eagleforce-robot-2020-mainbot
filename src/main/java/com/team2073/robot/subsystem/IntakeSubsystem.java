@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ctx.ApplicationContext;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class IntakeSubsystem implements AsyncPeriodicRunnable {
@@ -15,53 +16,43 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     private boolean rollersActivated = false;
 
     private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
-    private Solenoid piston = new Solenoid(1);
+    private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
+    private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
+    private IntakeState states = IntakeState.Disabled;
+
+    public IntakeSubsystem(){
+        intakeMotor.setOpenLoopRampRate(1);
+    }
 
     @Override
     public void onPeriodicAsync() {
-        if (appCtx.getController().getRawButton(1)) {
-            togglePistons();
-            //Button 1 is a placeholder until we know which button to assign
-        }
-        if (appCtx.getController().getRawButton(2)) {
-            rampRPM();
-            //Button 2 is a placeholder until we know which button to assign
-        }
-        if (appCtx.getController().getRawButton(3)) {
-            toggleRollers();
-            //Button 3 is a placeholder until we know which button to assign
-        }
-        if (appCtx.getController().getRawButton(4)) {
-            reverseMotor();
-            //Button 4 is a placeholder until we know which button to assign
-        }
+        setPower(states.getPercent());
     }
-
-    public void togglePistons() {
-        if (!pistonsExtended) {
-            piston.set(true);
-            pistonsExtended = true;
-        } else {
-            piston.set(false);
-            pistonsExtended = false;
-        }
+    public void setPower(Double percent) {
+        intakeMotor.set(percent);
     }
-
-    private void rampRPM() {
+    public void set(IntakeState goalState) {
+        states = goalState;
+    }
+    public void togglePistons(boolean value) {
+        pistonLeft.set(value);
 
     }
 
-    private void toggleRollers() {
-        if (!rollersActivated) {
-            intakeMotor.set(.5);
-            rollersActivated = true;
-        } else {
-            intakeMotor.set(0);
-            rollersActivated = false;
+    public enum IntakeState {
+        Stowed(0d),
+        Intake(1d),
+        Outtake(-.9),
+        Stop(0d),
+        Disabled(0d);
+
+        private Double percent;
+        IntakeState(Double percent) {
+            this.percent = percent;
         }
-    }
-    private void reverseMotor() {
-        intakeMotor.set(-.5);
+        public Double getPercent(){
+            return percent;
+        }
     }
 }
 
