@@ -30,14 +30,14 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private final ColorMatch m_colorMatcher = new ColorMatch();
     TalonSRX talonSRX = new TalonSRX(1);
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
-  // private Color kGreenTarget = getTarget("Green");
-  // private Color kRedTarget = getTarget("Red");
-  // private Color kYellowTarget = getTarget("Yellow");
-        private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+    // private Color kGreenTarget = getTarget("Green");
+    // private Color kRedTarget = getTarget("Red");
+    // private Color kYellowTarget = getTarget("Yellow");
+    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
     private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
     private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
     private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-   // private Color kBlueTarget = getTarget("Blue");
+    // private Color kBlueTarget = getTarget("Blue");
     private int rotations = 0;
     private static File file = new File(System.getProperty("user.home"), '/' + "RGB.csv");
     private String currentColor;
@@ -122,7 +122,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     public void rotationCounter() {
         currentColor = readColor();
-        if(!setGoalColor){
+        if (!setGoalColor) {
             setGoalColor = true;
             goalColor = currentColor;
         }
@@ -135,7 +135,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     public void stopOnRotation() {
         if (rotations >= 7) {
             setMotor(0d);
-        }else{
+        } else {
             setMotor(0.1);
         }
     }
@@ -148,24 +148,23 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         }
     }
 
-    public void calibrate(){
+    public void calibrate() {
         Joystick controller = ApplicationContext.getInstance().getController();
-        if(controller.getRawButtonPressed(1)){
+        if (controller.getRawButtonPressed(1)) {
             updateFile("Green", getRed().toString(), getGreen().toString(), getBlue().toString());
-        }else if(controller.getRawButtonPressed(2)){
+        } else if (controller.getRawButtonPressed(2)) {
             updateFile("Red", getRed().toString(), getGreen().toString(), getBlue().toString());
-        }else if(controller.getRawButtonPressed(3)){
+        } else if (controller.getRawButtonPressed(3)) {
             updateFile("Blue", getRed().toString(), getGreen().toString(), getBlue().toString());
-        }else if(controller.getRawButtonPressed(4)){
+        } else if (controller.getRawButtonPressed(4)) {
             updateFile("Yellow", getRed().toString(), getGreen().toString(), getBlue().toString());
         }
 
     }
 
-    public static void createCSV()
-    {
+    public static void createCSV() {
         try {
-            if(file.exists()){
+            if (file.exists()) {
                 file.delete();
             }
             file.createNewFile();
@@ -176,8 +175,8 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         updateFile("Color", "R", "G", "B");
     }
 
-    private static void updateFile(String ... data){
-        try{
+    private static void updateFile(String... data) {
+        try {
             CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
             csvWriter.writeNext(data);
             csvWriter.close();
@@ -191,7 +190,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
             CSVReader csvReader = new CSVReader(new FileReader(file));
             List<String[]> records = csvReader.readAll();
             for (String[] record : records) {
-                if(record[0].equals(color)){
+                if (record[0].equals(color)) {
                     return record;
                 }
             }
@@ -199,6 +198,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         } catch (IOException | CsvException e) {
             e.printStackTrace();
         }
+        System.err.println("File not Found");
         return new String[]{"Null Pointer Generated"};
     }
 
@@ -214,7 +214,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         return Double.parseDouble(getColorValues(color)[3]);
     }
 
-    private Color getTarget(String color){
+    private Color getTarget(String color) {
         return ColorMatch.makeColor(getR(color), getG(color), getB(color));
     }
 
