@@ -1,19 +1,30 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.common.util.GraphCSVUtil;
+import com.team2073.robot.ctx.ApplicationContext;
+import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+
+import java.io.IOException;
 
 public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
-
     private String m_autoSelected;
+    private WOFManipulatorSubsystem wofManipulatorSubsystem; //= ApplicationContext.getInstance().getWofManipulatorSubsystem();
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     @Override
     public void robotInit() {
+
     }
+
     /**
      * This function is called every robot packet, no matter the mode. Use
      * this for items like diagnostics that you want ran during disabled,
@@ -25,6 +36,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotPeriodic() {
     }
+
     /**
      * This autonomous (along with the chooser code above) shows how to select
      * between different autonomous modes using the dashboard. The sendable
@@ -41,6 +53,7 @@ public class Robot extends TimedRobot {
         // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
         System.out.println("Auto selected: " + m_autoSelected);
     }
+
     /**
      * This function is called periodically during autonomous.
      */
@@ -56,14 +69,50 @@ public class Robot extends TimedRobot {
                 break;
         }
     }
+
+    @Override
+    public void teleopInit() {
+        //wofManipulatorSubsystem.addColorMatch();
+        wofManipulatorSubsystem = ApplicationContext.getInstance().getWofManipulatorSubsystem();
+        wofManipulatorSubsystem.addColorMatch();
+    }
+
     /**
      * This function is called periodically during operator control.
      */
+
+
     @Override
     public void teleopPeriodic() {
+        //System.out.println(wofManipulatorSubsystem.readColor());
+        Joystick controller = ApplicationContext.getInstance().getController();
+        System.out.println(wofManipulatorSubsystem.readColor());
+        if(controller.getRawButton(1)){
+            wofManipulatorSubsystem.stopOnColor();
+        }else{
+            wofManipulatorSubsystem.setMotor(0d);
+        }
+
+        if(controller.getRawButtonPressed(2)){
+            wofManipulatorSubsystem.rotationCounter();
+            wofManipulatorSubsystem.stopOnRotation();
+        }
+
+        if(isDisabled()){
+            wofManipulatorSubsystem.setMotor(0d);
+        }
+
+    }
+
+    @Override
+    public void testInit() {
+        WOFManipulatorSubsystem.createCSV();
+        wofManipulatorSubsystem = ApplicationContext.getInstance().getWofManipulatorSubsystem();
     }
 
     @Override
     public void testPeriodic() {
+        wofManipulatorSubsystem.calibrate();
     }
+
 }

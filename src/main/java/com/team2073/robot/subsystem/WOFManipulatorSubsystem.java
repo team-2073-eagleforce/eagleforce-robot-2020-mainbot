@@ -2,6 +2,9 @@ package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvException;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
@@ -9,33 +12,44 @@ import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.robot.ctx.ApplicationContext;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.Color;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private static ApplicationContext appCtx = ApplicationContext.getInstance();
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private final ColorMatch m_colorMatcher = new ColorMatch();
-    private TalonSRX talonSRX = new TalonSRX(1);
+    TalonSRX talonSRX = new TalonSRX(1);
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    private Color kGreenTarget = ColorMatch.makeColor(88 / 255d, 170 / 255d, 67 / 255d);
-    private Color kRedTarget = ColorMatch.makeColor(113 / 255d, 65 / 255d, 27 / 255d);
-    private Color kYellowTarget = ColorMatch.makeColor(150 / 255d, 150 / 255d, 45 / 255d);
-    //    private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-//    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-//    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-//    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-    private Color kBlueTarget = ColorMatch.makeColor(60 / 255d, 136 / 255d, 107 / 255d);
-    private int counter = 0;
+  // private Color kGreenTarget = getTarget("Green");
+  // private Color kRedTarget = getTarget("Red");
+  // private Color kYellowTarget = getTarget("Yellow");
+        private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
+    private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
+    private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
+    private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+   // private Color kBlueTarget = getTarget("Blue");
     private int rotations = 0;
+    private static File file = new File(System.getProperty("user.home"), '/' + "RGB.csv");
+    private String currentColor;
+    private String goalColor;
+    private boolean setGoalColor = false;
+    private String previousColor = "Grey";
 
     @Override
     public void onPeriodic() {
     }
 
-    private void calibrateColors() {
+/*    private void calibrateColors() {
         if (appCtx.getController().getRawButton(1)) {
             setColor(kRedTarget, "Red");
         }
@@ -48,7 +62,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         if (appCtx.getController().getRawButton(4)) {
             setColor(kYellowTarget, "Yellow");
         }
-    }
+    }*/
 
     public void addColorMatch() {
         m_colorMatcher.addColorMatch(kBlueTarget);
@@ -76,20 +90,16 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         return colorString;
     }
 
-    private double getRed() {
+    private Double getRed() {
         return (m_colorSensor.getRawColor().red) / 255d;
     }
 
-    private double getGreen() {
+    private Double getGreen() {
         return (m_colorSensor.getRawColor().green) / 255d;
     }
 
-    private double getBlue() {
+    private Double getBlue() {
         return (m_colorSensor.getRawColor().blue) / 255d;
-    }
-
-    private void getRGBValues() {
-        System.out.println("Red: " + getRed() + " \t Green: " + getGreen() + " \t Blue: " + getBlue());
     }
 
     public ArrayList<Double> getColors(Color color) {
@@ -106,29 +116,108 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         System.out.println(colorName + " set: " + getColors(color).toString());
     }
 
-    private void setMotor(double output) {
+    public void setMotor(double output) {
         talonSRX.set(ControlMode.PercentOutput, output);
     }
 
-    private void rotationCounter(String colorName) {
-        setMotor(.2);
-        if (readColor().equals(colorName)) {
-            counter += 1;
+    public void rotationCounter() {
+        currentColor = readColor();
+        if(!setGoalColor){
+            setGoalColor = true;
+            goalColor = currentColor;
         }
+        if (readColor().equals(currentColor) && !previousColor.equals(currentColor)) {
+            rotations += 1;
+        }
+        previousColor = currentColor;
     }
 
-    private void stopOnRotation() {
-        if (counter >= 6) {
-            setMotor(0);
-        }
-    }
-
-    private void stopOnColor(String colorName) {
-        if (readColor().equals(colorName)) {
-            setMotor(.2);
-        } else {
+    public void stopOnRotation() {
+        if (rotations >= 7) {
             setMotor(0d);
+        }else{
+            setMotor(0.1);
         }
     }
+
+    public void stopOnColor() {
+        if (readColor().equals("Red")) {
+            setMotor(0d);
+        } else {
+            setMotor(0.2);
+        }
+    }
+
+    public void calibrate(){
+        Joystick controller = ApplicationContext.getInstance().getController();
+        if(controller.getRawButtonPressed(1)){
+            updateFile("Green", getRed().toString(), getGreen().toString(), getBlue().toString());
+        }else if(controller.getRawButtonPressed(2)){
+            updateFile("Red", getRed().toString(), getGreen().toString(), getBlue().toString());
+        }else if(controller.getRawButtonPressed(3)){
+            updateFile("Blue", getRed().toString(), getGreen().toString(), getBlue().toString());
+        }else if(controller.getRawButtonPressed(4)){
+            updateFile("Yellow", getRed().toString(), getGreen().toString(), getBlue().toString());
+        }
+
+    }
+
+    public static void createCSV()
+    {
+        try {
+            if(file.exists()){
+                file.delete();
+            }
+            file.createNewFile();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        updateFile("Color", "R", "G", "B");
+    }
+
+    private static void updateFile(String ... data){
+        try{
+            CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
+            csvWriter.writeNext(data);
+            csvWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] getColorValues(String color) {
+        try {
+            CSVReader csvReader = new CSVReader(new FileReader(file));
+            List<String[]> records = csvReader.readAll();
+            for (String[] record : records) {
+                if(record[0].equals(color)){
+                    return record;
+                }
+            }
+
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+        return new String[]{"Null Pointer Generated"};
+    }
+
+    private double getR(String color) {
+        return Double.parseDouble(getColorValues(color)[1]);
+    }
+
+    private double getG(String color) {
+        return Double.parseDouble(getColorValues(color)[2]);
+    }
+
+    private double getB(String color) {
+        return Double.parseDouble(getColorValues(color)[3]);
+    }
+
+    private Color getTarget(String color){
+        return ColorMatch.makeColor(getR(color), getG(color), getB(color));
+    }
+
+
 }
 

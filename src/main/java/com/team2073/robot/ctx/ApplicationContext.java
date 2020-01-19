@@ -1,6 +1,7 @@
 package com.team2073.robot.ctx;
 
 import com.revrobotics.ColorSensorV3;
+import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -14,6 +15,8 @@ public class ApplicationContext {
     private Joystick driveStick;
 
     private ColorSensorV3 colorSensor;
+
+    private WOFManipulatorSubsystem wofManipulatorSubsystem;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -49,5 +52,11 @@ public class ApplicationContext {
         return colorSensor;
     }
 
+    public WOFManipulatorSubsystem getWofManipulatorSubsystem(){
+        if(wofManipulatorSubsystem == null) {
+            wofManipulatorSubsystem = new WOFManipulatorSubsystem();
+        }
+        return wofManipulatorSubsystem;
+    }
 
 }
