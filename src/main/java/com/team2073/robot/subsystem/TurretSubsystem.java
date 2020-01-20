@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
-import com.team2073.robot.ctx.ApplicationContext;
+import com.team2073.robot.ApplicationContext;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
 
