@@ -1,24 +1,24 @@
-package com.team2073.robot.drive;
+package com.team2073.robot.subsystem.drive;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
-import edu.wpi.first.wpilibj.RobotController;
+import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
-import static com.team2073.robot.drive.Constants.DriveConstants.*;
+import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.*;
 
 
 public class DriveSubsystem {
-    private CANSparkMax leftMaster = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax rightMaster = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax leftSlave1 = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax leftSlave2 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax rightSlave1 = new CANSparkMax(5, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax rightSlave2 = new CANSparkMax(6, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private ApplicationContext appCtx = ApplicationContext.getInstance();
+    private CANSparkMax leftMaster = appCtx.getLeftMaster();
+    private CANSparkMax rightMaster = appCtx.getRightMaster();
+    private CANSparkMax leftSlave1 = appCtx.getLeftSlave1();
+    private CANSparkMax leftSlave2 = appCtx.getLeftSlave2();
+    private CANSparkMax rightSlave1 = appCtx.getRightSlave1();
+    private CANSparkMax rightSlave2 = appCtx.getRightSlave2();
 
 
     private CANEncoder leftEncoder = leftMaster.getEncoder();

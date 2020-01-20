@@ -12,5 +12,14 @@ public abstract class AppConstants {
         public static final int INTAKE_MOTOR_PORT = 0;
         public static final int INTAKE_SOLENOID_LEFT_PORT = 0;
         public static final int INTAKE_SOLENOID_RIGHT_PORT = 0;
+
+        //Drive
+        public static final int DRIVE_LEFT_MASTER = 1;
+        public static final int DRIVE_LEFT_SLAVE_ONE = 2;
+        public static final int DRIVE_LEFT_SLAVE_TWO = 3;
+        public static final int DRIVE_RIGHT_MASTER = 4;
+        public static final int DRIVE_RIGHT_SLAVE_ONE = 5;
+        public static final int DRIVE_RIGHT_SLAVE_TWO = 6;
+
     }
 }

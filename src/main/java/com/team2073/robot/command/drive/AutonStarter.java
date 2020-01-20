@@ -1,30 +1,23 @@
-package com.team2073.robot.drive.commands;
+package com.team2073.robot.command.drive;
 
 import com.team2073.robot.Robot;
-import com.team2073.robot.drive.Constants;
-import com.team2073.robot.drive.Constants.AutoConstants;
-import com.team2073.robot.drive.Constants.DriveConstants;
-import com.team2073.robot.drive.DriveSubsystem;
-import edu.wpi.first.wpilibj.GenericHID;
+import com.team2073.robot.subsystem.drive.Constants.AutoConstants;
+import com.team2073.robot.subsystem.drive.Constants.DriveConstants;
+import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.List;
-
-import static edu.wpi.first.wpilibj.XboxController.Button;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
