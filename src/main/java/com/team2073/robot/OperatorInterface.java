@@ -1,7 +1,6 @@
 package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
-import com.team2073.robot.ctx.ApplicationContext;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;

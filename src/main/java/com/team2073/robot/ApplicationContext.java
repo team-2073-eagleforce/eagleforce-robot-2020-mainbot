@@ -1,11 +1,11 @@
-package com.team2073.robot.ctx;
+package com.team2073.robot;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 
+import static com.revrobotics.CANSparkMaxLowLevel.*;
 import static com.team2073.robot.AppConstants.Ports.*;
 
 public class ApplicationContext {
@@ -16,6 +16,13 @@ public class ApplicationContext {
     private Joystick driveStick;
 
     private CANSparkMax intakeMotor;
+
+    private CANSparkMax leftMaster;
+    private CANSparkMax rightMaster;
+    private CANSparkMax leftSlave1;
+    private CANSparkMax leftSlave2;
+    private CANSparkMax rightSlave1;
+    private CANSparkMax rightSlave2;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
@@ -51,7 +58,7 @@ public class ApplicationContext {
 
     public CANSparkMax getIntakeMotor() {
         if (intakeMotor == null) {
-            intakeMotor = new CANSparkMax(INTAKE_MOTOR_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+            intakeMotor = new CANSparkMax(INTAKE_MOTOR_PORT, MotorType.kBrushless);
         }
         return intakeMotor;
     }
@@ -75,5 +82,47 @@ public class ApplicationContext {
             intakeSubsystem = new IntakeSubsystem();
         }
         return intakeSubsystem;
+    }
+
+    public CANSparkMax getLeftMaster() {
+        if(leftMaster == null){
+            leftMaster = new CANSparkMax(DRIVE_LEFT_MASTER, MotorType.kBrushless);
+        }
+        return leftMaster;
+    }
+
+    public CANSparkMax getRightMaster() {
+        if(rightMaster == null){
+            rightMaster = new CANSparkMax(DRIVE_RIGHT_MASTER, MotorType.kBrushless);
+        }
+        return rightMaster;
+    }
+
+    public CANSparkMax getLeftSlave1() {
+        if(leftSlave1 == null){
+            leftSlave1 = new CANSparkMax(DRIVE_LEFT_SLAVE_ONE, MotorType.kBrushless);
+        }
+        return leftSlave1;
+    }
+
+    public CANSparkMax getLeftSlave2() {
+        if(leftSlave2 == null){
+            leftSlave2 = new CANSparkMax(DRIVE_LEFT_SLAVE_TWO, MotorType.kBrushless);
+        }
+        return leftSlave2;
+    }
+
+    public CANSparkMax getRightSlave1() {
+        if(rightSlave1 == null){
+            rightSlave1 = new CANSparkMax(DRIVE_RIGHT_SLAVE_ONE, MotorType.kBrushless);
+        }
+        return rightSlave1;
+    }
+
+    public CANSparkMax getRightSlave2() {
+        if(rightSlave2 == null){
+            rightSlave2 = new CANSparkMax(DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
+        }
+        return rightSlave2;
     }
 }
