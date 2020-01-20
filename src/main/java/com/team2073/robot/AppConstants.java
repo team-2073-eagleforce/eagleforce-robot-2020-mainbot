@@ -14,8 +14,8 @@ public abstract class AppConstants {
         public static final int INTAKE_SOLENOID_RIGHT_PORT = 0;
 
         //Hopper
-        public static final int HOPPER_MOTOR_PORT = 0;
-        public static final int HOPPER_SENSOR = 0;
+        public static final int HOPPER_MOTOR_ID = 0;
+        public static final int HOPPER_SENSOR_DIO_PORT = 0;
 
         //Drive
         public static final int DRIVE_LEFT_MASTER = 1;

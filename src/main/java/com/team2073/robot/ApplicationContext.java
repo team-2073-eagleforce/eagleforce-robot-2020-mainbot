@@ -1,6 +1,5 @@
 package com.team2073.robot;
 
-import com.team2073.robot.AppConstants;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
@@ -72,14 +71,14 @@ public class ApplicationContext {
 
     public CANSparkMax getHopperMotor() {
         if(hopperMotor == null) {
-            hopperMotor = new CANSparkMax(HOPPER_MOTOR_PORT, CANSparkMaxLowLevel.MotorType.kBrushless);
+            hopperMotor = new CANSparkMax(HOPPER_MOTOR_ID, MotorType.kBrushless);
         }
         return hopperMotor;
     }
 
     public DigitalInput getHopperSensor() {
         if(hopperSensor == null) {
-            hopperSensor = new DigitalInput(HOPPER_SENSOR);
+            hopperSensor = new DigitalInput(HOPPER_SENSOR_DIO_PORT);
         }
         return hopperSensor;
     }
