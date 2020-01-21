@@ -2,6 +2,7 @@ package com.team2073.robot.statespace.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.robot.Robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -11,10 +12,10 @@ public class Shooter {
     // Check whether motors are slaves or motors are masters
     // Check the deviceNumbers, currently I put fillers
     private final TalonSRX motorOne = new TalonSRX(1);
-    private final TalonSRX motorTwo = new TalonSRX(2);
-    private final TalonSRX motorThree = new TalonSRX(3);
+    private final TalonSRX motorTwo = new TalonSRX(4);
 
-    private final Encoder encoder = new Encoder(1, 2);
+
+//    private final Encoder encoder = new Encoder(8, 9);
 
     private final ShooterController shooterController = new ShooterController();
 
@@ -24,6 +25,8 @@ public class Shooter {
 
     public void disable() {
         shooterController.disable();
+        motorOne.set(ControlMode.PercentOutput, 0);
+        motorTwo.set(ControlMode.PercentOutput, 0);
     }
 
     /**
@@ -31,7 +34,7 @@ public class Shooter {
      *
      * @param angularVelocity Velocity of arm in radians per second.
      */
-    public void setReferences(double angularVelocity) {
+    public void setReference(double angularVelocity) {
         shooterController.setReferences(angularVelocity);
     }
 
@@ -40,14 +43,17 @@ public class Shooter {
     }
 
     /**
-     * Iterates the elevator control loop one cycle.
+     * Iterates the shooter control loop one cycle.
      */
-    public void iterate() {
-        shooterController.setMeasuredVelocity(encoder.getDistance());
+    public void iterate(double velocity) {
+        shooterController.setMeasuredVelocity(velocity);
         shooterController.update();
 
-        double batteryVoltage = RobotController.getBatteryVoltage();
-        motorOne.set(ControlMode.PercentOutput, shooterController.getControllerVoltage() / batteryVoltage);
+//        double batteryVoltage = RobotController.getBatteryVoltage();
+        System.out.println(getControllerVoltage());
+        motorOne.set(ControlMode.PercentOutput, shooterController.getControllerVoltage()/12);
+        //motorTwo.set(ControlMode.PercentOutput, -shooterController.getControllerVoltage() / batteryVoltage);
+
     }
 
     public double getControllerVoltage() {
@@ -56,6 +62,10 @@ public class Shooter {
 
     public void reset() {
         shooterController.reset();
+    }
+
+    public double getTalonVoltage() {
+        return motorOne.getMotorOutputVoltage();
     }
 
 

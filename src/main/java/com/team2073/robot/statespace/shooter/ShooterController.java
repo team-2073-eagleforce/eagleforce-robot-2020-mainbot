@@ -9,8 +9,9 @@ import com.team2073.robot.statespace.math.numbers.N2;
 
 public class ShooterController {
     // State tolerances in meters and meters/sec respectively.
-    public static final double kAngleTolerance = 0.05;
-    public static final double kAngularVelocityTolerance = 2.0;
+    public static final double kAngularVelocityTolerance = 1.0;
+
+    private boolean atReference;
 
     // The current sensor measurement.
     private final Matrix<N1, N1> m_Y;
@@ -19,6 +20,7 @@ public class ShooterController {
     private final StateSpaceLoop<N2, N1, N1> ctrlLoop;
 
     private boolean m_atReferences;
+    double currentRefrence = 0;
 
     public ShooterController() {
         m_Y = MatrixUtils.zeros(Nat.N1());
@@ -74,11 +76,15 @@ public class ShooterController {
      * Executes the control loop for a cycle.
      */
     public void update() {
+        if (Math.abs(ctrlLoop.getNextR(0)) < 1.0) {
+            // Kill power at low angular velocities
+            System.out.println("Entered Disable Mode");
+            ctrlLoop.disable();
+        }
+
         ctrlLoop.correct(m_Y);
 
-        Matrix error = ctrlLoop.getError();
-        m_atReferences = Math.abs(error.get(0, 0)) < kAngleTolerance
-                && Math.abs(error.get(1, 0)) < kAngularVelocityTolerance;
+        atReference = Math.abs(getError()) < kAngularVelocityTolerance && ctrlLoop.getNextR(0) > 1.0;
 
         ctrlLoop.predict();
     }
@@ -88,5 +94,9 @@ public class ShooterController {
      */
     public void reset() {
         ctrlLoop.reset();
+    }
+
+    public double getError() {
+        return ctrlLoop.getError().get(0, 0);
     }
 }

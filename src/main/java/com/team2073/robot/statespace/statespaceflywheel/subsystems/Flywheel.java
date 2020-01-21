@@ -8,30 +8,28 @@
 package com.team2073.robot.statespace.statespaceflywheel.subsystems;
 
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Spark;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.*;
 
 public class Flywheel {
-  private final Spark m_motor = new Spark(1);
-  private final Encoder m_encoder = new Encoder(1, 2);
+  private final TalonSRX m_motor = new TalonSRX(1);
+  private final TalonSRX m_motor2 = new TalonSRX(4);
+//  private final Encoder m_encoder = new Encoder(1, 2);
 
   private final FlywheelController m_wheel = new FlywheelController();
-  private final Notifier m_thread = new Notifier(this::iterate);
+//  private final Notifier m_thread = new Notifier(this::iterate);
 
   public Flywheel() {
-    m_encoder.setDistancePerPulse(2.0 * Math.PI / 360.0);
+
   }
 
   public void enable() {
     m_wheel.enable();
-    m_thread.startPeriodic(0.005);
   }
 
   public void disable() {
     m_wheel.disable();
-    m_thread.stop();
   }
 
   public void setReference(double angularVelocity) {
@@ -45,15 +43,25 @@ public class Flywheel {
   /**
    * Iterates the shooter control loop one cycle.
    */
-  public void iterate() {
-    m_wheel.setMeasuredVelocity(m_encoder.getRate());
+  public void iterate(double velocity) {
+    m_wheel.setMeasuredVelocity(velocity);
     m_wheel.update();
 
     double batteryVoltage = RobotController.getBatteryVoltage();
-    m_motor.set(m_wheel.getControllerVoltage() / batteryVoltage);
+    m_motor.set(ControlMode.PercentOutput, m_wheel.getControllerVoltage() / batteryVoltage);
+    m_motor2.set(ControlMode.PercentOutput, -m_wheel.getControllerVoltage() / batteryVoltage);
+    System.out.println("Output: " + m_motor.getMotorOutputVoltage() + "\tBattery Voltage: " + batteryVoltage);
   }
 
   public void reset() {
     m_wheel.reset();
+  }
+
+  public double getControllerVoltage(){
+    return m_wheel.getControllerVoltage();
+  }
+
+  public double getTalonVoltage() {
+    return m_motor.getMotorOutputVoltage();
   }
 }
