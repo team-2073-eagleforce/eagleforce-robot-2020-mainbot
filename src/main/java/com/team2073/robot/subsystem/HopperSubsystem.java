@@ -59,6 +59,10 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         }
     }
 
+    public void set(HopperState state) {
+        this.state = state;
+    }
+
     private void shootingPosition() {
         if (!hopperSensor.get()) {
             setMotor(state.getRpm());
