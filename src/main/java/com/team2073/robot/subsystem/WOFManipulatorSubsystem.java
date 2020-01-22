@@ -8,20 +8,22 @@ import com.opencsv.exceptions.CsvException;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
+import com.team2073.common.controlloop.MotionProfileControlloop;
+import com.team2073.common.motionprofiling.ProfileConfiguration;
+import com.team2073.common.motionprofiling.TrapezoidalProfileManager;
 import com.team2073.common.periodic.PeriodicRunnable;
+import com.team2073.common.position.converter.PositionConverter;
+import com.team2073.common.util.Timer;
 import com.team2073.robot.ctx.ApplicationContext;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.SQLOutput;
+import java.util.*;
 
 public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private static ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -44,6 +46,34 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private String goalColor;
     private boolean setGoalColor = false;
     private String previousColor = "Grey";
+    private WOFPositionConverter converter = new WOFPositionConverter();
+
+    Timer timer = new Timer();
+    private boolean timerStarted = false;
+//    private Counter Achannel = new Counter(8);
+//    private Counter Bchannel = new Counter(9);
+
+    private Encoder encoder = new Encoder(8, 9);
+
+    private Map<String, String> wofColorsMap = new HashMap<>();
+    private Map<String, WOFColor> colorMap = new HashMap<>();
+
+    private MotionProfileControlloop controlloop = new MotionProfileControlloop(.0044, 0d, .5 / 970, 0d, 0.5d);
+    private ProfileConfiguration configuration = new ProfileConfiguration(970, 970 / .5, .01);
+    private TrapezoidalProfileManager manager = new TrapezoidalProfileManager(controlloop, configuration, this::position);
+
+    public WOFManipulatorSubsystem() {
+        wofColorsMap.put("Blue", "Red");
+        wofColorsMap.put("Green", "Yellow");
+        wofColorsMap.put("Red", "Blue");
+        wofColorsMap.put("Yellow", "Green");
+        colorMap.put("Red", WOFColor.RED);
+        colorMap.put("Green", WOFColor.GREEN);
+        colorMap.put("Blue", WOFColor.BLUE);
+        colorMap.put("Yellow", WOFColor.YELLOW);
+
+        encoder.reset();
+    }
 
     @Override
     public void onPeriodic() {
@@ -134,18 +164,83 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     public void stopOnRotation() {
         if (rotations >= 7) {
-            setMotor(0d);
+            stop(-.1);
+            rotations = 0;
         } else {
             setMotor(0.1);
         }
     }
 
-    public void stopOnColor() {
-        if (readColor().equals("Red")) {
-            setMotor(0d);
-        } else {
-            setMotor(0.2);
+    private String getOffsetColor(String color) {
+        return wofColorsMap.get(color);
+    }
+
+    public double getDegreeMovement(WOFColor current, WOFColor target) {
+        double least = 360;
+        double sign = 1;
+        if(Math.abs(current.getPosition() - target.getPosition()) < least){
+            least = Math.abs(current.getPosition() - target.getPosition());
+            sign = Math.signum(current.getPosition() - target.getPosition());
+        }else if(Math.abs(current.getPosition() - target.getPosition2()) < least){
+            least = Math.abs(current.getPosition() - target.getPosition2());
+            sign = Math.signum(current.getPosition() - target.getPosition2());
+        }else if(Math.abs(current.getPosition2() - target.getPosition()) < least){
+            least = Math.abs(current.getPosition2() - target.getPosition());
+            sign = Math.signum(current.getPosition2() - target.getPosition());
+        }else if(Math.abs(current.getPosition2() - target.getPosition2()) < least){
+            least = Math.abs(current.getPosition2() - target.getPosition2());
+            sign = Math.signum(current.getPosition2() - target.getPosition2());
+        }else{
+            System.out.println("JASON CANT CODE");
         }
+        System.out.println(least);
+        return position() + least * sign;
+//        if (Math.abs(target.position - current.position) < Math.abs(current.position - target.position)) {
+//            return (target.position - current.position) * 45;
+//        } else {
+//            return (current.position - target.position) * 45;
+//        }
+//        if(target.position - current.position > 0) {
+//            return -(position() + target.position - current.position) * 45;
+//        } else {
+//            return (position() + target.position - current.position) * 45;
+//        }
+    }
+    Double setpoint = null;
+    public void stopOnColor() {
+        if(setpoint == null){
+            setpoint = getDegreeMovement(colorMap.get("Red"), colorMap.get(readColor()));
+            System.out.println();
+            System.out.println();
+        }else {
+            manager.setPoint(setpoint);
+            manager.newOutput();
+            if (readColor().equals("Red")) {
+                setMotor(0d);
+                setpoint = null;
+            } else {
+                setMotor(manager.getOutput());
+            }
+        }
+
+        System.out.println("setpoint: " + setpoint);
+    }
+
+    private double position() {
+        return (32.34375 * encoder.get()) / 2048;
+    }
+
+    public void stop(double stoppingSpeed) {
+        if (!timerStarted) {
+            timer.start();
+            timerStarted = true;
+        }
+        if (timer.getElapsedTime() < .05) {
+            setMotor(stoppingSpeed);
+        } else {
+            setMotor(0d);
+        }
+
     }
 
     public void calibrate() {
@@ -219,5 +314,54 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     }
 
 
+    public enum WOFColor {
+        RED(0, 180),
+        GREEN(45, 225),
+        BLUE(90, 270),
+        YELLOW(135, 315);
+
+        private double position;
+        private double position2;
+
+        WOFColor(double position, double position2) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return position;
+        }
+
+        public double getPosition2(){
+            return position2;
+        }
+
+        public WOFColor getColor(int position) {
+            WOFColor color = null;
+            for (WOFColor wofColor : values()) {
+                if (wofColor.position == position) {
+                    color = wofColor;
+                }
+            }
+            return color;
+        }
+    }
+
+    private static class WOFPositionConverter implements PositionConverter {
+
+        @Override
+        public double asPosition(int tics) {
+            return 360 / ((32 / 2.875) * (1 / 2048) * tics);
+        }
+
+        @Override
+        public int asTics(double position) {
+            return (int) ((360 / position) * (2.875 / 32) * 2048);
+        }
+
+        @Override
+        public String positionalUnit() {
+            return Units.DEGREES;
+        }
+    }
 }
 

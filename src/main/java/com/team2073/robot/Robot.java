@@ -84,9 +84,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
+        wofManipulatorSubsystem.onPeriodic();
         //System.out.println(wofManipulatorSubsystem.readColor());
         Joystick controller = ApplicationContext.getInstance().getController();
-        System.out.println(wofManipulatorSubsystem.readColor());
         if(controller.getRawButton(1)){
             wofManipulatorSubsystem.stopOnColor();
         }else{
