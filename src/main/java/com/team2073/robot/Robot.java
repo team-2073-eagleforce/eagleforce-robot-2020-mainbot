@@ -1,20 +1,19 @@
 package com.team2073.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.util.GraphCSVUtil;
 import com.team2073.robot.ctx.ApplicationContext;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-
-import java.io.IOException;
+import edu.wpi.first.wpilibj.command.Scheduler;
 
 public class Robot extends TimedRobot {
     private static final String kDefaultAuto = "Default";
     private static final String kCustomAuto = "My Auto";
     private String m_autoSelected;
-    private WOFManipulatorSubsystem wofManipulatorSubsystem; //= ApplicationContext.getInstance().getWofManipulatorSubsystem();
+    private ApplicationContext appCtx = ApplicationContext.getInstance();
+    private WOFManipulatorSubsystem wofManipulatorSubsystem = appCtx.getWofManipulatorSubsystem();
+    private OperatorInterface oi;
+    GraphCSVUtil WOF = new GraphCSVUtil("WOF","Time", "Position", "Velocity", "Acceleration");
 
     /**
      * This function is run when the robot is first started up and should be
@@ -22,7 +21,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-
+        oi = new OperatorInterface();
     }
 
     /**
@@ -35,6 +34,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
+        Scheduler.getInstance().run();
     }
 
     /**
@@ -73,35 +73,45 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         //wofManipulatorSubsystem.addColorMatch();
-        wofManipulatorSubsystem = ApplicationContext.getInstance().getWofManipulatorSubsystem();
-        wofManipulatorSubsystem.addColorMatch();
+    }
+
+    @Override
+    public void disabledInit() {
+        WOF.writeToFile();
     }
 
     /**
      * This function is called periodically during operator control.
      */
 
+    private double time = 0d;
 
     @Override
     public void teleopPeriodic() {
-        wofManipulatorSubsystem.onPeriodic();
+/*        wofManipulatorSubsystem.onPeriodic();
         //System.out.println(wofManipulatorSubsystem.readColor());
         Joystick controller = ApplicationContext.getInstance().getController();
         if(controller.getRawButton(1)){
-            wofManipulatorSubsystem.stopOnColor();
+            wofManipulatorSubsystem.stopOnColor("Red");
         }else{
             wofManipulatorSubsystem.setMotor(0d);
         }
 
-        if(controller.getRawButtonPressed(2)){
+*//*        if(controller.getRawButtonPressed(2)){
             wofManipulatorSubsystem.rotationCounter();
             wofManipulatorSubsystem.stopOnRotation();
-        }
+        }*//*
 
         if(isDisabled()){
             wofManipulatorSubsystem.setMotor(0d);
-        }
+        }*/
+/*        appCtx.getWofManipulatorSubsystem().setMotor(0.5);
+        System.out.println(appCtx.getWofManipulatorSubsystem().getEncoderRate());*/
 
+        time += .01;
+        WOF.updateMainFile(time, wofManipulatorSubsystem.getWOFPosition(),
+                wofManipulatorSubsystem.getEncoderRate(),
+                wofManipulatorSubsystem.getEncoderRate()/0.01);
     }
 
     @Override

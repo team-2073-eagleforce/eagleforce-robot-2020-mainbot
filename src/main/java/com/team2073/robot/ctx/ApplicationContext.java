@@ -1,10 +1,13 @@
 package com.team2073.robot.ctx;
 
-import com.revrobotics.ColorSensorV3;
+import com.revrobotics.CANSparkMax;
+import com.team2073.robot.subsystem.IntakeSubsystem;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 
+import static com.revrobotics.CANSparkMaxLowLevel.*;
 import static com.team2073.robot.AppConstants.Ports.*;
 
 public class ApplicationContext {
@@ -14,9 +17,19 @@ public class ApplicationContext {
     private Joystick driveWheel;
     private Joystick driveStick;
 
-    private ColorSensorV3 colorSensor;
+    private CANSparkMax intakeMotor;
 
+    private CANSparkMax leftMaster;
+    private CANSparkMax rightMaster;
+    private CANSparkMax leftSlave1;
+    private CANSparkMax leftSlave2;
+    private CANSparkMax rightSlave1;
+    private CANSparkMax rightSlave2;
+    private Solenoid intakeSolenoidLeft;
+    private Solenoid intakeSolenoidRight;
+    private IntakeSubsystem intakeSubsystem;
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
+    private Encoder wofEncoder;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -31,8 +44,9 @@ public class ApplicationContext {
         }
         return controller;
     }
+
     public Joystick getDriveWheel() {
-        if (driveWheel == null){
+        if (driveWheel == null) {
             driveWheel = new Joystick(WHEEL_PORT);
         }
         return driveWheel;
@@ -45,18 +59,87 @@ public class ApplicationContext {
         return driveStick;
     }
 
-    public ColorSensorV3 getColorSensor() {
-        if (colorSensor == null) {
-            colorSensor = new ColorSensorV3(I2C.Port.kOnboard);
+    public CANSparkMax getIntakeMotor() {
+        if (intakeMotor == null) {
+            intakeMotor = new CANSparkMax(INTAKE_MOTOR_PORT, MotorType.kBrushless);
         }
-        return colorSensor;
+        return intakeMotor;
     }
 
-    public WOFManipulatorSubsystem getWofManipulatorSubsystem(){
-        if(wofManipulatorSubsystem == null) {
+    public Solenoid getIntakeSolenoidLeft() {
+        if (intakeSolenoidLeft == null) {
+            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT_PORT);
+        }
+        return intakeSolenoidLeft;
+    }
+
+    public Solenoid getIntakeSolenoidRight() {
+        if (intakeSolenoidRight == null) {
+            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT_PORT);
+        }
+        return intakeSolenoidRight;
+    }
+
+    public IntakeSubsystem getIntakeSubsystem() {
+        if (intakeSubsystem == null) {
+            intakeSubsystem = new IntakeSubsystem();
+        }
+        return intakeSubsystem;
+    }
+
+    public CANSparkMax getLeftMaster() {
+        if(leftMaster == null){
+            leftMaster = new CANSparkMax(DRIVE_LEFT_MASTER, MotorType.kBrushless);
+        }
+        return leftMaster;
+    }
+
+    public CANSparkMax getRightMaster() {
+        if(rightMaster == null){
+            rightMaster = new CANSparkMax(DRIVE_RIGHT_MASTER, MotorType.kBrushless);
+        }
+        return rightMaster;
+    }
+
+    public CANSparkMax getLeftSlave1() {
+        if(leftSlave1 == null){
+            leftSlave1 = new CANSparkMax(DRIVE_LEFT_SLAVE_ONE, MotorType.kBrushless);
+        }
+        return leftSlave1;
+    }
+
+    public CANSparkMax getLeftSlave2() {
+        if(leftSlave2 == null){
+            leftSlave2 = new CANSparkMax(DRIVE_LEFT_SLAVE_TWO, MotorType.kBrushless);
+        }
+        return leftSlave2;
+    }
+
+    public CANSparkMax getRightSlave1() {
+        if(rightSlave1 == null){
+            rightSlave1 = new CANSparkMax(DRIVE_RIGHT_SLAVE_ONE, MotorType.kBrushless);
+        }
+        return rightSlave1;
+    }
+
+    public CANSparkMax getRightSlave2() {
+        if(rightSlave2 == null){
+            rightSlave2 = new CANSparkMax(DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
+        }
+        return rightSlave2;
+    }
+
+    public WOFManipulatorSubsystem getWofManipulatorSubsystem (){
+        if(wofManipulatorSubsystem == null){
             wofManipulatorSubsystem = new WOFManipulatorSubsystem();
         }
         return wofManipulatorSubsystem;
     }
 
+    public Encoder getWofEncoder() {
+        if(wofEncoder == null){
+            wofEncoder = new Encoder(8, 9);
+        }
+        return wofEncoder;
+    }
 }

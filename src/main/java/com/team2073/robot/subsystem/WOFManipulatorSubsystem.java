@@ -14,16 +14,23 @@ import com.team2073.common.motionprofiling.TrapezoidalProfileManager;
 import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.common.util.Timer;
+import com.team2073.robot.command.WOF.WOFColorCalculator;
+import com.team2073.robot.command.WOF.WOFColorCombo;
 import com.team2073.robot.ctx.ApplicationContext;
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.util.Color;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private static ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -47,20 +54,22 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private boolean setGoalColor = false;
     private String previousColor = "Grey";
     private WOFPositionConverter converter = new WOFPositionConverter();
+    private WOFColorCalculator wofColorCalculator = new WOFColorCalculator();
 
     Timer timer = new Timer();
     private boolean timerStarted = false;
 //    private Counter Achannel = new Counter(8);
 //    private Counter Bchannel = new Counter(9);
 
-    private Encoder encoder = new Encoder(8, 9);
+    private Encoder encoder = appCtx.getWofEncoder();
 
     private Map<String, String> wofColorsMap = new HashMap<>();
     private Map<String, WOFColor> colorMap = new HashMap<>();
 
-    private MotionProfileControlloop controlloop = new MotionProfileControlloop(.0044, 0d, .5 / 970, 0d, 0.5d);
-    private ProfileConfiguration configuration = new ProfileConfiguration(970, 970 / .5, .01);
-    private TrapezoidalProfileManager manager = new TrapezoidalProfileManager(controlloop, configuration, this::position);
+    private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.01, 0d, .5d / 1000, 0d, 0.7d);
+    private ProfileConfiguration positionConfiguration = new ProfileConfiguration(800d, 800/.5, .01);
+    private TrapezoidalProfileManager positionManager = new TrapezoidalProfileManager(positionControlLoop, positionConfiguration, this::position);
+
 
     public WOFManipulatorSubsystem() {
         wofColorsMap.put("Blue", "Red");
@@ -71,7 +80,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         colorMap.put("Green", WOFColor.GREEN);
         colorMap.put("Blue", WOFColor.BLUE);
         colorMap.put("Yellow", WOFColor.YELLOW);
-
+        addColorMatch();
         encoder.reset();
     }
 
@@ -150,7 +159,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         talonSRX.set(ControlMode.PercentOutput, output);
     }
 
-    public void rotationCounter() {
+/*    public void rotationCounter() {
         currentColor = readColor();
         if (!setGoalColor) {
             setGoalColor = true;
@@ -205,32 +214,45 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 //        } else {
 //            return (position() + target.position - current.position) * 45;
 //        }
-    }
+    }*/
     Double setpoint = null;
-    public void stopOnColor() {
+    public void positionControl(String goal) {
         if(setpoint == null){
-            setpoint = getDegreeMovement(colorMap.get("Red"), colorMap.get(readColor()));
-            System.out.println();
-            System.out.println();
+            encoder.reset();
+            setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(goal), colorMap.get(readColor())).toString());
         }else {
-            manager.setPoint(setpoint);
-            manager.newOutput();
-            if (readColor().equals("Red")) {
-                setMotor(0d);
-                setpoint = null;
+            positionManager.setPoint(setpoint);
+            positionManager.newOutput();
+            if (readColor().equals(goal)) {
+//                setpoint = null;
+//                setMotor(0d);
+//                encoder.reset();
+//                System.out.println("resetting setpoint");
             } else {
-                setMotor(manager.getOutput());
+                setMotor(positionManager.getOutput());
             }
         }
 
-        System.out.println("setpoint: " + setpoint);
+        System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
+    }
+
+    public void rotationControl(){
+        if(setpoint == null){
+            encoder.reset();
+            setpoint = 360 * 4.0;
+        }else{
+            positionManager.setPoint(setpoint);
+            positionManager.newOutput();
+            setMotor(positionManager.getOutput());
+        }
+        System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
     }
 
     private double position() {
         return (32.34375 * encoder.get()) / 2048;
     }
 
-    public void stop(double stoppingSpeed) {
+/*    public void stop(double stoppingSpeed) {
         if (!timerStarted) {
             timer.start();
             timerStarted = true;
@@ -241,7 +263,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
             setMotor(0d);
         }
 
-    }
+    }*/
 
     public void calibrate() {
         Joystick controller = ApplicationContext.getInstance().getController();
@@ -255,6 +277,10 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
             updateFile("Yellow", getRed().toString(), getGreen().toString(), getBlue().toString());
         }
 
+    }
+
+    public double getEncoderRate(){
+        return (32.34375 * encoder.getRate()) / 2048;
     }
 
     public static void createCSV() {
@@ -313,6 +339,9 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         return ColorMatch.makeColor(getR(color), getG(color), getB(color));
     }
 
+    public double getWOFPosition(){
+        return position();
+    }
 
     public enum WOFColor {
         RED(0, 180),
@@ -344,6 +373,14 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
             }
             return color;
         }
+    }
+
+    public void setMotionSetpoint(Double setpoint){
+        this.setpoint = setpoint;
+    }
+
+    public void resetEncoder() {
+        encoder.reset();
     }
 
     private static class WOFPositionConverter implements PositionConverter {
