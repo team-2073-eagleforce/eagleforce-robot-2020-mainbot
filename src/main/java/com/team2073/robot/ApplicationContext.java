@@ -52,6 +52,8 @@ public class ApplicationContext {
 
     //Subsystem
     private HopperSubsystem hopperSubsystem;
+    private Limelight limelight;
+
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -206,5 +208,12 @@ public class ApplicationContext {
             wofEncoder = new Encoder(8, 9);
         }
         return wofEncoder;
+    }
+
+    public Limelight getLimelight() {
+        if(limelight == null){
+            limelight = new Limelight();
+        }
+        return limelight;
     }
 }
