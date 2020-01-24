@@ -66,7 +66,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private Map<String, String> wofColorsMap = new HashMap<>();
     private Map<String, WOFColor> colorMap = new HashMap<>();
 
-    private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.01, 0d, .5d / 1000, 0d, 0.7d);
+    private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.008, 0d, .4d / 800, 0d, 0.7d);
     private ProfileConfiguration positionConfiguration = new ProfileConfiguration(800d, 800/.5, .01);
     private TrapezoidalProfileManager positionManager = new TrapezoidalProfileManager(positionControlLoop, positionConfiguration, this::position);
 
