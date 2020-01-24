@@ -2,6 +2,7 @@ package com.team2073.robot.subsystem;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.util.MathUtil;
@@ -12,24 +13,24 @@ import edu.wpi.first.wpilibj.Timer;
 public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     private static final double POSITION_OFFSET = 5/360d;
-    private static final double MAX_RPM = 88d;
+    private static final double MAX_RPM = 73d;
     private static final double unjamTime = .1; // how long to backspin for to unjam
 
-    private final RobotContext robotContext = RobotContext.getInstance();
-    private final ApplicationContext appCtx = ApplicationContext.getInstance();
+//    private final RobotContext robotContext = RobotContext.getInstance();
+//    private final ApplicationContext appCtx = ApplicationContext.getInstance();
 
-    private CANSparkMax hopperMotor = appCtx.getHopperMotor();
-    private DigitalInput hopperSensor = appCtx.getHopperSensor();
+    private CANSparkMax hopperMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
+//    private DigitalInput hopperSensor = appCtx.getHopperSensor();
     private CANEncoder hopperEncoder = hopperMotor.getEncoder();
 
     private HopperState state = HopperState.STOP;
     private HopperState lastState = HopperState.STOP;
 
     private Timer jamTimer = new Timer();
-    private boolean shotReady = false;
+    private boolean shotReady = true;
 
     public HopperSubsystem(){
-        hopperMotor.setOpenLoopRampRate(2);
+        hopperMotor.setOpenLoopRampRate(1);
         hopperMotor.setSmartCurrentLimit(30);
         hopperEncoder.setPositionConversionFactor(1/125d);
     }
@@ -37,6 +38,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         checkJam();
+        System.out.println(hopperMotor.getOutputCurrent());
         switch (state) {
             case STOP:
                 setMotor(0);
@@ -59,21 +61,21 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         }
     }
 
-    public void set(HopperState state) {
+    public void setState(HopperState state){
         this.state = state;
     }
 
     private void shootingPosition() {
-        if (!hopperSensor.get()) {
-            setMotor(state.getRpm());
+//        if (!hopperSensor.get()) {
+//            setMotor(state.getRpm());
 
-        } else if (!shotReady){
-            setMotor(0d);
-            shotReady = true;
-            hopperEncoder.setPosition(0d);
-        }else{
-            keepPosition(0);
-        }
+//        } else if (!shotReady){
+//            setMotor(0d);
+//            shotReady = true;
+//            hopperEncoder.setPosition(0d);
+//        }else{
+//            keepPosition(0);
+//        }
     }
 
     /**
@@ -98,15 +100,21 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     }
 
     private boolean hasJammed = false;
+    private int timer;
     private void checkJam() {
-        if (hopperMotor.getOutputCurrent() > 20d) {
+        if (!hasJammed && hopperMotor.getOutputCurrent() > 15d && hopperMotor.getAppliedOutput() > 0) {
             lastState = state;
+            System.out.println(state);
             state = HopperState.JAM;
             hasJammed = true;
+            timer = 0;
             jamTimer.start();
-        }else if(!jamTimer.hasPeriodPassed(unjamTime) && hasJammed){
+        }else if(!(timer>65) && hasJammed){
             state = HopperState.JAM;
-        }else if(hasJammed && jamTimer.hasPeriodPassed(unjamTime)){
+            timer ++;
+        }else if(hasJammed/*jamTimer.hasPeriodPassed(unjamTime)*/) {
+            System.out.println("\n\n\n JAM OVER \n\n\n" + lastState);
+
             jamTimer.stop();
             state = lastState;
             hasJammed = false;
@@ -115,7 +123,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     public enum HopperState {
         STOP(0),
-        IDLE(10d),
+        IDLE(20d),
         PREP_SHOT(10d),
         SHOOT(60d),
         JAM(-20d);
