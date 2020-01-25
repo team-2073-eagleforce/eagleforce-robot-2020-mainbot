@@ -9,7 +9,7 @@ public class HopperShootCommand extends AbstractLoggingCommand {
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getHopperSubsystem().set(HopperSubsystem.HopperState.SHOOT);
+        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.SHOOT);
     }
 
     @Override

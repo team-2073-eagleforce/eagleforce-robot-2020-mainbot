@@ -10,7 +10,7 @@ public class HopperIdleCommand extends AbstractLoggingCommand {
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getHopperSubsystem().set(HopperSubsystem.HopperState.IDLE);
+        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.IDLE);
     }
 
     @Override

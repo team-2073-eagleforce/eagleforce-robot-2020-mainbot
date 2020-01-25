@@ -10,7 +10,7 @@ public class HopperStopCommand extends AbstractLoggingCommand {
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getHopperSubsystem().set(HopperSubsystem.HopperState.STOP);
+        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.STOP);
     }
 
     @Override

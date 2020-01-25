@@ -9,7 +9,7 @@ public class HopperJammedCommand extends AbstractLoggingCommand {
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getHopperSubsystem().set(HopperSubsystem.HopperState.JAM);
+        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.JAM);
     }
 
     @Override
