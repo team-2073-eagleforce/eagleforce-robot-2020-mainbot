@@ -20,22 +20,19 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private static final double KP = 0.01;
     private static final double acceptableError = 0.05;
+
     /*
     Use limelight to turn to center the image
     Zoom in to stabilize image
     Calculate distance using limelight and lidar
     Compensate for elevator height
-    - Calc RPM goal for Shooter based on distance
+        - Calc RPM goal for Shooter based on distance
     Zero relative to robot
     Always face shot wall by using gyro
     Determine when to move hood
     Prevent wires from doing the wrap
 
-    To-Do:
-    Expand MathUtil for unit conversions. Or use the one tool from common I forgot about.
-
      */
-
 
     @Override
     public void onPeriodicAsync() {
@@ -51,7 +48,6 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     }
 
     public void centerToTarget() {
-
         double turretAdjust = 0;
         double tx = limelight.getTx();
 
@@ -62,7 +58,6 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
 
         setMotor(turretAdjust);
-
     }
 
     public double calcRPMGoal() {
