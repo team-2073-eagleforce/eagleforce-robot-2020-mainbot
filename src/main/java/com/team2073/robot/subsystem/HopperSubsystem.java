@@ -30,7 +30,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private boolean shotReady = true;
 
     public HopperSubsystem(){
-        hopperMotor.setOpenLoopRampRate(1);
+        hopperMotor.setOpenLoopRampRate(0.5);
         hopperMotor.setSmartCurrentLimit(30);
         hopperEncoder.setPositionConversionFactor(1/125d);
     }
@@ -126,7 +126,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         IDLE(20d),
         PREP_SHOT(10d),
         SHOOT(60d),
-        JAM(-20d);
+        JAM(0d);
 
         private double rpm;
 
