@@ -30,11 +30,11 @@ public class Limelight {
     }
 
     public double getHighDistance(){
-        return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) - Math.tan(LIMELIGHT_LENS_ANGLE  + Math.toRadians(getTy()));
+        return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(LIMELIGHT_LENS_ANGLE  + Math.toRadians(getTy())));
     }
 
     public double getLowDistance(){
-        return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) - Math.tan(LIMELIGHT_LENS_ANGLE  + Math.toRadians(getTy()));
+        return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(LIMELIGHT_LENS_ANGLE  + Math.toRadians(getTy())));
     }
 
 //    public void changeConfig(Target target) {
