@@ -1,11 +1,10 @@
 package com.team2073.robot;
 
-import com.team2073.robot.subsystem.HopperSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.Encoder;
+import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -15,8 +14,6 @@ import static com.team2073.robot.AppConstants.Ports.*;
 public class ApplicationContext {
 
     private static ApplicationContext instance;
-
-    //Controller
     private Joystick controller;
     private Joystick driveWheel;
     private Joystick driveStick;
@@ -36,6 +33,7 @@ public class ApplicationContext {
 
     // Neo550
     private CANSparkMax hopperMotor;
+    private DriveSubsystem driveSubsystem;
 
     // Sensors
     private DigitalInput hopperSensor;
@@ -162,6 +160,14 @@ public class ApplicationContext {
         }
         return rightSlave2;
     }
+
+    public DriveSubsystem getDriveSubsystem() {
+        if (driveSubsystem == null) {
+            driveSubsystem = new DriveSubsystem();
+        }
+        return driveSubsystem;
+    }
+
 
     public WOFManipulatorSubsystem getWofManipulatorSubsystem (){
         if(wofManipulatorSubsystem == null){
