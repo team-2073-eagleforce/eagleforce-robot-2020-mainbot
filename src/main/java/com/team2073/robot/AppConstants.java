@@ -18,12 +18,12 @@ public abstract class AppConstants {
         public static final int HOPPER_SENSOR_DIO_PORT = 0;
 
         //Drive
-        public static final int DRIVE_LEFT_MASTER = 1;
-        public static final int DRIVE_LEFT_SLAVE_ONE = 2;
-        public static final int DRIVE_LEFT_SLAVE_TWO = 3;
-        public static final int DRIVE_RIGHT_MASTER = 4;
-        public static final int DRIVE_RIGHT_SLAVE_ONE = 5;
-        public static final int DRIVE_RIGHT_SLAVE_TWO = 6;
+        public static final int DRIVE_LEFT_MASTER = 40;
+        public static final int DRIVE_LEFT_SLAVE_ONE = 1;
+        public static final int DRIVE_LEFT_SLAVE_TWO = 2;
+        public static final int DRIVE_RIGHT_MASTER = 15;
+        public static final int DRIVE_RIGHT_SLAVE_ONE = 14;
+        public static final int DRIVE_RIGHT_SLAVE_TWO = 13;
 
         //WOF
         public static final int WOF_ENCODER_PORT = 0;
