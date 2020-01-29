@@ -1,6 +1,5 @@
 package com.team2073.robot;
 
-import com.team2073.common.util.GraphCSVUtil;
 import com.team2073.robot.ctx.ApplicationContext;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,7 +12,7 @@ public class Robot extends TimedRobot {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private WOFManipulatorSubsystem wofManipulatorSubsystem = appCtx.getWofManipulatorSubsystem();
     private OperatorInterface oi;
-    GraphCSVUtil WOF = new GraphCSVUtil("WOF","Time", "Position", "Velocity", "Acceleration");
+    //GraphCSVUtil WOF = new GraphCSVUtil("WOF","Time", "Position", "Velocity", "Acceleration");
 
     /**
      * This function is run when the robot is first started up and should be
@@ -77,7 +76,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        WOF.writeToFile();
+        //WOF.writeToFile();
     }
 
     /**
@@ -108,10 +107,11 @@ public class Robot extends TimedRobot {
 /*        appCtx.getWofManipulatorSubsystem().setMotor(0.5);
         System.out.println(appCtx.getWofManipulatorSubsystem().getEncoderRate());*/
 
-        time += .01;
-        WOF.updateMainFile(time, wofManipulatorSubsystem.getWOFPosition(),
-                wofManipulatorSubsystem.getEncoderRate(),
-                wofManipulatorSubsystem.getEncoderRate()/0.01);
+        //time += .01;
+        //WOF.updateMainFile(time, wofManipulatorSubsystem.getWOFPosition(),
+                //wofManipulatorSubsystem.getEncoderRate(),
+                //wofManipulatorSubsystem.getEncoderRate()/0.01);
+        wofManipulatorSubsystem.check();
     }
 
     @Override

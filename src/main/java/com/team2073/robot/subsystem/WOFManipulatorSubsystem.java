@@ -39,20 +39,15 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private final ColorMatch m_colorMatcher = new ColorMatch();
     TalonSRX talonSRX = new TalonSRX(1);
     String gameData = DriverStation.getInstance().getGameSpecificMessage();
-    // private Color kGreenTarget = getTarget("Green");
-    // private Color kRedTarget = getTarget("Red");
-    // private Color kYellowTarget = getTarget("Yellow");
+    private Color rioGreenTarget = getTarget("Green");
+    private Color rioRedTarget = getTarget("Red");
+    private Color rioYellowTarget = getTarget("Yellow");
     private final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
     private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
     private final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
     private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-    // private Color kBlueTarget = getTarget("Blue");
-    private int rotations = 0;
+    private Color rioBlueTarget = getTarget("Blue");
     private static File file = new File(System.getProperty("user.home"), '/' + "RGB.csv");
-    private String currentColor;
-    private String goalColor;
-    private boolean setGoalColor = false;
-    private String previousColor = "Grey";
     private WOFPositionConverter converter = new WOFPositionConverter();
     private WOFColorCalculator wofColorCalculator = new WOFColorCalculator();
 
@@ -88,21 +83,6 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     public void onPeriodic() {
     }
 
-/*    private void calibrateColors() {
-        if (appCtx.getController().getRawButton(1)) {
-            setColor(kRedTarget, "Red");
-        }
-        if (appCtx.getController().getRawButton(2)) {
-            setColor(kBlueTarget, "Blue");
-        }
-        if (appCtx.getController().getRawButton(3)) {
-            setColor(kGreenTarget, "Green");
-        }
-        if (appCtx.getController().getRawButton(4)) {
-            setColor(kYellowTarget, "Yellow");
-        }
-    }*/
-
     public void addColorMatch() {
         m_colorMatcher.addColorMatch(kBlueTarget);
         m_colorMatcher.addColorMatch(kGreenTarget);
@@ -129,6 +109,9 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         return colorString;
     }
 
+    public void check(){
+        System.out.println(rioBlueTarget.red + " " + rioBlueTarget.green + " " + rioBlueTarget.blue);
+    }
     private Double getRed() {
         return (m_colorSensor.getRawColor().red) / 255d;
     }
@@ -148,11 +131,6 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         colorArray.add(color.green);
 
         return colorArray;
-    }
-
-    private void setColor(Color color, String colorName) {
-        color = ColorMatch.makeColor(getRed() / 255d, getGreen() / 255d, getBlue() / 255d);
-        System.out.println(colorName + " set: " + getColors(color).toString());
     }
 
     public void setMotor(double output) {
@@ -324,15 +302,27 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     }
 
     private double getR(String color) {
-        return Double.parseDouble(getColorValues(color)[1]);
+        try{
+            return Double.parseDouble(getColorValues(color)[1]);
+        }catch(Exception e){
+            return defaultValues(color)[1];
+        }
     }
 
     private double getG(String color) {
-        return Double.parseDouble(getColorValues(color)[2]);
+        try{
+            return Double.parseDouble(getColorValues(color)[2]);
+        }catch(Exception e){
+            return defaultValues(color)[2];
+        }
     }
 
     private double getB(String color) {
-        return Double.parseDouble(getColorValues(color)[3]);
+        try{
+            return Double.parseDouble(getColorValues(color)[3]);
+        }catch(Exception e){
+            return defaultValues(color)[3];
+        }
     }
 
     private Color getTarget(String color) {
@@ -381,6 +371,21 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     public void resetEncoder() {
         encoder.reset();
+    }
+
+    private double[] defaultValues(String color){
+        switch(color){
+            case "Red":
+                return new double[]{0.561, 0.232, 0.114};
+            case "Blue":
+                return new double[]{0.143, 0.427, 0.429};
+            case "Green":
+                return new double[]{0.197, 0.561, 0.240};
+            case "Yellow":
+                return new double[]{0.361, 0.524, 0.113};
+            default:
+                return new double[]{0, 0, 0};
+        }
     }
 
     private static class WOFPositionConverter implements PositionConverter {
