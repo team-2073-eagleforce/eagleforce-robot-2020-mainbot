@@ -9,6 +9,7 @@ import com.team2073.common.subsys.ExampleAppConstants;
 import com.team2073.common.util.MathUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
 
@@ -17,7 +18,10 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private TalonFX turretMotor = appCtx.getTurretMotor();
     private Limelight limelight = appCtx.getLimelight();
+    private AnalogPotentiometer potentiometer = appCtx.getPotentiometer(); // WARNING: Port path on this is randomly chosen!
 
+    private static final double POT_MAX_VALUE = .51; // This value needs to be tuned
+    private static final double POT_MIN_VALUE = .57; // This value needs to be tuned
     private static final double KP = 0.01;
     private static final double acceptableError = 0.05;
 
@@ -43,6 +47,10 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     }
 
+    private void set(HoodState state) {
+
+    }
+
     private void setMotor(double output) {
         turretMotor.set(ControlMode.PercentOutput, output);
     }
@@ -64,9 +72,17 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         return 0;
     }
 
-    public boolean actuateHood() {
-        return false;
-    }
+    public enum HoodState {
+        RETRACTED(0.0),
+        EXTENDED(180.0);
 
+        private Double percent;
+        HoodState(Double degree) {
+            this.percent = degree;
+        }
+        public Double getPercent(){
+            return percent;
+        }
+    }
 
 }

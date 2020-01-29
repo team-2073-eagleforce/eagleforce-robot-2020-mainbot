@@ -6,11 +6,13 @@ import com.team2073.robot.subsystem.TurretSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import static com.revrobotics.CANSparkMaxLowLevel.*;
@@ -40,6 +42,8 @@ public class ApplicationContext {
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
+    private AnalogPotentiometer potentiometer; // WARNING: Change port
+    private Servo servo; // WARNING: Change channel
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
 
     // Neo550
@@ -210,10 +214,24 @@ public class ApplicationContext {
         return wofEncoder;
     }
 
+    public AnalogPotentiometer getPotentiometer() {
+        if(potentiometer == null){
+            potentiometer = new AnalogPotentiometer(4);
+        }
+        return potentiometer;
+    }
+
     public Limelight getLimelight() {
         if(limelight == null){
             limelight = new Limelight();
         }
         return limelight;
+    }
+
+    public Servo getServo() {
+        if(servo == null){
+            servo = new Servo(0);
+        }
+        return servo;
     }
 }
