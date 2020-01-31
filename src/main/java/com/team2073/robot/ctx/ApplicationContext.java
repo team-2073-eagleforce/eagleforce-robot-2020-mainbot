@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import static com.team2073.robot.AppConstants.Ports.*;
@@ -19,6 +20,7 @@ public class ApplicationContext {
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
+    private PowerDistributionPanel intakeMotorAmps;
 
 
     public static ApplicationContext getInstance() {
@@ -32,6 +34,7 @@ public class ApplicationContext {
         if (controller == null) {
             controller = new Joystick(CONTROLLER_PORT);
         }
+
         return controller;
     }
 
@@ -75,5 +78,11 @@ public class ApplicationContext {
             intakeSubsystem = new IntakeSubsystem();
         }
         return intakeSubsystem;
+    }
+    public PowerDistributionPanel getIntakeMotorAmps() {
+        if (intakeMotorAmps == null) {
+            intakeMotorAmps = new PowerDistributionPanel();
+        }
+        return intakeMotorAmps;
     }
 }

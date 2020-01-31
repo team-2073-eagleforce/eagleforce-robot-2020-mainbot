@@ -1,14 +1,15 @@
 package com.team2073.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends TimedRobot {
 
-    private TalonSRX motorOne = new TalonSRX(1);
-    private TalonSRX motorTwo = new TalonSRX(4);
+    private Joystick controller = new Joystick(0);
+    private Servo servoOne = new Servo(9);
+    //  private Servo servoTwo = new Servo(6);
 
     /**
      * This function is run when the robot is first started up and should be
@@ -16,8 +17,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        motorOne.configOpenloopRamp(1);
-        motorTwo.configOpenloopRamp(1);
+
         SmartDashboard.putNumber("Voltage", 7);
     }
 
@@ -31,13 +31,10 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        if(isEnabled()){
-            motorOne.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Voltage", 7)/12d);
-            motorTwo.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Voltage", 7)/12d);
-            System.out.println("Voltage: " + motorOne.getMotorOutputVoltage() + "\t Amperage: " + motorOne.getStatorCurrent());
+        if (isEnabled()) {
+
         } else {
-            motorOne.set(ControlMode.PercentOutput, 0);
-            motorTwo.set(ControlMode.PercentOutput, 0);
+
         }
 
     }
@@ -47,9 +44,32 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+         System.out.println(servoOne.getAngle());
+        if (controller.getRawButton(1)) {
+            servoOne.setAngle(0);
+        } else if (controller.getRawButton(2)) {
+            servoOne.setAngle(270);
+        }
+//        servoOne.setAngle(0d);
+//        servoOne.setAngle(270d);
+//          servoOne.set(0d);
+
+      } //else if (servoOne.getAngle() == 0) {
+//            servoOne.set(0.0);
+//        }
+
+//        while (servoTwo.getAngle() != 50d) {
+//            if (servoTwo.getAngle() > 50d){
+//                servoTwo.set(-0.1);
+//            }
+//            else {
+//                servoTwo.set(0.1);
+//            }
+//        }
 
 
-    }
+
+
 
     /**
      * This function is called periodically during test mode.

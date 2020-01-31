@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ctx.ApplicationContext;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class IntakeSubsystem implements AsyncPeriodicRunnable {
@@ -13,11 +14,13 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
 
     private boolean pistonsExtended = false;
     private boolean rollersActivated = false;
+    private double ampLimit = 10;
 
     private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
     private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
     private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
     private IntakeState state = IntakeState.DISABLED;
+    private PowerDistributionPanel getMotorAmps = appCtx.getIntakeMotorAmps();
 
     public IntakeSubsystem(){
         intakeMotor.setOpenLoopRampRate(1);
@@ -53,5 +56,12 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
             return percent;
         }
     }
+    public double amperageWarning() {
+    if ((getMotorAmps.getCurrent(3)) > ampLimit) {
+        System.out.println("Intake motor is drawing excessive amount of amperage");
+    }
+    return ampLimit;
+    }
 }
+
 
