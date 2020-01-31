@@ -44,31 +44,21 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-         System.out.println(servoOne.getAngle());
-        if (controller.getRawButton(1)) {
+        System.out.println(servoOne.getAngle());
+        if (controller.getRawButtonPressed(1)) {
             servoOne.setAngle(0);
-        } else if (controller.getRawButton(2)) {
+        } else if (controller.getRawButtonPressed(2)) {
             servoOne.setAngle(270);
+        } else if (controller.getRawButtonPressed(3)) {
+            servoOne.setAngle(servoOne.getAngle() + 5);
+        } else if (controller.getRawButtonPressed(4)) {
+            servoOne.setAngle(servoOne.getAngle() - 5);
+        } else if (controller.getRawButtonPressed(5)) {
+            servoOne.setAngle(servoOne.getAngle() + 1);
+        } else if (controller.getRawButtonPressed(6)) {
+            servoOne.setAngle(servoOne.getAngle() - 1);
         }
-//        servoOne.setAngle(0d);
-//        servoOne.setAngle(270d);
-//          servoOne.set(0d);
-
-      } //else if (servoOne.getAngle() == 0) {
-//            servoOne.set(0.0);
-//        }
-
-//        while (servoTwo.getAngle() != 50d) {
-//            if (servoTwo.getAngle() > 50d){
-//                servoTwo.set(-0.1);
-//            }
-//            else {
-//                servoTwo.set(0.1);
-//            }
-//        }
-
-
-
+    }
 
 
     /**
