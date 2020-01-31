@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
     private Counter BChannel = new Counter(9);
     Flywheel shooter = new Flywheel();
 
-    private TalonFX tf = new TalonFX(3);
+//    private TalonFX tf = new TalonFX(3);
     private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)", "output (voltage)", "Talon Output (V)", "Battery Voltage (V)");
 
     private int lastCount;
@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
+
         try {
             csv.initFile();
         } catch (IOException e) {

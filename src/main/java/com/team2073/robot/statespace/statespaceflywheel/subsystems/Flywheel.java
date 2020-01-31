@@ -15,13 +15,16 @@ import edu.wpi.first.wpilibj.*;
 public class Flywheel {
   private final TalonSRX m_motor = new TalonSRX(1);
   private final TalonSRX m_motor2 = new TalonSRX(4);
+  private final TalonSRX m_motor3 = new TalonSRX(5); // WARNING: Check if this is correct
 //  private final Encoder m_encoder = new Encoder(1, 2);
 
   private final FlywheelController m_wheel = new FlywheelController();
 //  private final Notifier m_thread = new Notifier(this::iterate);
 
   public Flywheel() {
-
+    m_motor.configOpenloopRamp(2);
+    m_motor2.configOpenloopRamp(2);
+    m_motor3.configOpenloopRamp(2);
   }
 
   public void enable() {
@@ -50,6 +53,7 @@ public class Flywheel {
     double batteryVoltage = RobotController.getBatteryVoltage();
     m_motor.set(ControlMode.PercentOutput, m_wheel.getControllerVoltage() / batteryVoltage);
     m_motor2.set(ControlMode.PercentOutput, -m_wheel.getControllerVoltage() / batteryVoltage);
+    m_motor3.set(ControlMode.PercentOutput, -m_wheel.getControllerVoltage() / batteryVoltage);
     System.out.println("Output: " + m_motor.getMotorOutputVoltage() + "\tBattery Voltage: " + batteryVoltage);
   }
 

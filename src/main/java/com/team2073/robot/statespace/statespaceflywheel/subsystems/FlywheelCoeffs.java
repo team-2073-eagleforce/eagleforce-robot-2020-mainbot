@@ -1,6 +1,5 @@
 package com.team2073.robot.statespace.statespaceflywheel.subsystems;
 
-
 import com.team2073.robot.statespace.controller.StateSpaceControllerCoeffs;
 import com.team2073.robot.statespace.controller.StateSpaceLoop;
 import com.team2073.robot.statespace.controller.StateSpaceObserverCoeffs;
