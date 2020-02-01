@@ -1,6 +1,8 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team2073.common.controlloop.MotionProfileControlloop;
 import com.team2073.common.ctremotionprofile.MotionProfileGenerator;
 import com.team2073.common.ctremotionprofile.MotionProfileHelper;
@@ -25,7 +27,7 @@ public class Robot extends TimedRobot {
     Flywheel shooter = new Flywheel();
 
 //    private TalonFX tf = new TalonFX(3);
-    private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)", "output (voltage)", "Talon Output (V)", "Battery Voltage (V)");
+    private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)", "output (voltage)", "Talon Output (V)", "Battery Voltage (V)", "Current Draw (A)");
 
     private int lastCount;
     private double lastTime;
@@ -45,17 +47,19 @@ public class Robot extends TimedRobot {
             e.printStackTrace();
         }
 
+
     }
 
     double speed = 0;
     boolean endFile = false;
     double iteration = 0;
-    double reference = 7000.0 * 2 * Math.PI / 60;
+    double reference = 6000.0 * 2 * Math.PI / 60;
 
     private double maxAcceleration = (6900 * 2 * Math.PI / 60) / 1.03;
     private double maxJerk = maxAcceleration / 0.5;
     private double goalVelocity = reference; // in rad/s - 2000 RPM
     private double startingVelocity = 0;
+
 
     ProfileConfiguration pc = new ProfileConfiguration(goalVelocity, maxAcceleration, maxJerk,0.01);
     SCurveShooterProfile shooterProfile = new SCurveShooterProfile(startingVelocity, goalVelocity, pc);
@@ -78,12 +82,14 @@ public class Robot extends TimedRobot {
 
 //        tf.getSensorCollection()
         if(isEnabled()){
+
             endFile = false;
             interval = current - lastInterval;
             lastInterval = current;
             ProfileTrajectoryPoint newPoint = shooterProfile.nextPoint(interval);
 
-            shooter.setReference(newPoint.getVelocity());
+//            shooter.setReference(newPoint.getVelocity());
+            shooter.setReference(reference);
             shooter.enable();
 
             if(counter - lastCount >= 10) {
@@ -94,7 +100,8 @@ public class Robot extends TimedRobot {
             }
             System.out.println("Speed: " + speed * 60 / (2*Math.PI));
             iteration ++;
-            csv.updateMainFile(iteration, speed * 60 / (2 * Math.PI), shooter.getControllerVoltage(), shooter.getTalonVoltage(), RobotController.getBatteryVoltage());
+            csv.updateMainFile(iteration, speed * 60 / (2 * Math.PI), shooter.getControllerVoltage(),
+                    shooter.getTalonVoltage(), RobotController.getBatteryVoltage(), shooter.getAmerageDraw());
             shooter.iterate(speed);
         } else {
             speed = 0;
