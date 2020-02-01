@@ -10,12 +10,14 @@ package com.team2073.robot.statespace.statespaceflywheel.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.*;
 
 public class Flywheel {
-  private final TalonSRX m_motor = new TalonSRX(1);
-  private final TalonSRX m_motor2 = new TalonSRX(4);
-  private final TalonSRX m_motor3 = new TalonSRX(5); // WARNING: Check if this is correct
+  private ApplicationContext appCtx = ApplicationContext.getInstance();
+  private TalonSRX m_motor = appCtx.getShooterMotorOne();
+  private TalonSRX m_motor2 = appCtx.getShooterMotorTwo();
+  private TalonSRX m_motor3 = appCtx.getShooterMotorThree();
 //  private final Encoder m_encoder = new Encoder(1, 2);
 
   private final FlywheelController m_wheel = new FlywheelController();

@@ -1,5 +1,6 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
@@ -64,6 +65,9 @@ public class ApplicationContext {
     private HopperSubsystem hopperSubsystem;
     private Limelight limelight;
 
+    private TalonSRX shooterMotorOne;
+    private TalonSRX shooterMotorTwo;
+    private TalonSRX shooterMotorThree;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -214,6 +218,28 @@ public class ApplicationContext {
         }
         return wofEncoder;
     }
+
+    public TalonSRX getShooterMotorOne() {
+        if(shooterMotorOne == null){
+            shooterMotorOne = new TalonSRX(SHOOTER_ONE);
+        }
+        return shooterMotorOne;
+    }
+
+    public TalonSRX getShooterMotorTwo() {
+        if(shooterMotorTwo == null){
+            shooterMotorTwo = new TalonSRX(SHOOTER_TWO);
+        }
+        return shooterMotorOne;
+    }
+
+    public TalonSRX getShooterMotorThree() {
+        if(shooterMotorThree == null){
+            shooterMotorThree = new TalonSRX(SHOOTER_THREE);
+        }
+        return shooterMotorOne;
+    }
+
 
     public AnalogPotentiometer getPotentiometer() {
         if(potentiometer == null){
