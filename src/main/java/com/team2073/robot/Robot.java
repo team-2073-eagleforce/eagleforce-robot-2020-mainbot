@@ -22,8 +22,6 @@ import java.io.IOException;
 
 public class Robot extends TimedRobot {
 
-    private Counter AChannel = new Counter(8);
-    private Counter BChannel = new Counter(9);
     Flywheel shooter = new Flywheel();
 
 //    private TalonFX tf = new TalonFX(3);
@@ -74,7 +72,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
 
         double current = Timer.getFPGATimestamp();
-        int counter = AChannel.get();
+        int counter = ApplicationContext.getInstance().getAChannel().get();
         double dt = 0;
         double interval = 0;
 

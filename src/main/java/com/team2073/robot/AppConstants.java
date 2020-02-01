@@ -32,6 +32,8 @@ public abstract class AppConstants {
         public static final int SHOOTER_ONE = 1;
         public static final int SHOOTER_TWO = 4;
         public static final int SHOOTER_THREE = 9;
+        public static final int SHOOTER_COUNTER_A = 8;
+        public static final int SHOOTER_COUNTER_B = 9;
 
         //turret
         public static final int TURRET_MOTOR_PORT = 1;

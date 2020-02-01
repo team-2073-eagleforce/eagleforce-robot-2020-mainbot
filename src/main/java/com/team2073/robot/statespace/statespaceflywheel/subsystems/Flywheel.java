@@ -70,4 +70,9 @@ public class Flywheel {
   public double getTalonVoltage() {
     return m_motor.getMotorOutputVoltage();
   }
+
+  //change this
+  public boolean atShootingRPM(double angularVelocity) {
+    return false;
+  }
 }

@@ -16,6 +16,7 @@ import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -68,6 +69,8 @@ public class ApplicationContext {
     private TalonSRX shooterMotorOne;
     private TalonSRX shooterMotorTwo;
     private TalonSRX shooterMotorThree;
+    private Counter AChannel;
+    private Counter BChannel;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -238,6 +241,20 @@ public class ApplicationContext {
             shooterMotorThree = new TalonSRX(SHOOTER_THREE);
         }
         return shooterMotorOne;
+    }
+
+    public Counter getAChannel() {
+        if(AChannel == null){
+            AChannel = new Counter(SHOOTER_COUNTER_A);
+        }
+        return AChannel;
+    }
+
+    public Counter getBChannel() {
+        if(BChannel == null){
+            BChannel = new Counter(SHOOTER_COUNTER_B);
+        }
+        return BChannel;
     }
 
 
