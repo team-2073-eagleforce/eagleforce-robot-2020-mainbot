@@ -3,7 +3,7 @@ package com.team2073.robot.subsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
-import com.team2073.robot.ctx.ApplicationContext;
+import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class IntakeSubsystem implements AsyncPeriodicRunnable {

@@ -11,7 +11,7 @@ public abstract class AppConstants {
         //Intake
         public static final int INTAKE_MOTOR_PORT = 0;
         public static final int INTAKE_SOLENOID_LEFT_PORT = 0;
-        public static final int INTAKE_SOLENOID_RIGHT_PORT = 0;
+        public static final int INTAKE_SOLENOID_RIGHT_PORT = 1;
 
         //Hopper
         public static final int HOPPER_MOTOR_ID = 0;
