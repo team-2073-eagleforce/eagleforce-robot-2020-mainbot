@@ -28,6 +28,7 @@ public class Robot extends TimedRobot {
 
 //    private TalonFX tf = new TalonFX(3);
     private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)", "output (voltage)", "Talon Output (V)", "Battery Voltage (V)", "Current Draw (A)");
+//    private Servo servo = new Servo
 
     private int lastCount;
     private double lastTime;
@@ -53,7 +54,7 @@ public class Robot extends TimedRobot {
     double speed = 0;
     boolean endFile = false;
     double iteration = 0;
-    double reference = 6000.0 * 2 * Math.PI / 60;
+    double reference = 9000 * 2 * Math.PI / 60;
 
     private double maxAcceleration = (6900 * 2 * Math.PI / 60) / 1.03;
     private double maxJerk = maxAcceleration / 0.5;
