@@ -4,6 +4,22 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import static com.team2073.common.util.ConversionUtil.*;
 
 public final class Constants {
+    public static final class CheesyDriveConstants {
+        public static final double kThrottleDeadband = 0.05;
+        public static final double kWheelDeadband = 0.05;
+
+        // These factor determine how fast the wheel traverses the "non linear" sine curve.
+        public static final double kHighWheelNonLinearity = 0.65;
+
+        public static final double kHighNegInertiaScalar = 4.0;
+
+        public static final double kHighSensitivity = 0.85;
+
+        public static final double kQuickStopDeadband = 0.5;
+        public static final double kQuickStopWeight = 0.1;
+        public static final double kQuickStopScalar = 5.0;
+
+    }
     public static final class DriveConstants {
 
         public static final double trackWidthInches = 24;

@@ -2,16 +2,24 @@ package com.team2073.robot.subsystem.drive;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.team2073.common.periodic.AsyncPeriodicRunnable;
+import com.team2073.common.periodic.PeriodicRunnable;
 import com.team2073.robot.ApplicationContext;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.*;
 
 
-public class DriveSubsystem {
+public class DriveSubsystem implements AsyncPeriodicRunnable {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private CANSparkMax leftMaster = appCtx.getLeftMaster();
     private CANSparkMax rightMaster = appCtx.getRightMaster();
@@ -28,13 +36,16 @@ public class DriveSubsystem {
 
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
+    private CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
+    private Joystick joystick = appCtx.getDriveStick();
+    private Joystick wheel = appCtx.getDriveWheel();
 
     /**
      * Creates a new DriveSubsystem.
      */
     public DriveSubsystem() {
         // Sets the distance per pulse for the encoders
-
+        autoRegisterWithPeriodicRunner(10);
 //        TODO:  MATH TO MAKE SURE UNITS ARE PROPER
         leftEncoder.setPositionConversionFactor(distancePerRevMeters);
         rightEncoder.setPositionConversionFactor(distancePerRevMeters);
@@ -46,9 +57,10 @@ public class DriveSubsystem {
 
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
     }
 
-    public void periodic() {
+    public void updateOdometry() {
         // Update the odometry in the periodic block
 //        TODO: Make sure positions are in meters
         m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
@@ -146,6 +158,26 @@ public class DriveSubsystem {
         return Math.IEEEremainder(gyro.getFusedHeading(), 360) * (kGyroReversed ? -1.0 : 1.0);
     }
 
+    private void teleopDrive() {
+        DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(1));
+
+        leftMaster.set(driveSignal.getLeft());
+        rightMaster.set(driveSignal.getRight());
+    }
+
+    private double adjustWheel(double rawJoystick) {
+        if (rawJoystick < .02 && rawJoystick > -.02) {
+            rawJoystick = 0;
+        }
+        if (rawJoystick < 0) {
+            return Math.max(-1d, (rawJoystick * 110d) / 90d);
+        } else {
+            return Math.min(1d, (rawJoystick * 110d) / 90d);
+        }
+
+    }
+
+
     private double lastHeading;
     private double lastTime;
     /**
@@ -160,5 +192,34 @@ public class DriveSubsystem {
         lastHeading = heading;
         lastTime = time;
         return rate;
+    }
+
+//    private ArrayList<Double> avgTime = new ArrayList<>();
+//    private double avg(ArrayList<Double> vals){
+//        double total = 0;
+//        for (int i = vals.size() - 10; i < vals.size(); i++) {
+//            total += vals.get(i);
+//        }
+//        return total/10;
+//    }
+//    int count = 0;
+
+    @Override
+    public void onPeriodicAsync() {
+        updateOdometry();
+
+//        double time = Timer.getFPGATimestamp();
+//        avgTime.add(time-lastTime);
+//        count++;
+//        if(count % 10 == 0) {
+//            System.out.println(avg(avgTime));
+//            count = 0;
+//        }
+//        lastTime = time;
+
+
+        if(RobotState.isOperatorControl()){
+            teleopDrive();
+        }
     }
 }
