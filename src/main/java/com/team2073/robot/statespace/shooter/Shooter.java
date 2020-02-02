@@ -2,10 +2,6 @@ package com.team2073.robot.statespace.shooter;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.robot.Robot;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.RobotController;
 
 public class Shooter {
 
