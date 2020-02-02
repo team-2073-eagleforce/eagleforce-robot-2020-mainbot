@@ -1,6 +1,5 @@
 package com.team2073.robot.command.drive;
 
-import com.team2073.robot.Robot;
 import com.team2073.robot.subsystem.drive.Constants.AutoConstants;
 import com.team2073.robot.subsystem.drive.Constants.DriveConstants;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
@@ -19,12 +18,6 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 
 import java.util.List;
 
-/**
- * This class is where the bulk of the robot should be declared.  Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
- * (including subsystems, commands, and button mappings) should be declared here.
- */
 public class AutonStarter {
     // The robot's subsystems
     private final DriveSubsystem robotDrive = new DriveSubsystem();
