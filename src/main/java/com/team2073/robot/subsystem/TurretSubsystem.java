@@ -1,8 +1,10 @@
 package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.subsys.ExampleAppConstants;
@@ -17,15 +19,21 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private RobotContext robotContext = RobotContext.getInstance();
     private ApplicationContext appCtx = ApplicationContext.getInstance();
 
-    private TalonFX turretMotor = appCtx.getTurretMotor();
+    private CANSparkMax turretMotor = appCtx.getTurretMotor();
     private Limelight limelight = appCtx.getLimelight();
     private AnalogPotentiometer potentiometer = appCtx.getPotentiometer(); // WARNING: Port path on this is randomly chosen!
     private Servo servo = appCtx.getServo(); // WARNING: Channel is randomly chosen!
+
 
     private static final double POT_MAX_VALUE = .51; // This value needs to be tuned
     private static final double POT_MIN_VALUE = .57; // This value needs to be tuned
     private static final double KP = 0.01;
     private static final double acceptableError = 0.05;
+    private static final double MIN_POSITION = 0;
+    private static final double MAX_POSITION = 270;
+    private static final double MIN_OUTPUT = .05;
+
+    private boolean rotatingClockwise = false;
 
     /*
     Use limelight to turn to center the image
@@ -54,7 +62,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void setMotor(double output) {
-        turretMotor.set(ControlMode.PercentOutput, output);
+        turretMotor.set(output);
     }
 
     public void centerToTarget() {
@@ -84,6 +92,35 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
         public Double getPercent(){
             return percent;
+        }
+    }
+    private double potPosition() {
+        return (potentiometer.get() - POT_MIN_VALUE) * (MAX_POSITION - MIN_POSITION) / (POT_MAX_VALUE - POT_MIN_VALUE) + MIN_POSITION;
+    }
+
+    private void zeroEncoder(){
+        turretMotor.getEncoder().setPosition(0);
+    }
+
+    private double getPosition() {
+        return turretMotor.getEncoder().getPosition() * 360;
+    }
+
+
+    private void seekTarget() {
+        if (limelight.getTv() == 0d) {
+//            if(potPosition() > MIN_POSITION && potPosition() < MAX_POSITION && !rotatingClockwise){
+            if(getPosition() > MIN_POSITION && getPosition() < MAX_POSITION){
+                setMotor(-.1);
+            }else if(getPosition() >= MAX_POSITION){
+                setMotor(.1);
+                rotatingClockwise = true;
+            }else if(getPosition() <= MIN_POSITION){
+                setMotor(-.1);
+                rotatingClockwise = false;
+            }
+        }else{
+            centerToTarget();
         }
     }
 

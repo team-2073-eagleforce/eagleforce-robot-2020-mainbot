@@ -26,7 +26,6 @@ public class ApplicationContext {
     private Joystick driveStick;
 
     //Falcon
-    private TalonFX turretMotor;
 
     //Subsystem
     private TurretSubsystem turretSubsystem;
@@ -39,6 +38,7 @@ public class ApplicationContext {
     private CANSparkMax leftSlave2;
     private CANSparkMax rightSlave1;
     private CANSparkMax rightSlave2;
+    private CANSparkMax turretMotor;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
@@ -136,12 +136,7 @@ public class ApplicationContext {
         return intakeSubsystem;
     }
 
-    public TalonFX getTurretMotor() {
-        if(turretMotor == null) {
-            turretMotor = new TalonFX(TURRET_MOTOR_PORT);
-        }
-        return turretMotor;
-    }
+
 
     public TurretSubsystem getTurretSubsystem() {
         if(turretSubsystem == null) {
@@ -233,5 +228,11 @@ public class ApplicationContext {
             servo = new Servo(0);
         }
         return servo;
+    }
+    public CANSparkMax getTurretMotor(){
+        if (turretMotor == null){
+            turretMotor = new CANSparkMax(TURRET_MOTOR_PORT, MotorType.kBrushless);
+        }
+        return turretMotor;
     }
 }

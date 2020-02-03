@@ -9,7 +9,6 @@ public abstract class AppConstants {
         public static final int CONTROLLER_PORT = 0;
 
         //Intake
-        public static final int TURRET_MOTOR_PORT = 0;
 
         //Intake
         public static final int INTAKE_MOTOR_PORT = 0;
@@ -30,6 +29,9 @@ public abstract class AppConstants {
 
         //WOF
         public static final int WOF_ENCODER_PORT = 0;
+
+        //turret
+        public static final int TURRET_MOTOR_PORT = 1;
 
     }
 }
