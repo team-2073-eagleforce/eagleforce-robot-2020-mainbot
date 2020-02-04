@@ -8,7 +8,7 @@ public class IntakeToggleSolenoidsCommand extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
     @Override
     protected void initializeDelegate() {
-        appCtx.getIntakeSubsystem().togglePistons(false);
+        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.INTAKE_OUT);
     }
 
     @Override
@@ -17,12 +17,11 @@ public class IntakeToggleSolenoidsCommand extends AbstractLoggingCommand {
 
     @Override
     protected void endDelegate() {
-        appCtx.getIntakeSubsystem().togglePistons(true);
         appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.STOWED);
     }
 
     @Override
     protected boolean isFinishedDelegate() {
-        return true;
+        return false;
     }
 }
