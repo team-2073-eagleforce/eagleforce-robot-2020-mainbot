@@ -16,7 +16,7 @@ import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.common.util.Timer;
 import com.team2073.robot.command.WOF.WOFColorCalculator;
 import com.team2073.robot.command.WOF.WOFColorCombo;
-import com.team2073.robot.ctx.ApplicationContext;
+import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;

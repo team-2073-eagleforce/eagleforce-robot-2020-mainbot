@@ -25,5 +25,8 @@ public abstract class AppConstants {
         public static final int DRIVE_RIGHT_SLAVE_ONE = 5;
         public static final int DRIVE_RIGHT_SLAVE_TWO = 6;
 
+        //WOF
+        public static final int WOF_ENCODER_PORT = 0;
+
     }
 }
