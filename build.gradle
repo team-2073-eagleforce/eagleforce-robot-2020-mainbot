@@ -98,6 +98,7 @@ dependencies {
     compile group: 'com.team2073', name: 'common-util', version: COMMON_VERSION
     compile group: 'com.team2073', name: 'common-wpi-util', version: COMMON_VERSION
     compile group: 'com.team2073', name: 'common-guice', version: COMMON_VERSION
+    compile group: 'com.opencsv', name: 'opencsv', version: '5.0'
 
     testCompile group: 'com.team2073', name: 'common-wpi-simulation', version: COMMON_VERSION
     testCompile group: 'com.team2073', name: 'common-wpi-simulation-stubs', version: COMMON_VERSION

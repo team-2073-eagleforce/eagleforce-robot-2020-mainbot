@@ -4,6 +4,8 @@ import com.team2073.robot.subsystem.HopperSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.IntakeSubsystem;
+import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -30,13 +32,14 @@ public class ApplicationContext {
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
-
+    private WOFManipulatorSubsystem wofManipulatorSubsystem;
 
     // Neo550
     private CANSparkMax hopperMotor;
 
     // Sensors
     private DigitalInput hopperSensor;
+    private Encoder wofEncoder;
 
     //Subsystem
     private HopperSubsystem hopperSubsystem;
@@ -158,5 +161,19 @@ public class ApplicationContext {
             rightSlave2 = new CANSparkMax(DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
         }
         return rightSlave2;
+    }
+
+    public WOFManipulatorSubsystem getWofManipulatorSubsystem (){
+        if(wofManipulatorSubsystem == null){
+            wofManipulatorSubsystem = new WOFManipulatorSubsystem();
+        }
+        return wofManipulatorSubsystem;
+    }
+
+    public Encoder getWofEncoder() {
+        if (wofEncoder == null){
+            wofEncoder = new Encoder(8, 9);
+        }
+        return wofEncoder;
     }
 }
