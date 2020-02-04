@@ -10,14 +10,13 @@ public class ShooterVelocityCounter {
 	private ApplicationContext appCtx = ApplicationContext.getInstance();
 	private Counter AChannel = appCtx.getAChannel();
 	private Counter BChannel = appCtx.getBChannel();
-	private double velocity = 0;
 
 	private int lastCount;
 	private double lastTime;
 	private double lastInterval;
 	private double speed = 0;
 
-	private double calculateVelocity() {
+	public double getVelocity() {
 		double current = Timer.getFPGATimestamp();
 		int counter = AChannel.get();
 		double dt = 0;
@@ -34,15 +33,12 @@ public class ShooterVelocityCounter {
 		}
 		return speed;
 	}
-	public double getVelocity() {
-		return 0;
 
+	public void reset(){
+		speed = 0;
+		lastCount = 0;
+		lastInterval = 0;
+		lastTime = 0;
 	}
-
-	public boolean atGoal(double goalVelocity, double acceptedError){
-//		if(goalVelocity <=)
-		return false;
-	}
-
 
 }

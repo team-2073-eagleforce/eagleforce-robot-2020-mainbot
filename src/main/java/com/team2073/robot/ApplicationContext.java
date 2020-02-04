@@ -10,6 +10,9 @@ import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntermediateSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
+import com.team2073.robot.statespace.ShooterVelocityCounter;
+import com.team2073.robot.statespace.statespaceflywheel.subsystems.Flywheel;
+import com.team2073.robot.subsystem.FlywheelSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
@@ -71,6 +74,10 @@ public class ApplicationContext {
     private TalonSRX shooterMotorThree;
     private Counter AChannel;
     private Counter BChannel;
+
+    private ShooterVelocityCounter velocityCounter;
+    private Flywheel flywheel;
+    private FlywheelSubsystem flywheelSubsystem;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -255,6 +262,27 @@ public class ApplicationContext {
             BChannel = new Counter(SHOOTER_COUNTER_B);
         }
         return BChannel;
+    }
+
+    public ShooterVelocityCounter getVelocityCounter() {
+        if(velocityCounter == null){
+            velocityCounter = new ShooterVelocityCounter();
+        }
+        return velocityCounter;
+    }
+
+    public Flywheel getFlywheel() {
+        if(flywheel == null){
+            flywheel = new Flywheel();
+        }
+        return flywheel;
+    }
+
+    public FlywheelSubsystem getFlywheelSubsystem() {
+        if(flywheelSubsystem == null){
+            flywheelSubsystem = new FlywheelSubsystem();
+        }
+        return flywheelSubsystem;
     }
 
 
