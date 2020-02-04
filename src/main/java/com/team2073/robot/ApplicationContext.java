@@ -1,10 +1,14 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
 import com.team2073.robot.subsystem.TurretSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
+import com.team2073.robot.subsystem.IntermediateSubsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
+import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
@@ -25,7 +29,6 @@ public class ApplicationContext {
     private Joystick driveWheel;
     private Joystick driveStick;
 
-    //Falcon
 
     //Subsystem
     private TurretSubsystem turretSubsystem;
@@ -39,12 +42,14 @@ public class ApplicationContext {
     private CANSparkMax rightSlave1;
     private CANSparkMax rightSlave2;
     private CANSparkMax turretMotor;
+    private CANSparkMax intermediateMotor;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
+    private IntermediateSubsystem intermediateSubsystem;
 
     // Neo550
     private CANSparkMax hopperMotor;
@@ -234,5 +239,17 @@ public class ApplicationContext {
             turretMotor = new CANSparkMax(TURRET_MOTOR_PORT, MotorType.kBrushless);
         }
         return turretMotor;
+    }
+    public IntermediateSubsystem getIntermediateSubsystem() {
+        if (intermediateSubsystem == null){
+            intermediateSubsystem = new IntermediateSubsystem();
+        }
+        return intermediateSubsystem;
+    }
+    public CANSparkMax getIntermediateMotor() {
+        if (intermediateMotor == null) {
+            intermediateMotor = new CANSparkMax(INTERMEDIATE_MASTER, MotorType.kBrushless);
+        }
+        return intermediateMotor;
     }
 }
