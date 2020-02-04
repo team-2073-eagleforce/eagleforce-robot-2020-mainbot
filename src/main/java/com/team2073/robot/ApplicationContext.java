@@ -1,8 +1,10 @@
 package com.team2073.robot;
 
 import com.revrobotics.CANSparkMax;
+import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
