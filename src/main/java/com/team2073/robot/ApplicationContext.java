@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
-import com.team2073.robot.subsystem.TurretSubsystem;
+import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntermediateSubsystem;
@@ -12,10 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
 import com.team2073.robot.statespace.statespaceflywheel.subsystems.Flywheel;
-import com.team2073.robot.subsystem.FlywheelSubsystem;
-import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
@@ -302,7 +299,7 @@ public class ApplicationContext {
 
     public Servo getServo() {
         if(servo == null){
-            servo = new Servo(0);
+            servo = new Servo(9);
         }
         return servo;
     }
