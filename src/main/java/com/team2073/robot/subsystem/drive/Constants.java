@@ -5,7 +5,7 @@ import static com.team2073.common.util.ConversionUtil.*;
 
 public final class Constants {
     public static final class CheesyDriveConstants {
-        public static final double kThrottleDeadband = 0.05;
+        public static final double kThrottleDeadband = 0.10;
         public static final double kWheelDeadband = 0.05;
 
         // These factor determine how fast the wheel traverses the "non linear" sine curve.
