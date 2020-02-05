@@ -1,13 +1,18 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.team2073.robot.AppConstants;
+import com.team2073.robot.subsystem.TurretSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 
 import static com.revrobotics.CANSparkMaxLowLevel.*;
@@ -20,6 +25,11 @@ public class ApplicationContext {
     private Joystick driveWheel;
     private Joystick driveStick;
 
+    //Falcon
+
+    //Subsystem
+    private TurretSubsystem turretSubsystem;
+
     private CANSparkMax intakeMotor;
 
     private CANSparkMax leftMaster;
@@ -28,9 +38,12 @@ public class ApplicationContext {
     private CANSparkMax leftSlave2;
     private CANSparkMax rightSlave1;
     private CANSparkMax rightSlave2;
+    private CANSparkMax turretMotor;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
     private IntakeSubsystem intakeSubsystem;
+    private AnalogPotentiometer potentiometer; // WARNING: Change port
+    private Servo servo; // WARNING: Change channel
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
 
     // Neo550
@@ -43,6 +56,8 @@ public class ApplicationContext {
 
     //Subsystem
     private HopperSubsystem hopperSubsystem;
+    private Limelight limelight;
+
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -121,6 +136,15 @@ public class ApplicationContext {
         return intakeSubsystem;
     }
 
+
+
+    public TurretSubsystem getTurretSubsystem() {
+        if(turretSubsystem == null) {
+            turretSubsystem = new TurretSubsystem();
+        }
+        return turretSubsystem;
+    }
+
     public CANSparkMax getLeftMaster() {
         if(leftMaster == null){
             leftMaster = new CANSparkMax(DRIVE_LEFT_MASTER, MotorType.kBrushless);
@@ -183,5 +207,32 @@ public class ApplicationContext {
             wofEncoder = new Encoder(8, 9);
         }
         return wofEncoder;
+    }
+
+    public AnalogPotentiometer getPotentiometer() {
+        if(potentiometer == null){
+            potentiometer = new AnalogPotentiometer(4);
+        }
+        return potentiometer;
+    }
+
+    public Limelight getLimelight() {
+        if(limelight == null){
+            limelight = new Limelight();
+        }
+        return limelight;
+    }
+
+    public Servo getServo() {
+        if(servo == null){
+            servo = new Servo(0);
+        }
+        return servo;
+    }
+    public CANSparkMax getTurretMotor(){
+        if (turretMotor == null){
+            turretMotor = new CANSparkMax(TURRET_MOTOR_PORT, MotorType.kBrushless);
+        }
+        return turretMotor;
     }
 }

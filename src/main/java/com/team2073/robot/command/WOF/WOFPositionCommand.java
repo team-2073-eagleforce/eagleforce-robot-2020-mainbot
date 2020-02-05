@@ -1,7 +1,7 @@
 package com.team2073.robot.command.WOF;
 
 import com.team2073.common.command.AbstractLoggingCommand;
-import com.team2073.robot.ctx.ApplicationContext;
+import com.team2073.robot.ApplicationContext;
 
 public class WOFPositionCommand extends AbstractLoggingCommand {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
