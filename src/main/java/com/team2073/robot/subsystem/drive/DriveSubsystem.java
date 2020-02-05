@@ -206,7 +206,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
-        updateOdometry();
+//        updateOdometry();
 
 //        double time = Timer.getFPGATimestamp();
 //        avgTime.add(time-lastTime);

@@ -13,18 +13,19 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
 
     private boolean pistonsExtended = false;
 
-    private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
+//    private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
     private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
     private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
     private IntakeState state = IntakeState.DISABLED;
 
     public IntakeSubsystem(){
-        intakeMotor.setOpenLoopRampRate(1);
+        autoRegisterWithPeriodicRunner(10);
+//        intakeMotor.setOpenLoopRampRate(1);
     }
 
     @Override
     public void onPeriodicAsync() {
-        setPower(state.getPercent());
+//        setPower(state.getPercent());
         switch(state){
             case DISABLED:
                 togglePistons(false);
@@ -41,11 +42,12 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     }
 
     public void setPower(Double percent) {
-        intakeMotor.set(percent);
+//        intakeMotor.set(percent);
     }
     public void set(IntakeState goalState) {
         state = goalState;
     }
+
     private void togglePistons(boolean value) {
         pistonLeft.set(value);
         pistonRight.set(value);

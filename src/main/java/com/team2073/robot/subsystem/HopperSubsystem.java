@@ -18,8 +18,8 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
 //    private final RobotContext robotContext = RobotContext.getInstance();
 //    private final ApplicationContext appCtx = ApplicationContext.getInstance();
-
-    private CANSparkMax hopperMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
+    private ApplicationContext appCtx = ApplicationContext.getInstance();
+    private CANSparkMax hopperMotor = appCtx.getHopperMotor();
 //    private DigitalInput hopperSensor = appCtx.getHopperSensor();
     private CANEncoder hopperEncoder = hopperMotor.getEncoder();
 
@@ -30,15 +30,19 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private boolean shotReady = true;
 
     public HopperSubsystem(){
-        hopperMotor.setOpenLoopRampRate(0.5);
+        autoRegisterWithPeriodicRunner(10);
+        hopperMotor.setOpenLoopRampRate(1);
         hopperMotor.setSmartCurrentLimit(30);
+        hopperMotor.setInverted(true);
+        hopperMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         hopperEncoder.setPositionConversionFactor(1/125d);
+        hopperMotor.clearFaults();
     }
 
     @Override
     public void onPeriodicAsync() {
         checkJam();
-        System.out.println(hopperMotor.getOutputCurrent());
+//        System.out.println(hopperMotor.getOutputCurrent());
         switch (state) {
             case STOP:
                 setMotor(0);

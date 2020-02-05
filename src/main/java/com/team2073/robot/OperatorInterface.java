@@ -46,12 +46,12 @@ public class OperatorInterface {
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
 
     public OperatorInterface(){
-        a.whileHeld(new WOFPositionCommand("Green"));
-        b.whileHeld(new WOFPositionCommand("Red"));
-        x.whileHeld(new WOFPositionCommand("Blue"));
-        y.whileHeld(new WOFPositionCommand("Yellow"));
-
-        lb.whileHeld(new WOFRotationCommand());
+//        a.whileHeld(new WOFPositionCommand("Green"));
+//        b.whileHeld(new WOFPositionCommand("Red"));
+//        x.whileHeld(new WOFPositionCommand("Blue"));
+//        y.whileHeld(new WOFPositionCommand("Yellow"));
+//
+//        lb.whileHeld(new WOFRotationCommand());
 
     }
 
