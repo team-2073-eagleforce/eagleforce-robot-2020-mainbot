@@ -1,5 +1,7 @@
 package com.team2073.robot.subsystem;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ApplicationContext;
@@ -7,7 +9,7 @@ import com.team2073.robot.ApplicationContext;
 public class IntermediateSubsystem implements AsyncPeriodicRunnable {
     private ApplicationContext applicationContext = ApplicationContext.getInstance();
     private CANSparkMax intermediateMotor1 = applicationContext.getIntermediateMotor();
-    // private VictorSPX intermediateSlave = applicationContext.get
+    private VictorSPX intermediateMotor2 = applicationContext.getBagMotor();
     private IntermediateState state = IntermediateState.DISABLED;
 
     public IntermediateSubsystem() {
@@ -25,6 +27,7 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
 
     public void setPower(Double percent) {
         intermediateMotor1.set(percent);
+        intermediateMotor2.set(ControlMode.PercentOutput,percent);
     }
 
     public void set(IntermediateState goalState) {

@@ -50,6 +50,7 @@ public class ApplicationContext {
     private Servo servo; // WARNING: Change channel
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
     private IntermediateSubsystem intermediateSubsystem;
+    private VictorSPX intermediateBagMotor;
 
     // Neo550
     private CANSparkMax hopperMotor;
@@ -251,5 +252,11 @@ public class ApplicationContext {
             intermediateMotor = new CANSparkMax(INTERMEDIATE_MASTER, MotorType.kBrushless);
         }
         return intermediateMotor;
+    }
+    public VictorSPX getBagMotor() {
+        if (intermediateBagMotor == null) {
+            intermediateBagMotor = new VictorSPX(INTERMEDIATE_SLAVE);
+        }
+        return intermediateBagMotor;
     }
 }
