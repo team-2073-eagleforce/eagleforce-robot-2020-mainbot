@@ -90,4 +90,8 @@ public class Flywheel {
   public double getAmerageDraw(){
     return m_motor.getStatorCurrent();
   }
+
+  public double getEstimatedVelocity(){
+    return m_wheel.getEstimatedVelocity();
+  }
 }

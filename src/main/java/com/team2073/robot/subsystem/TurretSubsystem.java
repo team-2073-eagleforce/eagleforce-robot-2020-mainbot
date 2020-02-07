@@ -57,14 +57,14 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     // Positive Output = Turret turns clockwise
 
     public TurretSubsystem(){
-        turretMotor.getEncoder().setPosition(0);
-        autoRegisterWithPeriodicRunner(10);
-        turretMotor.setInverted(true);
-        turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        pid.setPositionSupplier(()->limelight.getTx()+1.7d);
-//        SmartDashboard.putNumber("KP", 0.01);
-        SmartDashboard.putNumber("Angle", 18d);
-        SmartDashboard.putNumber("Height", 90);
+//        turretMotor.getEncoder().setPosition(0);
+//        autoRegisterWithPeriodicRunner(10);
+//        turretMotor.setInverted(true);
+//        turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+//        pid.setPositionSupplier(()->limelight.getTx()+1.7d);
+////        SmartDashboard.putNumber("KP", 0.01);
+//        SmartDashboard.putNumber("Angle", 18d);
+//        SmartDashboard.putNumber("Height", 90);
     }
 
     @Override
@@ -76,9 +76,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //        setMotor(output);
 //
 //        System.out.println("Output:" + output + "\t Tx: " + limelight.getTx());*/
-        seekTarget();
+//        seekTarget();
 
-        servo.set(96);
+//        servo.set(96);
 //        System.out.println(getPosition());
 //        double height = SmartDashboard.getNumber("Height", 90d);
 //        double angle = SmartDashboard.getNumber("Angle", 18d);

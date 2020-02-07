@@ -4,15 +4,14 @@ import com.team2073.robot.statespace.controller.StateSpaceControllerCoeffs;
 import com.team2073.robot.statespace.controller.StateSpaceLoop;
 import com.team2073.robot.statespace.controller.StateSpaceObserverCoeffs;
 import com.team2073.robot.statespace.controller.StateSpacePlantCoeffs;
-import com.team2073.robot.statespace.math.Matrix;
-import com.team2073.robot.statespace.math.MatrixUtils;
-import com.team2073.robot.statespace.math.Nat;
-import com.team2073.robot.statespace.math.numbers.N1;
+import com.team2073.robot.statespace.math.*;
+import com.team2073.robot.statespace.math.numbers.*;
+
 
 public class FlywheelCoeffs {
   public static StateSpacePlantCoeffs<N1, N1, N1> makeFlywheelPlantCoeffs() {
-    Matrix<N1, N1> A = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9763010704913198);
-    Matrix<N1, N1> B = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(1.9469667365335424);
+    Matrix<N1, N1> A = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9880794859176663);
+    Matrix<N1, N1> B = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.97932036939401);
     Matrix<N1, N1> C = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(1.0);
     Matrix<N1, N1> D = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.0);
     return new StateSpacePlantCoeffs<N1, N1, N1>(Nat.N1(), Nat.N1(), Nat.N1(), A, B, C, D);
@@ -21,8 +20,8 @@ public class FlywheelCoeffs {
 
   public static StateSpaceControllerCoeffs<N1, N1, N1>
     makeFlywheelControllerCoeffs() {
-    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.44301079539165);
-    Matrix<N1, N1> Kff = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.4472516579052545);
+    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.7686625798740028);
+    Matrix<N1, N1> Kff = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.7255872923565606);
     Matrix<N1, N1> Umin = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(-12.0);
     Matrix<N1, N1> Umax = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(12.0);
     return new StateSpaceControllerCoeffs<N1, N1, N1>(K, Kff, Umin, Umax);
@@ -31,7 +30,7 @@ public class FlywheelCoeffs {
 
   public static StateSpaceObserverCoeffs<N1, N1, N1>
     makeFlywheelObserverCoeffs() {
-    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9999000195268711);
+    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9999000197581299);
     return new StateSpaceObserverCoeffs<N1, N1, N1>(K);
   }
 
