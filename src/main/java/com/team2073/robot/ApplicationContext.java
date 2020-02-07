@@ -1,21 +1,14 @@
 package com.team2073.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.team2073.robot.AppConstants;
-import com.team2073.robot.subsystem.TurretSubsystem;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import com.team2073.robot.subsystem.TurretSubsystem;
 import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 
-import static com.revrobotics.CANSparkMaxLowLevel.*;
+import static com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import static com.team2073.robot.AppConstants.Ports.*;
 
 public class ApplicationContext {
@@ -45,6 +38,7 @@ public class ApplicationContext {
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
+    private Solenoid climbSolenoid1;
 
     // Neo550
     private CANSparkMax hopperMotor;
@@ -88,21 +82,21 @@ public class ApplicationContext {
     }
 
     public CANSparkMax getHopperMotor() {
-        if(hopperMotor == null) {
+        if (hopperMotor == null) {
             hopperMotor = new CANSparkMax(HOPPER_MOTOR_ID, MotorType.kBrushless);
         }
         return hopperMotor;
     }
 
     public DigitalInput getHopperSensor() {
-        if(hopperSensor == null) {
+        if (hopperSensor == null) {
             hopperSensor = new DigitalInput(HOPPER_SENSOR_DIO_PORT);
         }
         return hopperSensor;
     }
 
     public HopperSubsystem getHopperSubsystem() {
-        if(hopperSubsystem == null) {
+        if (hopperSubsystem == null) {
             hopperSubsystem = new HopperSubsystem();
         }
         return hopperSubsystem;
@@ -137,51 +131,50 @@ public class ApplicationContext {
     }
 
 
-
     public TurretSubsystem getTurretSubsystem() {
-        if(turretSubsystem == null) {
+        if (turretSubsystem == null) {
             turretSubsystem = new TurretSubsystem();
         }
         return turretSubsystem;
     }
 
     public CANSparkMax getLeftMaster() {
-        if(leftMaster == null){
+        if (leftMaster == null) {
             leftMaster = new CANSparkMax(DRIVE_LEFT_MASTER, MotorType.kBrushless);
         }
         return leftMaster;
     }
 
     public CANSparkMax getRightMaster() {
-        if(rightMaster == null){
+        if (rightMaster == null) {
             rightMaster = new CANSparkMax(DRIVE_RIGHT_MASTER, MotorType.kBrushless);
         }
         return rightMaster;
     }
 
     public CANSparkMax getLeftSlave1() {
-        if(leftSlave1 == null){
+        if (leftSlave1 == null) {
             leftSlave1 = new CANSparkMax(DRIVE_LEFT_SLAVE_ONE, MotorType.kBrushless);
         }
         return leftSlave1;
     }
 
     public CANSparkMax getLeftSlave2() {
-        if(leftSlave2 == null){
+        if (leftSlave2 == null) {
             leftSlave2 = new CANSparkMax(DRIVE_LEFT_SLAVE_TWO, MotorType.kBrushless);
         }
         return leftSlave2;
     }
 
     public CANSparkMax getRightSlave1() {
-        if(rightSlave1 == null){
+        if (rightSlave1 == null) {
             rightSlave1 = new CANSparkMax(DRIVE_RIGHT_SLAVE_ONE, MotorType.kBrushless);
         }
         return rightSlave1;
     }
 
     public CANSparkMax getRightSlave2() {
-        if(rightSlave2 == null){
+        if (rightSlave2 == null) {
             rightSlave2 = new CANSparkMax(DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
         }
         return rightSlave2;
@@ -195,44 +188,53 @@ public class ApplicationContext {
     }
 
 
-    public WOFManipulatorSubsystem getWofManipulatorSubsystem (){
-        if(wofManipulatorSubsystem == null){
+    public WOFManipulatorSubsystem getWofManipulatorSubsystem() {
+        if (wofManipulatorSubsystem == null) {
             wofManipulatorSubsystem = new WOFManipulatorSubsystem();
         }
         return wofManipulatorSubsystem;
     }
 
     public Encoder getWofEncoder() {
-        if (wofEncoder == null){
+        if (wofEncoder == null) {
             wofEncoder = new Encoder(8, 9);
         }
         return wofEncoder;
     }
 
     public AnalogPotentiometer getPotentiometer() {
-        if(potentiometer == null){
+        if (potentiometer == null) {
             potentiometer = new AnalogPotentiometer(4);
         }
         return potentiometer;
     }
 
     public Limelight getLimelight() {
-        if(limelight == null){
+        if (limelight == null) {
             limelight = new Limelight();
         }
         return limelight;
     }
 
     public Servo getServo() {
-        if(servo == null){
+        if (servo == null) {
             servo = new Servo(0);
         }
         return servo;
     }
-    public CANSparkMax getTurretMotor(){
-        if (turretMotor == null){
+
+    public CANSparkMax getTurretMotor() {
+        if (turretMotor == null) {
             turretMotor = new CANSparkMax(TURRET_MOTOR_PORT, MotorType.kBrushless);
         }
         return turretMotor;
+    }
+
+    public Solenoid getClimbSolenoid1() {
+        if (climbSolenoid1 == null) {
+            climbSolenoid1 = new Solenoid(CLIMB_SOLENOID_1);
+        }
+
+        return climbSolenoid1;
     }
 }

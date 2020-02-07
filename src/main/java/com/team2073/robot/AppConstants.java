@@ -39,5 +39,9 @@ public abstract class AppConstants {
         //Intermediate
         public static final int INTERMEDIATE_MOTOR_ID = 11;
 
+        //CLIMB
+        public static final int CLIMB_SOLENOID_1 = 0;
+        //TODO change the port # for climb
+
     }
 }
