@@ -18,11 +18,11 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 
 	private ApplicationContext appCtx = ApplicationContext.getInstance();
 	private ShooterVelocityCounter counter = appCtx.getVelocityCounter();
-	private Servo servo = appCtx.getServo();
+	private Servo newServo = appCtx.getServo();
 	private Flywheel shooter = new Flywheel();
 	private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)",
 			"Estimated Velocity", "Talon Output (V)", "Battery Voltage (V)", "Reference");
-	private double rpm_reference = 5000;
+	private double rpm_reference = 6500;
 	private double reference = rpm_reference * 2 * Math.PI / 60; // 130"
 	private boolean endFile = false;
 	private double iteration = 0;
@@ -32,9 +32,6 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 
 	@Override
 	public void onPeriodicAsync() {
-		// Converts RPM to Rad/Sec
-//		servo.setAngle(96);
-//		System.out.println(servo.getAngle());
 		double currentVelocity = counter.getVelocity();
 		shooter.setReference(reference);
 		shooter.enable();
