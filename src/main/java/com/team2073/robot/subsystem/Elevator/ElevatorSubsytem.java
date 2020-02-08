@@ -1,9 +1,9 @@
 package com.team2073.robot.subsystem.Elevator;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.team2073.common.motionmagic.MotionMagicHandler;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.position.converter.PositionConverter;
-import com.team2073.common.util.TalonUtil;
 import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -13,13 +13,16 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
     private double climbPercent;
     public Double setpoint;
-
+    private static final double MAX_VELOCITY = 27d;
+    private TalonFX elevatorMotor = appCtx.getElevatorMotor();
     private ElevatorPositionConverter converter = new ElevatorPositionConverter();
+    // distances are in inches
+    private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 4, MAX_VELOCITY, MAX_VELOCITY / 0.3);
 
-    private static final double ENCODER_TICS_PER_INCH = 697d;
+    private static final double ENCODER_TICS_PER_INCH = 7138.1;
+    private static final double KG = 0.05;
 
     private DigitalInput bottomLimit = appCtx.getElevatorZeroSensor();
-    private TalonFX elevatorMotor = appCtx.getElevatorMotor();
     private ElevatorState currentState = ElevatorState.BOTTOM;
 
     public ElevatorSubsytem() {
@@ -30,10 +33,9 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
         elevatorMotor.configPeakOutputForward(1,10);
         elevatorMotor.configPeakOutputReverse(-1,10);
     }
-
     @Override
     public void onPeriodicAsync() {
-
+        profile.update(currentState.getValue(), KG);
     }
 
     public enum ElevatorState {
@@ -73,17 +75,17 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
     public double position() {
         //values not permanent
-        return converter.asPosition(elevatorMotor.getSelectedSensorPosition(0));
+        return profile.currentPosition();
     }
 
     public double velocity() {
         //values not permanent
-        return converter.asPosition(elevatorMotor.getSelectedSensorVelocity(0) * 10);
+        return profile.currentVelocity();
     }
 
     public void zeroElevator() {
         //values not permanent
-        elevatorMotor.setSelectedSensorPosition(converter.asTics(.5), 0, 10);
+        elevatorMotor.setSelectedSensorPosition(converter.asTics(0), 0, 10);
     }
 
     private class ElevatorPositionConverter implements PositionConverter {
