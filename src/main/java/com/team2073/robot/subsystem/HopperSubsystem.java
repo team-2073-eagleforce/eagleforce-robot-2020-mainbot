@@ -16,9 +16,8 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private static final double MAX_RPM = 73d;
     private static final double unjamTime = .1; // how long to backspin for to unjam
 
-//    private final RobotContext robotContext = RobotContext.getInstance();
-//    private final ApplicationContext appCtx = ApplicationContext.getInstance();
-    private ApplicationContext appCtx = ApplicationContext.getInstance();
+    private final ApplicationContext appCtx = ApplicationContext.getInstance();
+
     private CANSparkMax hopperMotor = appCtx.getHopperMotor();
 //    private DigitalInput hopperSensor = appCtx.getHopperSensor();
     private CANEncoder hopperEncoder = hopperMotor.getEncoder();
@@ -30,13 +29,11 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private boolean shotReady = true;
 
     public HopperSubsystem(){
-        autoRegisterWithPeriodicRunner(10);
-        hopperMotor.setOpenLoopRampRate(1);
+        hopperMotor.setOpenLoopRampRate(0.5);
         hopperMotor.setSmartCurrentLimit(30);
         hopperMotor.setInverted(true);
-        hopperMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         hopperEncoder.setPositionConversionFactor(1/125d);
-        hopperMotor.clearFaults();
+        autoRegisterWithPeriodicRunner();
     }
 
     @Override

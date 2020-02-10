@@ -9,10 +9,11 @@ import com.team2073.robot.ApplicationContext;
 public class IntermediateSubsystem implements AsyncPeriodicRunnable {
     private ApplicationContext applicationContext = ApplicationContext.getInstance();
     private CANSparkMax intermediateMotor1 = applicationContext.getIntermediateMotor();
-    private VictorSPX intermediateMotor2 = applicationContext.getBagMotor();
+//    private VictorSPX intermediateMotor2 = applicationContext.getBagMotor();
     private IntermediateState state = IntermediateState.STOP;
 
     public IntermediateSubsystem() {
+        autoRegisterWithPeriodicRunner();
     }
 
     @Override
@@ -20,9 +21,9 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
         setPower(state.getBottomPercent(), state.getTopPercent());
     }
 
-    public void setPower(Double bottomPercent, Double topPercent) {
+    private void setPower(Double bottomPercent, Double topPercent) {
         intermediateMotor1.set(bottomPercent);
-        intermediateMotor2.set(ControlMode.PercentOutput, topPercent);
+//        intermediateMotor2.set(ControlMode.PercentOutput, topPercent);
     }
 
     public void set(IntermediateState goalState) {
@@ -31,7 +32,7 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
 
     public enum IntermediateState {
         SHOOT(1d, .9),
-        IDLE(-.1d, 0),
+        IDLE(-.05d, 0),
         STOP(0d, 0),
         DISABLED(0d, 0);
 
