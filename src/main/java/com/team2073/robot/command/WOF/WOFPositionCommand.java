@@ -12,13 +12,13 @@ public class WOFPositionCommand extends AbstractLoggingCommand {
     }
     @Override
     protected void executeDelegate() {
-        appCtx.getWofManipulatorSubsystem().positionControl(goal);
+        appCtx.getWofManipulatorSubsystem().positionControl();
     }
 
     @Override
     protected void endDelegate() {
         super.endDelegate();
-        appCtx.getWofManipulatorSubsystem().setMotor(0d);
+        appCtx.getWofManipulatorSubsystem().setWOFMotor(0d);
         appCtx.getWofManipulatorSubsystem().setMotionSetpoint(null);
     }
 
