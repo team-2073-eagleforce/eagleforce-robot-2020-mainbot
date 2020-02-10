@@ -35,9 +35,8 @@ public abstract class AppConstants {
         public static final int SHOOTER_MASTER = 3;
         public static final int SHOOTER_SLAVE_ONE = 12;
         public static final int SHOOTER_SLAVE_TWO = 5;
-
         //Intermediate
-        public static final int INTERMEDIATE_MOTOR_ID = 11;
-
+        public static final int INTERMEDIATE_MASTER = 10; //change number
+        public static final int INTERMEDIATE_SLAVE = 8; //change number;
     }
 }
