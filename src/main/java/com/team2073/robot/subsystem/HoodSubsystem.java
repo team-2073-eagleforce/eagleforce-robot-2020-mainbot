@@ -21,7 +21,7 @@ public class HoodSubsystem implements PeriodicRunnable {
 
     public HoodSubsystem() {
         autoRegisterWithPeriodicRunner();
-        buildMap();
+//        buildMap();
     }
     private void buildMap(){
         hoodToServo.put(new InterpolatingDouble(RETRACTED_HOOD_ANGLE), new InterpolatingDouble(HoodState.RETRACTED.getServoDegree()));
@@ -31,6 +31,7 @@ public class HoodSubsystem implements PeriodicRunnable {
     @Override
     public void onPeriodic() {
         if (state != HoodState.CALCULATED) {
+            determineHoodAngle();
             servo.setAngle(state.getServoDegree());
         }else{
             servo.set(setPoint);
@@ -48,10 +49,9 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
 
     public void determineHoodAngle(){
-        double dist = limelight.getLowDistance();
-        if(dist > 8 * 12){
+        if(limelight.getTv() > 0) {
             setHood(HoodState.EXTENDED);
-        }else{
+        }else {
             setHood(HoodState.RETRACTED);
         }
     }

@@ -13,6 +13,7 @@ public class Mediator implements AsyncPeriodicRunnable {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private RobotState desiredState = STARTING_CONFIG;
     private RobotState lastState = DISABLED;
+    private static Mediator instance = null;
 
     private DriveSubsystem drive;
     private IntakeSubsystem intake;
@@ -22,7 +23,14 @@ public class Mediator implements AsyncPeriodicRunnable {
     private WOFManipulatorSubsystem wof;
     private HoodSubsystem hood;
 
-    public Mediator() {
+
+    public static Mediator getInstance(){
+        if(instance == null){
+            instance = new Mediator();
+        }
+        return instance;
+    }
+    private Mediator() {
         autoRegisterWithPeriodicRunner(10);
         drive = appCtx.getDriveSubsystem();
         intake = appCtx.getIntakeSubsystem();

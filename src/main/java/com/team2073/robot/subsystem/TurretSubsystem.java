@@ -4,9 +4,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.team2073.common.controlloop.PidfControlLoop;
 import com.team2073.common.ctx.RobotContext;
+import com.team2073.common.pathfollowing.math.InterpolatingDouble;
+import com.team2073.common.pathfollowing.math.InterpolatingTreeMap;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
+import com.team2073.robot.Mediator;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Servo;
 import org.opencv.core.Mat;
@@ -15,8 +18,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private RobotContext robotContext = RobotContext.getInstance();
     private ApplicationContext appCtx = ApplicationContext.getInstance();
-
 //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
+    private Mediator mediator = Mediator.getInstance();
+
     private Limelight limelight = appCtx.getLimelight();
     private AnalogPotentiometer potentiometer = appCtx.getPotentiometer(); // WARNING: Port path on this is randomly chosen!
 
@@ -34,12 +38,15 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private boolean rotatingClockwise = true;
     private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 1e-5, 0.0008, 0, 0.25);
     private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0, 0.0, 0.15);
+    private PidfControlLoop pid = new PidfControlLoop(KP, 1e-5, 0.0008, 0, 0.25);
+    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
+    private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
 
     private Double setpoint = null;
     /*
     Use limelight to turn to center the image
     Zoom in to stabilize image
-    Calculate distance using limelight and lidar
+    Calculate distance using limelight and lidar?
     Compensate for elevator height
         - Calc RPM goal for Shooter based on distance
     Zero relative to robot
@@ -62,8 +69,16 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 ////        SmartDashboard.putNumber("KP", 0.01);
 //        SmartDashboard.putNumber("Angle", 18d);
 //        SmartDashboard.putNumber("Height", 90);
+        initializeMap();
     }
+    private void initializeMap(){
+//       TEMP DATA! Upon measuring real data, record
+        lowDistanceToRPM.put(new InterpolatingDouble(10*12d), new InterpolatingDouble(4300d));
+        lowDistanceToRPM.put(new InterpolatingDouble(16*12d), new InterpolatingDouble(5000d));
 
+        highDistanceToRPM.put(new InterpolatingDouble(10*12d), new InterpolatingDouble(4300d));
+        highDistanceToRPM.put(new InterpolatingDouble(22*12d), new InterpolatingDouble(5800d));
+    }
     @Override
     public void onPeriodicAsync() {
 //        centerToTarget();
@@ -91,6 +106,16 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         turretMotor.set(output);
     }
 
+    private double lastTurretAngle = 0;
+
+    public void updateTargetSighting(double turretAngle, double limelightTx){
+        lastTurretAngle = turretAngle + limelightTx;
+    }
+
+    public double predictTurretAngle(){
+        return lastTurretAngle;
+    }
+
     public void centerToTarget() {
         double turretAdjust = 0;
         double tx = limelight.getTx();
@@ -111,12 +136,19 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //        System.out.println("Turret Adj: " + turretAdjust);
     }
 
-    public double calcRPMGoal() {
-        return 0;
+    public double calcRPMGoal(boolean isLowHeight) {
+        if(isLowHeight){
+            Double low = lowDistanceToRPM.getInterpolated(new InterpolatingDouble(limelight.getLowDistance())).value;
+            return low == null ? 3000 : low;
+        }else{
+            Double high = highDistanceToRPM.getInterpolated(new InterpolatingDouble(limelight.getHighDistance())).value;
+            return high == null ? 6000 : high;
+        }
+
     }
 
     private double potPosition() {
-        return (potentiometer.get() - POT_MIN_VALUE) * (MAX_POSITION - MIN_POSITION) / (POT_MAX_VALUE - POT_MIN_VALUE) + MIN_POSITION;
+        return MathUtil.map(potentiometer.get(), POT_MIN_VALUE, POT_MAX_VALUE, MIN_POSITION, MAX_POSITION);
     }
 
     private void zeroEncoder(){
@@ -167,5 +199,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         }
     }
+
+
 
 }

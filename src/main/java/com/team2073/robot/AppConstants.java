@@ -1,7 +1,7 @@
 package com.team2073.robot;
 
 public abstract class AppConstants {
-    public abstract class Ports {
+    public abstract static class Ports {
 
         //DS
         public static final int WHEEL_PORT = 0;
@@ -54,7 +54,20 @@ public abstract class AppConstants {
         public static final int PDB_PORT = 0;
     }
 
-    public abstract class Mediator {
+    public abstract static class Mediator {
         public static final double MAX_DRIVE_PERCENT_IN_CLIMB = .3;
+    }
+
+    public abstract static class Shooter {
+        public static final double NO_TARGET_RPM = 3250;
+        public static final double DEFAULT_LONG_RPM = 6250;
+        public static final double ZOOM_RANGE_INCHES = 12*20;
+        public static final double test = 3;
+
+
+        public static final double LIMELIGHT_HIGH_HEIGHT = 39d;
+        public static final double LIMELIGHT_LOW_HEIGHT = 23d;
+        public static final double LIMELIGHT_LENS_ANGLE = 18d;
+        public static final double TARGET_HEIGHT = 87d;
     }
 }
