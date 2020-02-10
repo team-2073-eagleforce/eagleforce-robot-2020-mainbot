@@ -19,7 +19,6 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
     private Limelight limelight = appCtx.getLimelight();
     private AnalogPotentiometer potentiometer = appCtx.getPotentiometer(); // WARNING: Port path on this is randomly chosen!
-    private Servo servo = appCtx.getServo(); // WARNING: Channel is randomly chosen!
 
     private CANSparkMax turretMotor = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
 
@@ -44,7 +43,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     Compensate for elevator height
         - Calc RPM goal for Shooter based on distance
     Zero relative to robot
-    Always face shot wall by using gyro
+    Always face shot wall by using gyro *maybe not
     Determine when to move hood
     Prevent wires from doing the wrap
 
@@ -88,10 +87,6 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     }
 
-    public void set(HoodState state) {
-        servo.setAngle(state.percent);
-    }
-
     private void setMotor(double output) {
         turretMotor.set(output);
     }
@@ -120,18 +115,6 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         return 0;
     }
 
-    public enum HoodState {
-        RETRACTED(0.0),
-        EXTENDED(180.0);
-
-        private Double percent;
-        HoodState(Double degree) {
-            this.percent = degree;
-        }
-        public Double getPercent(){
-            return percent;
-        }
-    }
     private double potPosition() {
         return (potentiometer.get() - POT_MIN_VALUE) * (MAX_POSITION - MIN_POSITION) / (POT_MAX_VALUE - POT_MIN_VALUE) + MIN_POSITION;
     }

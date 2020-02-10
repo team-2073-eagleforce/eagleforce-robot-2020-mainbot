@@ -1,13 +1,13 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.robot.subsystem.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
 import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.HopperSubsystem;
-import com.team2073.robot.subsystem.IntermediateSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
@@ -33,10 +33,7 @@ public class ApplicationContext {
 
 
     //Subsystem
-    private TurretSubsystem turretSubsystem;
-
     private CANSparkMax intakeMotor;
-
     private CANSparkMax leftMaster;
     private CANSparkMax rightMaster;
     private CANSparkMax leftSlave1;
@@ -47,23 +44,25 @@ public class ApplicationContext {
     private CANSparkMax intermediateMotor;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
-    private IntakeSubsystem intakeSubsystem;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
-    private WOFManipulatorSubsystem wofManipulatorSubsystem;
-    private IntermediateSubsystem intermediateSubsystem;
-    private VictorSPX intermediateBagMotor;
+    private TalonSRX intermediateBagMotor;
 
     // Neo550
     private CANSparkMax hopperMotor;
-    private DriveSubsystem driveSubsystem;
 
     // Sensors
     private DigitalInput hopperSensor;
     private Encoder wofEncoder;
 
     //Subsystem
+    private TurretSubsystem turretSubsystem;
     private HopperSubsystem hopperSubsystem;
+    private DriveSubsystem driveSubsystem;
+    private WOFManipulatorSubsystem wofManipulatorSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+    private IntermediateSubsystem intermediateSubsystem;
+    private HoodSubsystem hoodSubsystem;
     private Limelight limelight;
 
     private TalonSRX shooterMotorOne;
@@ -75,6 +74,8 @@ public class ApplicationContext {
     private ShooterVelocityCounter velocityCounter;
     private Flywheel flywheel;
     private FlywheelSubsystem flywheelSubsystem;
+
+
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -134,14 +135,14 @@ public class ApplicationContext {
 
     public Solenoid getIntakeSolenoidLeft() {
         if (intakeSolenoidLeft == null) {
-            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT_PORT);
+            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
         }
         return intakeSolenoidLeft;
     }
 
     public Solenoid getIntakeSolenoidRight() {
         if (intakeSolenoidRight == null) {
-            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT_PORT);
+            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
         }
         return intakeSolenoidRight;
     }
@@ -321,10 +322,17 @@ public class ApplicationContext {
         }
         return intermediateMotor;
     }
-    public VictorSPX getBagMotor() {
+    public TalonSRX getBagMotor() {
         if (intermediateBagMotor == null) {
-            intermediateBagMotor = new VictorSPX(INTERMEDIATE_SLAVE);
+            intermediateBagMotor = new TalonSRX(INTERMEDIATE_SLAVE);
         }
         return intermediateBagMotor;
+    }
+
+    public HoodSubsystem getHoodSubsystem() {
+        if(hoodSubsystem == null){
+            hoodSubsystem = new HoodSubsystem();
+        }
+        return hoodSubsystem;
     }
 }

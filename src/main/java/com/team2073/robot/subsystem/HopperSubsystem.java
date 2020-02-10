@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 
 public class HopperSubsystem implements AsyncPeriodicRunnable {
-
+    //TODO: test RPM to make sure constants are correct.
     private static final double POSITION_OFFSET = 5/360d;
     private static final double MAX_RPM = 73d;
     private static final double unjamTime = .1; // how long to backspin for to unjam
@@ -126,7 +126,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         STOP(0),
         IDLE(20d),
         PREP_SHOT(10d),
-        SHOOT(60d),
+        SHOOT(40d),
         JAM(0d);
 
         private double rpm;

@@ -1,7 +1,7 @@
 package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
@@ -35,12 +35,13 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private final I2C.Port i2cPort = I2C.Port.kOnboard;
     private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
     private final ColorMatch m_colorMatcher = new ColorMatch();
+    private TalonSRX WOFMotor = appCtx.getBagMotor();
+
+    private static File file = new File(System.getProperty("user.home"), '/' + "RGB.csv");
     private WOFColorCalculator wofColorCalculator = new WOFColorCalculator();
     private Map<String, WOFColor> colorMap = new HashMap<>();
     private Map<String, String> offsetColor = new HashMap<>();
-    private static File file = new File(System.getProperty("user.home"), '/' + "RGB.csv");
 
-    private VictorSPX WOFMotor = appCtx.getBagMotor();
     private Encoder wofEncoder = appCtx.getWofEncoder();
 
     private Color rioGreenTarget = getTargetFromFile("Green");

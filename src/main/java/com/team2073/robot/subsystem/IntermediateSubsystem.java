@@ -1,15 +1,15 @@
 package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.robot.ApplicationContext;
 
 public class IntermediateSubsystem implements AsyncPeriodicRunnable {
     private ApplicationContext applicationContext = ApplicationContext.getInstance();
-    private CANSparkMax intermediateMotor1 = applicationContext.getIntermediateMotor();
-//    private VictorSPX intermediateMotor2 = applicationContext.getBagMotor();
+    private CANSparkMax bottomMotor = applicationContext.getIntermediateMotor();
+    private TalonSRX topMotor = applicationContext.getBagMotor();
     private IntermediateState state = IntermediateState.STOP;
 
     public IntermediateSubsystem() {
@@ -22,8 +22,12 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void setPower(Double bottomPercent, Double topPercent) {
-        intermediateMotor1.set(bottomPercent);
-//        intermediateMotor2.set(ControlMode.PercentOutput, topPercent);
+        if(state != IntermediateState.WAIT_FOR_WOF) {
+            bottomMotor.set(bottomPercent);
+            topMotor.set(ControlMode.PercentOutput, topPercent);
+        }else{
+            bottomMotor.set(0);
+        }
     }
 
     public void set(IntermediateState goalState) {
@@ -34,7 +38,8 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
         SHOOT(1d, .9),
         IDLE(-.05d, 0),
         STOP(0d, 0),
-        DISABLED(0d, 0);
+        DISABLED(0d, 0),
+        WAIT_FOR_WOF(0d,0d);
 
         private double topPercent;
         private double bottomPercent;
