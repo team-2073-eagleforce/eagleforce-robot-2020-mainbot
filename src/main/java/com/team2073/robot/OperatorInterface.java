@@ -1,9 +1,6 @@
 package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
-import com.team2073.robot.command.WOF.WOFPositionCommand;
-import com.team2073.robot.command.WOF.WOFRotationCommand;
-import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
@@ -46,12 +43,6 @@ public class OperatorInterface {
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
 
     public OperatorInterface(){
-//        a.whileHeld(new WOFPositionCommand("Green"));
-//        b.whileHeld(new WOFPositionCommand("Red"));
-//        x.whileHeld(new WOFPositionCommand("Blue"));
-//        y.whileHeld(new WOFPositionCommand("Yellow"));
-//
-//        lb.whileHeld(new WOFRotationCommand());
 
     }
 

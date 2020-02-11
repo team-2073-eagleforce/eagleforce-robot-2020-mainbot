@@ -12,7 +12,7 @@ public class WOFRotationCommand extends AbstractLoggingCommand {
 
     @Override
     protected void endDelegate() {
-        appCtx.getWofManipulatorSubsystem().setMotor(0d);
+        appCtx.getWofManipulatorSubsystem().setWOFMotor(0d);
         appCtx.getWofManipulatorSubsystem().setMotionSetpoint(null);
     }
 
