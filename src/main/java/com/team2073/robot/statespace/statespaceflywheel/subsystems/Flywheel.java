@@ -10,17 +10,15 @@ package com.team2073.robot.statespace.statespaceflywheel.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.*;
 
 public class Flywheel {
   private ApplicationContext appCtx = ApplicationContext.getInstance();
-//  private TalonSRX m_motor = appCtx.getShooterMotorOne();
-//  private TalonSRX m_motor2 = appCtx.getShooterMotorTwo();
-//  private TalonSRX m_motor3 = appCtx.getShooterMotorThree();
-  private TalonSRX m_motor = new TalonSRX(1);
-  private TalonSRX m_motor2 = new TalonSRX(4);
-  private TalonSRX m_motor3 = new TalonSRX(9);
+  private TalonSRX m_motor = appCtx.getShooterMotorOne();
+  private VictorSPX m_motor2 = appCtx.getShooterMotorTwo();
+  private VictorSPX m_motor3 = appCtx.getShooterMotorThree();
 //  private final Encoder m_encoder = new Encoder(1, 2);
 
   private final FlywheelController m_wheel = new FlywheelController();
@@ -30,6 +28,9 @@ public class Flywheel {
     m_motor.configOpenloopRamp(0.25);
     m_motor2.configOpenloopRamp(0.25);
     m_motor3.configOpenloopRamp(0.25);
+
+    m_motor2.follow(m_motor);
+    m_motor3.follow(m_motor);
   }
 
   public void enable() {
@@ -60,8 +61,8 @@ public class Flywheel {
     double batteryVoltage = RobotController.getBatteryVoltage();
     double controllerVoltage = m_wheel.getControllerVoltage();
     m_motor.set(ControlMode.PercentOutput, -controllerVoltage / batteryVoltage);
-    m_motor2.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
-    m_motor3.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+//    m_motor2.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+//    m_motor3.set(ControlMode.PercentOutput, -controllerVoltage / batteryVoltage);
 //      m_motor3.set(ControlMode.PercentOutput, 0.3);
 //    m_motor3.set(ControlMode.PercentOutput, 0.4);
 //    System.out.println("Output: " + m_motor.getMo

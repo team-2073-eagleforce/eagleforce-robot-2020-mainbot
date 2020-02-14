@@ -67,8 +67,8 @@ public class ApplicationContext {
     private Limelight limelight;
 
     private TalonSRX shooterMotorOne;
-    private TalonSRX shooterMotorTwo;
-    private TalonSRX shooterMotorThree;
+    private VictorSPX shooterMotorTwo;
+    private VictorSPX shooterMotorThree;
     private Counter AChannel;
 
     private ShooterVelocityCounter velocityCounter;
@@ -229,37 +229,30 @@ public class ApplicationContext {
 
     public TalonSRX getShooterMotorOne() {
         if(shooterMotorOne == null){
-            shooterMotorOne = new TalonSRX(SHOOTER_ONE);
+            shooterMotorOne = new TalonSRX(SHOOTER_MASTER);
         }
         return shooterMotorOne;
     }
 
-    public TalonSRX getShooterMotorTwo() {
+    public VictorSPX getShooterMotorTwo() {
         if(shooterMotorTwo == null){
-            shooterMotorTwo = new TalonSRX(SHOOTER_TWO);
+            shooterMotorTwo = new VictorSPX(SHOOTER_SLAVE_ONE);
         }
-        return shooterMotorOne;
+        return shooterMotorTwo;
     }
 
-    public TalonSRX getShooterMotorThree() {
+    public VictorSPX getShooterMotorThree() {
         if(shooterMotorThree == null){
-            shooterMotorThree = new TalonSRX(SHOOTER_THREE);
+            shooterMotorThree = new VictorSPX(SHOOTER_SLAVE_TWO);
         }
-        return shooterMotorOne;
+        return shooterMotorThree;
     }
 
     public Counter getAChannel() {
         if(AChannel == null){
-            AChannel = new Counter(SHOOTER_COUNTER_A);
+            AChannel = new Counter(SHOOTER_ENCODER_A_DIO);
         }
         return AChannel;
-    }
-
-    public Counter getBChannel() {
-        if(BChannel == null){
-            BChannel = new Counter(SHOOTER_COUNTER_B);
-        }
-        return BChannel;
     }
 
     public ShooterVelocityCounter getVelocityCounter() {

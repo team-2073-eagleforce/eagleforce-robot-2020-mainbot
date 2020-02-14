@@ -33,26 +33,21 @@ public abstract class AppConstants {
         public static final int WOF_ENCODER_B_DIO_PORT = 1;
 
         //Shooter - Current settings are for the test board
-        public static final int SHOOTER_ONE = 1;
-        public static final int SHOOTER_TWO = 4;
-        public static final int SHOOTER_THREE = 9;
-        public static final int SHOOTER_COUNTER_A = 8;
-        public static final int SHOOTER_COUNTER_B = 9;
 
         //turret
-        public static final int TURRET_MOTOR_PORT = 1;
+        public static final int TURRET_MOTOR_PORT = 8;
         public static final int TURRET_POT_ANALOG_PORT = 3;
 
         //Shooter
         public static final int SHOOTER_MASTER = 3;
-        public static final int SHOOTER_SLAVE_ONE = 12;
+        public static final int SHOOTER_SLAVE_ONE = 11;
         public static final int SHOOTER_SLAVE_TWO = 5;
         public static final int SHOOTER_ENCODER_A_DIO = 4;
         public static final int HOOD_SERVO_PWM_PORT = 9;
 
         //Intermediate
         public static final int INTERMEDIATE_MASTER = 10; //change number
-        public static final int INTERMEDIATE_SLAVE = 8; //change number;
+        public static final int INTERMEDIATE_SLAVE = 12; //change number;
 
         // Control System
         public static final int PDB_PORT = 0;
@@ -70,8 +65,8 @@ public abstract class AppConstants {
 
 
         public static final double LIMELIGHT_HIGH_HEIGHT = 39d;
-        public static final double LIMELIGHT_LOW_HEIGHT = 23d;
-        public static final double LIMELIGHT_LENS_ANGLE = 18d;
+        public static final double LIMELIGHT_LOW_HEIGHT = 24.5d;
+        public static final double LIMELIGHT_LENS_ANGLE = 15d;
         public static final double TARGET_HEIGHT = 87d;
     }
 }

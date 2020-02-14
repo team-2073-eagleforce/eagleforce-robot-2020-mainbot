@@ -14,6 +14,7 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
 
     public IntermediateSubsystem() {
         autoRegisterWithPeriodicRunner();
+        topMotor.setInverted(true);
     }
 
     @Override

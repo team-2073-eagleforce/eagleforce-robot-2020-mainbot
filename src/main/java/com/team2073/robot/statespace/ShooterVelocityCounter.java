@@ -12,7 +12,6 @@ public class ShooterVelocityCounter {
 
 	private ApplicationContext appCtx = ApplicationContext.getInstance();
 	private Counter AChannel = appCtx.getAChannel();
-	private Counter BChannel = appCtx.getBChannel();
 
 	private int bLastCount;
 	private int aLastCount;
@@ -26,7 +25,7 @@ public class ShooterVelocityCounter {
 	private double lastVelocity = 0;
 
 	public double getVelocity() {
-		return (aVelocity() + bVelocity()) / 2d;
+		return (aVelocity())/* + bVelocity()) / 2d*/;
 	}
 
 	public double aVelocity(){
@@ -44,26 +43,27 @@ public class ShooterVelocityCounter {
 			aLastTime = current;
 			aLastCount = counter;
 		}
+		System.out.println(aSpeed);
 		return aSpeed;
 	}
 
-	public double bVelocity(){
-		double current = Timer.getFPGATimestamp();
-		int counter = BChannel.get();
-		double dt = 0;
-		double interval = 0;
-
-		interval = current - bInterval;
-		bInterval = current;
-
-		if (counter - bLastCount >= 1000) {
-			dt = current - bLastTime;
-			bSpeed = ((counter - bLastCount) * 2 * Math.PI) / (2048 * dt);
-			bLastTime = current;
-			bLastCount = counter;
-		}
-		return bSpeed;
-	}
+//	public double bVelocity(){
+//		double current = Timer.getFPGATimestamp();
+//		int counter = BChannel.get();
+//		double dt = 0;
+//		double interval = 0;
+//
+//		interval = current - bInterval;
+//		bInterval = current;
+//
+//		if (counter - bLastCount >= 1000) {
+//			dt = current - bLastTime;
+//			bSpeed = ((counter - bLastCount) * 2 * Math.PI) / (2048 * dt);
+//			bLastTime = current;
+//			bLastCount = counter;
+//		}
+//		return bSpeed;
+//	}
 
 
 
