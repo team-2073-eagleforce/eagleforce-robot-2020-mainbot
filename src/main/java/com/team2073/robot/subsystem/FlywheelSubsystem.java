@@ -22,7 +22,7 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 	private Flywheel shooter = new Flywheel();
 	private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)",
 			"Estimated Velocity", "Talon Output (V)", "Battery Voltage (V)", "Reference");
-	private double rpm_reference = 6500;
+	private double rpm_reference = 5090;
 	private double reference = rpm_reference * 2 * Math.PI / 60; // 130"
 	private boolean endFile = false;
 	private double iteration = 0;
@@ -36,7 +36,7 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 		shooter.setReference(reference);
 		shooter.enable();
 
-		System.out.println("Speed: " +  currentVelocity * 60 / (2*Math.PI) + "\t Kalman Estimated Velocity: " + shooter.getEstimatedVelocity());
+//		System.out.println("Speed: " +  currentVelocity * 60 / (2*Math.PI) + "\t Kalman Estimated Velocity: " + shooter.getEstimatedVelocity());
 
 
 //			shooter.iterate(lastVelocity);

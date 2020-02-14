@@ -20,8 +20,8 @@ public class FlywheelCoeffs {
 
   public static StateSpaceControllerCoeffs<N1, N1, N1>
     makeFlywheelControllerCoeffs() {
-    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.31515822450073155);
-    Matrix<N1, N1> Kff = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.3267810912261796);
+    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.2997171323728053);
+    Matrix<N1, N1> Kff = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.30927150970301476);
     Matrix<N1, N1> Umin = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(-12.0);
     Matrix<N1, N1> Umax = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(12.0);
     return new StateSpaceControllerCoeffs<N1, N1, N1>(K, Kff, Umin, Umax);
@@ -30,7 +30,7 @@ public class FlywheelCoeffs {
 
   public static StateSpaceObserverCoeffs<N1, N1, N1>
     makeFlywheelObserverCoeffs() {
-    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9999000196804267);
+    Matrix<N1, N1> K = MatrixUtils.mat(Nat.N1(), Nat.N1()).fill(0.9999000192839473);
     return new StateSpaceObserverCoeffs<N1, N1, N1>(K);
   }
 

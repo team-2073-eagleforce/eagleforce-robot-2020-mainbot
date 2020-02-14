@@ -1,22 +1,15 @@
 package com.team2073.robot.subsystem;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.team2073.common.controlloop.PidfControlLoop;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
-import com.team2073.common.subsys.ExampleAppConstants;
-import com.team2073.common.util.MathUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.opencv.core.Mat;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
 
@@ -32,15 +25,18 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private static final double POT_MAX_VALUE = .51; // This value needs to be tuned
     private static final double POT_MIN_VALUE = .57; // This value needs to be tuned
-    private static final double KP = 0.015;
+    private static final double KP_LIMELIGHT = 0.0125; // 0.015
+    private static final double KP_ENCODER = 0.002;
     private static final double acceptableError = 0.05;
     private static final double MIN_POSITION = 0;
     private static final double MAX_POSITION = 60;
-    private static final double MIN_OUTPUT = 0.058;
+    private static final double MIN_OUTPUT = 0.04;
 
     private boolean rotatingClockwise = true;
-    private PidfControlLoop pid = new PidfControlLoop(KP, 1e-5, 0.0008, 0, 0.25);
+    private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 1e-5, 0.0008, 0, 0.25);
+    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0, 0.0, 0.15);
 
+    private Double setpoint = null;
     /*
     Use limelight to turn to center the image
     Zoom in to stabilize image
@@ -61,7 +57,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         autoRegisterWithPeriodicRunner(10);
         turretMotor.setInverted(true);
         turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        pid.setPositionSupplier(()->limelight.getTx()+1.7d);
+        limelight.setxOffset(1.6);
+        pidLimelight.setPositionSupplier(()->limelight.getAdjustedTx());
+        pidEncoder.setPositionSupplier(this::getPosition);
 ////        SmartDashboard.putNumber("KP", 0.01);
 //        SmartDashboard.putNumber("Angle", 18d);
 //        SmartDashboard.putNumber("Height", 90);
@@ -104,18 +102,18 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         if (tx > acceptableError) {
 //            turretAdjust = KP * (tx - acceptableError);
-            turretAdjust = KP * tx;
+            turretAdjust = KP_LIMELIGHT * tx;
             turretAdjust += MIN_OUTPUT;
         } else if (tx < -acceptableError) {
 //            turretAdjust = KP * (tx + acceptableError);
-            turretAdjust = KP * tx;
+            turretAdjust = KP_LIMELIGHT * tx;
             turretAdjust -= MIN_OUTPUT;
         } else {
             turretAdjust = 0;
         }
 
         setMotor(turretAdjust);
-        System.out.println("Turret Adj: " + turretAdjust);
+//        System.out.println("Turret Adj: " + turretAdjust);
     }
 
     public double calcRPMGoal() {
@@ -160,9 +158,30 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
                 rotatingClockwise = true;
             }
         }else{
-            pid.updatePID();
-            double output =-pid.getOutput() + MIN_OUTPUT * Math.signum(limelight.getTx() + 1.7d);
-            setMotor(output);
+            if(limelight.getTv() == 0d){
+                setpoint = null;
+                pidEncoder.resetAccumulatedError();
+            }
+            if(Math.abs(limelight.getAdjustedTx()) > 0.5 && setpoint == null){
+                pidLimelight.updatePID();
+                double output =-pidLimelight.getOutput() + MIN_OUTPUT * Math.signum(limelight.getAdjustedTx());
+                System.out.println("Limelight Output:" + output);
+                setMotor(output);
+            } else {
+                double position = getPosition();
+                if(setpoint == null) {
+                    setpoint = position + limelight.getAdjustedTx();
+                }
+                if(limelight.getAdjustedTx() > 3){
+                    setpoint = null;
+                }
+                pidEncoder.updateSetPoint(setpoint);
+                pidEncoder.updatePID();
+                double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(position - setpoint));
+                System.out.println("Output: " + output + "\t Setpoint: " + setpoint + "\t pos: " + position + "\t tx" + limelight.getAdjustedTx());
+                setMotor(output);
+            }
+
         }
     }
 
