@@ -54,6 +54,7 @@ public class ApplicationContext {
     // Sensors
     private DigitalInput hopperSensor;
     private Encoder wofEncoder;
+    private DigitalInput elevatorBottomSensor;
 
     //Subsystem
     private TurretSubsystem turretSubsystem;
@@ -69,7 +70,6 @@ public class ApplicationContext {
     private TalonSRX shooterMotorTwo;
     private TalonSRX shooterMotorThree;
     private Counter AChannel;
-    private Counter BChannel;
 
     private ShooterVelocityCounter velocityCounter;
     private Flywheel flywheel;
@@ -222,7 +222,7 @@ public class ApplicationContext {
 
     public Encoder getWofEncoder() {
         if (wofEncoder == null){
-            wofEncoder = new Encoder(8, 9);
+            wofEncoder = new Encoder(WOF_ENCODER_A_DIO_PORT, WOF_ENCODER_B_DIO_PORT);
         }
         return wofEncoder;
     }
@@ -286,7 +286,7 @@ public class ApplicationContext {
 
     public AnalogPotentiometer getPotentiometer() {
         if(potentiometer == null){
-            potentiometer = new AnalogPotentiometer(4);
+            potentiometer = new AnalogPotentiometer(TURRET_POT_ANALOG_PORT);
         }
         return potentiometer;
     }
@@ -300,7 +300,7 @@ public class ApplicationContext {
 
     public Servo getServo() {
         if(servo == null){
-            servo = new Servo(9);
+            servo = new Servo(HOOD_SERVO_PWM_PORT);
         }
         return servo;
     }
@@ -334,5 +334,12 @@ public class ApplicationContext {
             hoodSubsystem = new HoodSubsystem();
         }
         return hoodSubsystem;
+    }
+
+    public DigitalInput getElevatorBottomSensor(){
+        if(elevatorBottomSensor == null){
+            elevatorBottomSensor = new DigitalInput(ELEVATOR_BOTTOM_DIO_PORT);
+        }
+        return elevatorBottomSensor;
     }
 }

@@ -75,7 +75,8 @@ public class Mediator implements AsyncPeriodicRunnable {
                 break;
             case WHEEL_OF_FORTUNE:
                 intermediate.set(IntermediateSubsystem.IntermediateState.WAIT_FOR_WOF);
-//                wof.DoTheThing;
+//                wof.DoTheThing
+                wof.rotationControl();
 //                elevator.toWOFHeight
 
                 break;

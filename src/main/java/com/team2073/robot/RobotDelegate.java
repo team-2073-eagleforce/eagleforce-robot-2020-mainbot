@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotDelegate extends AbstractRobotDelegate {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private RobotContext robotCtx = RobotContext.getInstance();
-    private WOFManipulatorSubsystem wofManipulatorSubsystem = appCtx.getWofManipulatorSubsystem();
+    private WOFManipulatorSubsystem wofManipulatorSubsystem/* = appCtx.getWofManipulatorSubsystem()*/;
     private OperatorInterface oi;
     private IntermediateSubsystem intermediate;
     private HopperSubsystem hopper;
@@ -29,6 +29,11 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotPeriodic() {
+        appCtx.getHopperSensor();
+        appCtx.getPotentiometer();
+        appCtx.getWofEncoder();
+        appCtx.getElevatorBottomSensor();
+        appCtx.getServo();
     }
 
     @Override
