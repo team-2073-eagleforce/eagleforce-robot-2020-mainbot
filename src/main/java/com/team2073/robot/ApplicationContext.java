@@ -1,20 +1,22 @@
 package com.team2073.robot;
 
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
-import com.team2073.robot.subsystem.TurretSubsystem;
+import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntermediateSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.IntakeSubsystem;
+import com.team2073.robot.statespace.ShooterVelocityCounter;
+import com.team2073.robot.statespace.statespaceflywheel.subsystems.Flywheel;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -64,6 +66,15 @@ public class ApplicationContext {
     private HopperSubsystem hopperSubsystem;
     private Limelight limelight;
 
+    private TalonSRX shooterMotorOne;
+    private TalonSRX shooterMotorTwo;
+    private TalonSRX shooterMotorThree;
+    private Counter AChannel;
+    private Counter BChannel;
+
+    private ShooterVelocityCounter velocityCounter;
+    private Flywheel flywheel;
+    private FlywheelSubsystem flywheelSubsystem;
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -215,6 +226,63 @@ public class ApplicationContext {
         return wofEncoder;
     }
 
+    public TalonSRX getShooterMotorOne() {
+        if(shooterMotorOne == null){
+            shooterMotorOne = new TalonSRX(SHOOTER_ONE);
+        }
+        return shooterMotorOne;
+    }
+
+    public TalonSRX getShooterMotorTwo() {
+        if(shooterMotorTwo == null){
+            shooterMotorTwo = new TalonSRX(SHOOTER_TWO);
+        }
+        return shooterMotorOne;
+    }
+
+    public TalonSRX getShooterMotorThree() {
+        if(shooterMotorThree == null){
+            shooterMotorThree = new TalonSRX(SHOOTER_THREE);
+        }
+        return shooterMotorOne;
+    }
+
+    public Counter getAChannel() {
+        if(AChannel == null){
+            AChannel = new Counter(SHOOTER_COUNTER_A);
+        }
+        return AChannel;
+    }
+
+    public Counter getBChannel() {
+        if(BChannel == null){
+            BChannel = new Counter(SHOOTER_COUNTER_B);
+        }
+        return BChannel;
+    }
+
+    public ShooterVelocityCounter getVelocityCounter() {
+        if(velocityCounter == null){
+            velocityCounter = new ShooterVelocityCounter();
+        }
+        return velocityCounter;
+    }
+
+    public Flywheel getFlywheel() {
+        if(flywheel == null){
+            flywheel = new Flywheel();
+        }
+        return flywheel;
+    }
+
+    public FlywheelSubsystem getFlywheelSubsystem() {
+        if(flywheelSubsystem == null){
+            flywheelSubsystem = new FlywheelSubsystem();
+        }
+        return flywheelSubsystem;
+    }
+
+
     public AnalogPotentiometer getPotentiometer() {
         if(potentiometer == null){
             potentiometer = new AnalogPotentiometer(4);
@@ -231,7 +299,7 @@ public class ApplicationContext {
 
     public Servo getServo() {
         if(servo == null){
-            servo = new Servo(0);
+            servo = new Servo(9);
         }
         return servo;
     }

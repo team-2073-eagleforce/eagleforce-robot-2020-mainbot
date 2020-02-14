@@ -56,8 +56,8 @@ public final class Constants {
         public static final double maxSpeedFeetPerSecond = 16;
         public static final double maxAccelerationMetersPerSecondSquared = 16;
 
-        public static final double kMaxSpeedMetersPerSecond = feetToMeters(maxSpeedFeetPerSecond);
-        public static final double kMaxAccelerationMetersPerSecondSquared = feetToMeters(maxAccelerationMetersPerSecondSquared);
+        public static final double kMaxSpeedMetersPerSecond = (maxSpeedFeetPerSecond);
+        public static final double kMaxAccelerationMetersPerSecondSquared = (maxAccelerationMetersPerSecondSquared);
 
         // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
         public static final double kRamseteB = 2;
