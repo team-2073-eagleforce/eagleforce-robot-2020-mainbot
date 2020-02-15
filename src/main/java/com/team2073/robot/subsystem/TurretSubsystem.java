@@ -20,11 +20,11 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
     //private Mediator mediator = Mediator.getInstance();
     private static final double KP_LIMELIGHT = 0.0125; // 0.015
-    private static final double KP_ENCODER = 0.0025;
+    private static final double KP_ENCODER = 0.0033;
     private static final double acceptableError = 0.05;
     private static final double MIN_POSITION = 0;
     private static final double MAX_POSITION = 238;
-    private static final double MIN_OUTPUT = 0.04;
+    private static final double MIN_OUTPUT = 0.05;
     private RobotContext robotContext = RobotContext.getInstance();
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private Limelight limelight = appCtx.getLimelight();
@@ -34,7 +34,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private boolean rotatingClockwise = true;
     private boolean hasZeroed = false;
     private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 1e-5, 0.0008, 0, 0.25);
-    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0, 0.0, 0.15);
+    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0005, 0.0, 0.15);
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
     private boolean deadZone = false;
@@ -60,7 +60,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         autoRegisterWithPeriodicRunner(10);
         turretMotor.setInverted(true);
         turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        limelight.setxOffset(1);
+        limelight.setxOffset(1.7);
         pidLimelight.setPositionSupplier(() -> limelight.getAdjustedTx());
         pidEncoder.setPositionSupplier(this::getPosition);
 ////        SmartDashboard.putNumber("KP", 0.01);
@@ -166,18 +166,18 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void seekTarget() {
-        if (limelight.getTv() == 0d) {
-//            if(potPosition() > MIN_POSITION && potPosition() < MAX_POSITION && !rotatingClockwise){
-            if (getPosition() >= MIN_POSITION && getPosition() <= MAX_POSITION && rotatingClockwise) {
-                setMotor(.1);
-            } else if (getPosition() > MAX_POSITION) {
-                setMotor(-.1);
-                rotatingClockwise = false;
-            } else if (getPosition() < MIN_POSITION) {
-                setMotor(.1);
-                rotatingClockwise = true;
-            }
-        } else {
+//        if (limelight.getTv() == 0d) {
+////            if(potPosition() > MIN_POSITION && potPosition() < MAX_POSITION && !rotatingClockwise){
+//            if (getPosition() >= MIN_POSITION && getPosition() <= MAX_POSITION && rotatingClockwise) {
+//                setMotor(.35);
+//            } else if (getPosition() > MAX_POSITION - 5) {
+//                setMotor(-.35);
+//                rotatingClockwise = false;
+//            } else if (getPosition() < MIN_POSITION + 5) {
+//                setMotor(.35);
+//                rotatingClockwise = true;
+//            }
+//        } else {
             if (limelight.getTv() == 0d) {
                 setpoint = null;
                 pidEncoder.resetAccumulatedError();
@@ -201,7 +201,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //                System.out.println("Output: " + output + "\t Setpoint: " + setpoint + "\t pos: " + position + "\t tx" + limelight.getAdjustedTx());
                 setMotor(output);
             }
-        }
+//        }
     }
 }
 

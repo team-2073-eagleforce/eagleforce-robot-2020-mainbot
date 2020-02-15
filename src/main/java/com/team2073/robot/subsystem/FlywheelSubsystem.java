@@ -23,7 +23,8 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
     private VictorSPX m_motor3 = appCtx.getShooterMotorThree();
     private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)",
             "Estimated Velocity", "Talon Output (V)", "Battery Voltage (V)", "Reference");
-    private double rpm_reference = 4685;
+//    private double rpm_reference = 4710; good for a dist of 133.5 in from front bumper rail
+    private double rpm_reference = 5975;
     private double reference = rpm_reference * 2 * Math.PI / 60; // 130"
     private boolean endFile = false;
     private double iteration = 0;
@@ -63,7 +64,7 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         double currentVelocity = counter.getVelocity();
-        System.out.println("Current Velocity: " + currentVelocity * 60 / (2*Math.PI) + "\t Output" + m_motor.getMotorOutputVoltage());
+//        System.out.println("Current Velocity: " + currentVelocity * 60 / (2*Math.PI) + "\t Output" + m_motor.getMotorOutputVoltage());
         setReference(reference);
         enable();
 

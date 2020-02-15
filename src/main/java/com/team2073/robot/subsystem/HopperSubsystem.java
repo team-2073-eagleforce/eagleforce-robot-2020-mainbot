@@ -29,7 +29,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private boolean shotReady = false;
 
     public HopperSubsystem(){
-        hopperMotor.setOpenLoopRampRate(0.5);
+        hopperMotor.setOpenLoopRampRate(1);
         hopperMotor.setSmartCurrentLimit(30);
         hopperMotor.setInverted(true);
         hopperEncoder.setPositionConversionFactor(1/125d);
@@ -38,6 +38,9 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
+//        if(state != HopperState.SHOOT){
+//            checkJam();
+//        }
         checkJam();
 //        System.out.println(hopperMotor.getOutputCurrent());
         switch (state) {
@@ -77,7 +80,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     private void shootingPosition() {
         if (hopperSensor.get() && !shotReady) {
-            setMotor(state.getRpm()/2d);
+            setMotor(state.getRpm());
         } else if (!shotReady){
             setMotor(0d);
             shotReady = true;
@@ -113,7 +116,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private void checkJam() {
         if (!hasJammed && hopperMotor.getOutputCurrent() > 15d && hopperMotor.getAppliedOutput() > 0) {
             lastState = state;
-            System.out.println(state);
+//            System.out.println(state);
             state = HopperState.JAM;
             hasJammed = true;
             timer = 0;
@@ -133,8 +136,8 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     public enum HopperState {
         STOP(0),
         IDLE(20d),
-        PREP_SHOT(10d),
-        SHOOT(40d),
+        PREP_SHOT(20d),
+        SHOOT(30d),
         JAM(0d);
 
         private double rpm;
