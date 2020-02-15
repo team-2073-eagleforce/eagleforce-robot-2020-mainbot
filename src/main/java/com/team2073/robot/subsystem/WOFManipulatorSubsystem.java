@@ -180,7 +180,6 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         } else if (controller.getRawButtonPressed(4)) {
             updateFile("Yellow", getSensorRed().toString(), getSensorGreen().toString(), getSensorBlue().toString());
         }
-
     }
 
     public static void createCSV() {

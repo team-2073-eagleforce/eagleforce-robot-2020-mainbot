@@ -1,6 +1,7 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.robot.math.ShooterReference;
 import com.team2073.robot.subsystem.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -8,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
 import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
+import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
@@ -64,12 +66,14 @@ public class ApplicationContext {
     private IntakeSubsystem intakeSubsystem;
     private IntermediateSubsystem intermediateSubsystem;
     private HoodSubsystem hoodSubsystem;
+    private ElevatorSubsytem elevatorSubsytem;
     private Limelight limelight;
 
     private TalonSRX shooterMotorOne;
     private VictorSPX shooterMotorTwo;
     private VictorSPX shooterMotorThree;
     private Counter AChannel;
+    private TalonFX elevatorMotor;
 
     private ShooterVelocityCounter velocityCounter;
     private FlywheelSubsystem flywheelSubsystem;
@@ -326,5 +330,19 @@ public class ApplicationContext {
             elevatorBottomSensor = new DigitalInput(ELEVATOR_BOTTOM_DIO_PORT);
         }
         return elevatorBottomSensor;
+    }
+
+    public TalonFX getElevatorMotor(){
+        if (elevatorMotor == null){
+            elevatorMotor = new TalonFX(ELEVATOR_MOTOR_PORT);
+        }
+        return elevatorMotor;
+    }
+
+    public ElevatorSubsytem getElevatorSubsystem() {
+        if (elevatorSubsytem == null){
+            elevatorSubsytem = new ElevatorSubsytem();
+        }
+        return elevatorSubsytem;
     }
 }
