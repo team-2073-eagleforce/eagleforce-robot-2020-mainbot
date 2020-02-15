@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Timer;
 
 public class HopperSubsystem implements AsyncPeriodicRunnable {
-
+    //TODO: test RPM to make sure constants are correct.
     private static final double POSITION_OFFSET = 5/360d;
     private static final double MAX_RPM = 73d;
     private static final double unjamTime = .1; // how long to backspin for to unjam
@@ -19,14 +19,14 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
 
     private CANSparkMax hopperMotor = appCtx.getHopperMotor();
-//    private DigitalInput hopperSensor = appCtx.getHopperSensor();
+    private DigitalInput hopperSensor = appCtx.getHopperSensor();
     private CANEncoder hopperEncoder = hopperMotor.getEncoder();
 
     private HopperState state = HopperState.STOP;
     private HopperState lastState = HopperState.STOP;
 
     private Timer jamTimer = new Timer();
-    private boolean shotReady = true;
+    private boolean shotReady = false;
 
     public HopperSubsystem(){
         hopperMotor.setOpenLoopRampRate(0.5);
@@ -59,6 +59,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
                 }else {
                     shootingPosition();
                 }
+                break;
         }
     }
 
@@ -66,17 +67,23 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         this.state = state;
     }
 
-    private void shootingPosition() {
-//        if (!hopperSensor.get()) {
-//            setMotor(state.getRpm());
+    public boolean isShotReady() {
+        return shotReady;
+    }
 
-//        } else if (!shotReady){
-//            setMotor(0d);
-//            shotReady = true;
-//            hopperEncoder.setPosition(0d);
-//        }else{
-//            keepPosition(0);
-//        }
+    public void setShotReady(boolean ready) {
+        this.shotReady = ready;
+    }
+
+    private void shootingPosition() {
+        if (hopperSensor.get() && !shotReady) {
+            setMotor(state.getRpm()/2d);
+        } else if (!shotReady){
+            setMotor(0d);
+            shotReady = true;
+            hopperEncoder.setPosition(0d);
+        }
+
     }
 
     /**
@@ -102,6 +109,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     private boolean hasJammed = false;
     private int timer;
+
     private void checkJam() {
         if (!hasJammed && hopperMotor.getOutputCurrent() > 15d && hopperMotor.getAppliedOutput() > 0) {
             lastState = state;
@@ -126,7 +134,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         STOP(0),
         IDLE(20d),
         PREP_SHOT(10d),
-        SHOOT(60d),
+        SHOOT(40d),
         JAM(0d);
 
         private double rpm;

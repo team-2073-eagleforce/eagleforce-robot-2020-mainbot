@@ -1,13 +1,13 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team2073.robot.subsystem.*;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.robot.AppConstants;
 import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.HopperSubsystem;
-import com.team2073.robot.subsystem.IntermediateSubsystem;
 import edu.wpi.first.wpilibj.DigitalInput;
 import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
@@ -33,10 +33,7 @@ public class ApplicationContext {
 
 
     //Subsystem
-    private TurretSubsystem turretSubsystem;
-
     private CANSparkMax intakeMotor;
-
     private CANSparkMax leftMaster;
     private CANSparkMax rightMaster;
     private CANSparkMax leftSlave1;
@@ -47,34 +44,37 @@ public class ApplicationContext {
     private CANSparkMax intermediateMotor;
     private Solenoid intakeSolenoidLeft;
     private Solenoid intakeSolenoidRight;
-    private IntakeSubsystem intakeSubsystem;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
-    private WOFManipulatorSubsystem wofManipulatorSubsystem;
-    private IntermediateSubsystem intermediateSubsystem;
-    private VictorSPX intermediateBagMotor;
+    private TalonSRX intermediateBagMotor;
 
     // Neo550
     private CANSparkMax hopperMotor;
-    private DriveSubsystem driveSubsystem;
 
     // Sensors
     private DigitalInput hopperSensor;
     private Encoder wofEncoder;
+    private DigitalInput elevatorBottomSensor;
 
     //Subsystem
+    private TurretSubsystem turretSubsystem;
     private HopperSubsystem hopperSubsystem;
+    private DriveSubsystem driveSubsystem;
+    private WOFManipulatorSubsystem wofManipulatorSubsystem;
+    private IntakeSubsystem intakeSubsystem;
+    private IntermediateSubsystem intermediateSubsystem;
+    private HoodSubsystem hoodSubsystem;
     private Limelight limelight;
 
     private TalonSRX shooterMotorOne;
-    private TalonSRX shooterMotorTwo;
-    private TalonSRX shooterMotorThree;
+    private VictorSPX shooterMotorTwo;
+    private VictorSPX shooterMotorThree;
     private Counter AChannel;
-    private Counter BChannel;
 
     private ShooterVelocityCounter velocityCounter;
-    private Flywheel flywheel;
     private FlywheelSubsystem flywheelSubsystem;
+
+
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -134,14 +134,14 @@ public class ApplicationContext {
 
     public Solenoid getIntakeSolenoidLeft() {
         if (intakeSolenoidLeft == null) {
-            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_LEFT_PORT);
+            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
         }
         return intakeSolenoidLeft;
     }
 
     public Solenoid getIntakeSolenoidRight() {
         if (intakeSolenoidRight == null) {
-            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_RIGHT_PORT);
+            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
         }
         return intakeSolenoidRight;
     }
@@ -221,44 +221,37 @@ public class ApplicationContext {
 
     public Encoder getWofEncoder() {
         if (wofEncoder == null){
-            wofEncoder = new Encoder(8, 9);
+            wofEncoder = new Encoder(WOF_ENCODER_A_DIO_PORT, WOF_ENCODER_B_DIO_PORT);
         }
         return wofEncoder;
     }
 
     public TalonSRX getShooterMotorOne() {
         if(shooterMotorOne == null){
-            shooterMotorOne = new TalonSRX(SHOOTER_ONE);
+            shooterMotorOne = new TalonSRX(SHOOTER_MASTER);
         }
         return shooterMotorOne;
     }
 
-    public TalonSRX getShooterMotorTwo() {
+    public VictorSPX getShooterMotorTwo() {
         if(shooterMotorTwo == null){
-            shooterMotorTwo = new TalonSRX(SHOOTER_TWO);
+            shooterMotorTwo = new VictorSPX(SHOOTER_SLAVE_ONE);
         }
-        return shooterMotorOne;
+        return shooterMotorTwo;
     }
 
-    public TalonSRX getShooterMotorThree() {
+    public VictorSPX getShooterMotorThree() {
         if(shooterMotorThree == null){
-            shooterMotorThree = new TalonSRX(SHOOTER_THREE);
+            shooterMotorThree = new VictorSPX(SHOOTER_SLAVE_TWO);
         }
-        return shooterMotorOne;
+        return shooterMotorThree;
     }
 
     public Counter getAChannel() {
         if(AChannel == null){
-            AChannel = new Counter(SHOOTER_COUNTER_A);
+            AChannel = new Counter(SHOOTER_ENCODER_A_DIO);
         }
         return AChannel;
-    }
-
-    public Counter getBChannel() {
-        if(BChannel == null){
-            BChannel = new Counter(SHOOTER_COUNTER_B);
-        }
-        return BChannel;
     }
 
     public ShooterVelocityCounter getVelocityCounter() {
@@ -266,13 +259,6 @@ public class ApplicationContext {
             velocityCounter = new ShooterVelocityCounter();
         }
         return velocityCounter;
-    }
-
-    public Flywheel getFlywheel() {
-        if(flywheel == null){
-            flywheel = new Flywheel();
-        }
-        return flywheel;
     }
 
     public FlywheelSubsystem getFlywheelSubsystem() {
@@ -285,7 +271,7 @@ public class ApplicationContext {
 
     public AnalogPotentiometer getPotentiometer() {
         if(potentiometer == null){
-            potentiometer = new AnalogPotentiometer(4);
+            potentiometer = new AnalogPotentiometer(TURRET_POT_ANALOG_PORT);
         }
         return potentiometer;
     }
@@ -299,7 +285,7 @@ public class ApplicationContext {
 
     public Servo getServo() {
         if(servo == null){
-            servo = new Servo(9);
+            servo = new Servo(HOOD_SERVO_PWM_PORT);
         }
         return servo;
     }
@@ -321,10 +307,24 @@ public class ApplicationContext {
         }
         return intermediateMotor;
     }
-    public VictorSPX getBagMotor() {
+    public TalonSRX getBagMotor() {
         if (intermediateBagMotor == null) {
-            intermediateBagMotor = new VictorSPX(INTERMEDIATE_SLAVE);
+            intermediateBagMotor = new TalonSRX(INTERMEDIATE_SLAVE);
         }
         return intermediateBagMotor;
+    }
+
+    public HoodSubsystem getHoodSubsystem() {
+        if(hoodSubsystem == null){
+            hoodSubsystem = new HoodSubsystem();
+        }
+        return hoodSubsystem;
+    }
+
+    public DigitalInput getElevatorBottomSensor(){
+        if(elevatorBottomSensor == null){
+            elevatorBottomSensor = new DigitalInput(ELEVATOR_BOTTOM_DIO_PORT);
+        }
+        return elevatorBottomSensor;
     }
 }

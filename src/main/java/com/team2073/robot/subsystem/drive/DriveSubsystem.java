@@ -39,7 +39,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     private CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
     private Joystick joystick = appCtx.getDriveStick();
     private Joystick wheel = appCtx.getDriveWheel();
-
+    private double maxPercent = 1;
     /**
      * Creates a new DriveSubsystem.
      */
@@ -51,7 +51,12 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         rightEncoder.setPositionConversionFactor(distancePerRevMeters);
         leftEncoder.setVelocityConversionFactor(distancePerRevMeters);
         leftEncoder.setVelocityConversionFactor(distancePerRevMeters);
-
+        leftMaster.setSmartCurrentLimit(60);
+        leftSlave1.setSmartCurrentLimit(60);
+        leftSlave2.setSmartCurrentLimit(60);
+        rightMaster.setSmartCurrentLimit(60);
+        rightSlave1.setSmartCurrentLimit(60);
+        rightSlave2.setSmartCurrentLimit(60);
         leftEncoder.setMeasurementPeriod(10);
         rightEncoder.setMeasurementPeriod(10);
 
@@ -158,11 +163,19 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         return Math.IEEEremainder(gyro.getFusedHeading(), 360) * (kGyroReversed ? -1.0 : 1.0);
     }
 
+
+    public void capTeleopOutput(double maxPercent){
+        this.maxPercent = maxPercent;
+    }
+
     private void teleopDrive() {
         DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(1));
-
-        leftMaster.set(driveSignal.getLeft());
-        rightMaster.set(driveSignal.getRight());
+        double left = driveSignal.getLeft();
+        double right = driveSignal.getRight();
+        left = Math.abs(left) > maxPercent ? maxPercent*Math.signum(left) : left;
+        right = Math.abs(right) > maxPercent ? maxPercent*Math.signum(right) : right;
+        leftMaster.set(left);
+        rightMaster.set(right);
     }
 
     private double adjustWheel(double rawJoystick) {

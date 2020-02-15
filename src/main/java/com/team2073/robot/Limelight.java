@@ -30,13 +30,13 @@ public class Limelight {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(0);
     }
 
-    public double getHighDistance(double height, double angle){
+    public double getHighDistance(){
         //return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE));
-        return(height - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + angle)));
+        return(TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 
     public double getLowDistance(){
-        return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(LIMELIGHT_LENS_ANGLE  + Math.toRadians(getTy())));
+        return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 
     public double getAreaBasedDistance() {
