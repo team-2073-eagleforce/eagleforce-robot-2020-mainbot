@@ -43,7 +43,6 @@ public class ShooterVelocityCounter {
 			aLastTime = current;
 			aLastCount = counter;
 		}
-		System.out.println(aSpeed);
 		return aSpeed;
 	}
 

@@ -24,8 +24,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
-//        intermediate = appCtx.getIntermediateSubsystem();
-//        hopper = appCtx.getHopperSubsystem();
+        intermediate = appCtx.getIntermediateSubsystem();
+        hopper = appCtx.getHopperSubsystem();
 //        DriveSubsystem drive = new DriveSubsystem();
         appCtx.getTurretSubsystem();
         hopper = appCtx.getHopperSubsystem();
@@ -33,7 +33,6 @@ public class RobotDelegate extends AbstractRobotDelegate {
         intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
         hopper.setState(HopperSubsystem.HopperState.IDLE);
         flywheel = appCtx.getFlywheelSubsystem();
-        flywheel.init();
 
     }
 
@@ -44,22 +43,22 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        double wofEncoder = appCtx.getWofEncoder().get();
 //        boolean elevatorSensor = appCtx.getElevatorBottomSensor().get();
 //        double aChannel = appCtx.getAChannel().get();
-        if (isOperatorControl()) {
-            flywheel.onPeriodicAsync();
-        } else {
+        if (!isOperatorControl()) {
             flywheel.reset();
+            hopper.setShotReady(false);
         }
 
         if (controller.getRawButton(1)) {
             hopper.setState(HopperSubsystem.HopperState.PREP_SHOT);
-            if (hopper.isShotReady()) {
-                intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
-            }
         } else if (controller.getRawButton(2)) {
             hopper.setState(HopperSubsystem.HopperState.IDLE);
         }
         if (controller.getRawButton(3)) {
             hopper.setState(HopperSubsystem.HopperState.SHOOT);
+        }
+
+        if (hopper.isShotReady() && isOperatorControl()) {
+            intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
         }
 
 

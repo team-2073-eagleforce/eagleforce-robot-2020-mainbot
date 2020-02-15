@@ -72,7 +72,6 @@ public class ApplicationContext {
     private Counter AChannel;
 
     private ShooterVelocityCounter velocityCounter;
-    private Flywheel flywheel;
     private FlywheelSubsystem flywheelSubsystem;
 
 
@@ -260,13 +259,6 @@ public class ApplicationContext {
             velocityCounter = new ShooterVelocityCounter();
         }
         return velocityCounter;
-    }
-
-    public Flywheel getFlywheel() {
-        if(flywheel == null){
-            flywheel = new Flywheel();
-        }
-        return flywheel;
     }
 
     public FlywheelSubsystem getFlywheelSubsystem() {
