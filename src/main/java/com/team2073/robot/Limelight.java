@@ -2,13 +2,12 @@ package com.team2073.robot;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+import static com.team2073.robot.AppConstants.Shooter.*;
+
 public class Limelight {
 
-    private static final double LIMELIGHT_HIGH_HEIGHT = 39d;
-    private static final double LIMELIGHT_LOW_HEIGHT = 23d;
-    private static final double LIMELIGHT_LENS_ANGLE = 18d;
-    private static final double TARGET_HEIGHT = 87d;
     private double xOffset = 0d;
+    private Pipeline currentPipeline = Pipeline.CLOSE;
 
     public double getTx() {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
@@ -30,12 +29,21 @@ public class Limelight {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(0);
     }
 
-    public double getHighDistance(){
-        //return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE));
-        return(TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+    public void setCurrentPipeline(Pipeline currentPipeline) {
+        this.currentPipeline = currentPipeline;
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(currentPipeline.getPipeline());
     }
 
-    public double getLowDistance(){
+    public Pipeline getCurrentPipeline(){
+        return currentPipeline;
+    }
+
+    public double getHighDistance() {
+        //return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE));
+        return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+    }
+
+    public double getLowDistance() {
         return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 
@@ -66,8 +74,30 @@ public class Limelight {
 //    }
 
     public enum Target {
-        TRENCH,
-        INITIATION_LINE,
+        TRENCH(209d),
+        INITIATION_LINE(10 * 12d);
+        private double distance;
 
+        Target(double distance) {
+            this.distance = distance;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+    }
+
+    public enum Pipeline {
+        CLOSE(1),
+        FAR(0);
+        private int pipeline;
+
+        Pipeline(int pipeline) {
+            this.pipeline = pipeline;
+        }
+
+        public int getPipeline() {
+            return pipeline;
+        }
     }
 }
