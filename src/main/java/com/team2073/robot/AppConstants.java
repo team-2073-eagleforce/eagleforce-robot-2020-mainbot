@@ -10,6 +10,7 @@ public abstract class AppConstants {
 
         //Elevator
         public static final int ELEVATOR_BOTTOM_DIO_PORT = 2;
+        public static final int ELEVATOR_MOTOR_PORT = 54;
 
         //Intake
         public static final int INTAKE_MOTOR_PORT = 7;

@@ -1,5 +1,7 @@
 package com.team2073.robot.subsystem.Elevator;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.team2073.common.motionmagic.MotionMagicHandler;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
@@ -17,31 +19,40 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     private TalonFX elevatorMotor = appCtx.getElevatorMotor();
     private ElevatorPositionConverter converter = new ElevatorPositionConverter();
     // distances are in inches
-    private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 4, MAX_VELOCITY, MAX_VELOCITY / 0.3);
+    private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 3, MAX_VELOCITY, MAX_VELOCITY / 0.3);
 
     private static final double ENCODER_TICS_PER_INCH = 7138.1;
-    private static final double KG = 0.05;
+    private static final double KG = 0.04;
+    private static final double KV = .461/10d;
+    private static final double KA = .0126;
+    private static final double KP = 0.04;
 
-    private DigitalInput bottomLimit = appCtx.getElevatorZeroSensor();
+    private DigitalInput bottomLimit = appCtx.getElevatorBottomSensor();
     private ElevatorState currentState = ElevatorState.BOTTOM;
 
     public ElevatorSubsytem() {
+        elevatorMotor.setSelectedSensorPosition(0,0,10);
         autoRegisterWithPeriodicRunner(10);
 
 //        TalonUtil.resetTalon(); to do
-
+        profile.setGains(KP, KV);
+        elevatorMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
+        elevatorMotor.setInverted(true);
         elevatorMotor.configPeakOutputForward(1,10);
         elevatorMotor.configPeakOutputReverse(-1,10);
+
     }
     @Override
     public void onPeriodicAsync() {
         profile.update(currentState.getValue(), KG);
+//        elevatorMotor.set(ControlMode.PercentOutput, .2);
+        System.out.println("Inches: " + elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH + "\t Output: " + elevatorMotor.getMotorOutputPercent());
     }
 
     public enum ElevatorState {
-        BOTTOM(0d),
-        TOP(0d),
-        WOFHEIGHT(0d);
+        BOTTOM(.25),
+        TOP(11d),
+        WOF_HEIGHT(8.25);
 
         private Double height;
 
@@ -57,6 +68,12 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     public void setElevatorState(ElevatorState state){
         this.currentState = state;
     }
+
+    public void setPower(double output){
+        elevatorMotor.set(ControlMode.PercentOutput, output);
+    }
+
+
     public ElevatorState getCurrentState(){
         return currentState;
     }
