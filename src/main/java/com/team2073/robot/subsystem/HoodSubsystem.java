@@ -12,7 +12,7 @@ public class HoodSubsystem implements PeriodicRunnable {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private Servo servo = appCtx.getServo();
     private Limelight limelight = appCtx.getLimelight();
-    private HoodState state = HoodState.EXTENDED;
+    private HoodState state = HoodState.RETRACTED;
     private double setPoint = 0;
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodToServo = new InterpolatingTreeMap<>();
 
