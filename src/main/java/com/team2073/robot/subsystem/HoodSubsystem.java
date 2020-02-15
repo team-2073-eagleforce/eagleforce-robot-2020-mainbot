@@ -10,14 +10,14 @@ import edu.wpi.first.wpilibj.Servo;
 
 public class HoodSubsystem implements PeriodicRunnable {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
-    private Servo servo = appCtx.getServo(); // WARNING: Channel is randomly chosen!
+    private Servo servo = appCtx.getServo();
     private Limelight limelight = appCtx.getLimelight();
     private HoodState state = HoodState.RETRACTED;
     private double setPoint = 0;
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodToServo = new InterpolatingTreeMap<>();
 
-    private static final double RETRACTED_HOOD_ANGLE = 60.0;
-    private static final double EXTENDED_HOOD_ANGLE = 25.9;
+    private static final double RETRACTED_HOOD_ANGLE = 40.0;
+    private static final double EXTENDED_HOOD_ANGLE = 140.0;
 
     public HoodSubsystem() {
         autoRegisterWithPeriodicRunner();
@@ -34,14 +34,13 @@ public class HoodSubsystem implements PeriodicRunnable {
             determineHoodAngle();
             servo.setAngle(state.getServoDegree());
         }else{
-            servo.set(setPoint);
+            servo.setAngle(state.getServoDegree());
         }
     }
 
     public void setHood(HoodState state){
         this.state = state;
     }
-
 
     public void setHood(double hoodAngle){
         state = HoodState.CALCULATED;
@@ -55,14 +54,18 @@ public class HoodSubsystem implements PeriodicRunnable {
             setHood(HoodState.RETRACTED);
         }
     }
+
+    public double getHoodAngle(){
+        return servo.getAngle();
+    }
     private double hoodAngleToServoAngle(double desiredHoodAngle){
         Double interpolated = hoodToServo.getInterpolated(new InterpolatingDouble(desiredHoodAngle)).value;
         return interpolated == null ? EXTENDED_HOOD_ANGLE : interpolated;
     }
 
     public enum HoodState {
-        RETRACTED(40.0),
-        EXTENDED(140.0),
+        RETRACTED(144.0),
+        EXTENDED(46.0),
         CALCULATED(null);
 
         private Double servoDegree;
