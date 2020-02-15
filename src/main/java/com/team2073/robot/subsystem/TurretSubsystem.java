@@ -10,6 +10,7 @@ import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.util.MathUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
+import com.team2073.robot.Limelight.Pipeline;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
@@ -36,6 +37,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0, 0.0, 0.15);
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
+    private boolean deadZone = false;
 
     private Double setpoint = null;
     /*
@@ -86,6 +88,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
 //        System.out.println(getPosition());
         seekTarget();
+        System.out.println("Distance: " + limelight.getLowDistance());
+        double distance = limelight.getLowDistance();
+        limelight.setCurrentPipeline(calculatePipeline(distance));
     }
 
     private void set(double position) {
@@ -147,6 +152,18 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         return (turretMotor.getEncoder().getPosition());
     }
 
+    private Pipeline calculatePipeline(double distance) {
+        if (limelight.getCurrentPipeline() == Pipeline.CLOSE) {
+            if (distance > 156) {
+                return Pipeline.FAR;
+            }
+        } else {
+            if (distance < 140) {
+                return Pipeline.CLOSE;
+            }
+        }
+        return limelight.getCurrentPipeline();
+    }
 
     private void seekTarget() {
         if (limelight.getTv() == 0d) {
