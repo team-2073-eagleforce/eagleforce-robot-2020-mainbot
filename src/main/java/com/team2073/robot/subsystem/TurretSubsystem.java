@@ -11,6 +11,7 @@ import com.team2073.common.util.MathUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import com.team2073.robot.Limelight.Pipeline;
+import com.team2073.robot.Mediator;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
@@ -25,6 +26,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private static final double MIN_POSITION = 0;
     private static final double MAX_POSITION = 238;
     private static final double MIN_OUTPUT = 0.05;
+
+    private static final double WOF_POSITION = 45;
     private RobotContext robotContext = RobotContext.getInstance();
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private Limelight limelight = appCtx.getLimelight();
@@ -40,6 +43,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private boolean deadZone = false;
 
     private Double setpoint = null;
+    private Mediator mediator;
+    private TurretState state = TurretState.WAIT;
     /*
     Use limelight to turn to center the image
     Zoom in to stabilize image
@@ -63,21 +68,25 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         limelight.setxOffset(1.7);
         pidLimelight.setPositionSupplier(() -> limelight.getAdjustedTx());
         pidEncoder.setPositionSupplier(this::getPosition);
-////        SmartDashboard.putNumber("KP", 0.01);
-//        SmartDashboard.putNumber("Angle", 18d);
-//        SmartDashboard.putNumber("Height", 90);
         encoder.setPositionConversionFactor(360 / 30d);
         encoder.setVelocityConversionFactor(6 / 30d);
         initializeMap();
     }
 
-    private void initializeMap() {
-//       TEMP DATA! Upon measuring real data, record
-        lowDistanceToRPM.put(new InterpolatingDouble(10 * 12d), new InterpolatingDouble(4300d));
-        lowDistanceToRPM.put(new InterpolatingDouble(16 * 12d), new InterpolatingDouble(5000d));
+    public void setState(TurretState state) {
+        this.state = state;
+    }
 
-        highDistanceToRPM.put(new InterpolatingDouble(10 * 12d), new InterpolatingDouble(4300d));
-        highDistanceToRPM.put(new InterpolatingDouble(22 * 12d), new InterpolatingDouble(5800d));
+    private void initializeMap() {
+//       Recording on 2/15/2020
+        lowDistanceToRPM.put(new InterpolatingDouble(324d), new InterpolatingDouble(6225d));
+        lowDistanceToRPM.put(new InterpolatingDouble(312d), new InterpolatingDouble(6125d));
+        lowDistanceToRPM.put(new InterpolatingDouble(300d), new InterpolatingDouble(6025d));
+
+        highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(4965d));
+        highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(4970d));
+        highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(4975d));
+
     }
 
     @Override
@@ -86,15 +95,39 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             encoder.setPosition(potPosition());
             hasZeroed = true;
         }
-//        System.out.println(getPosition());
-        seekTarget();
-        System.out.println("Distance: " + limelight.getLowDistance());
-        double distance = limelight.getLowDistance();
+
+        if (limelight.getTv() == 0d) {
+            setpoint = null;
+            pidEncoder.resetAccumulatedError();
+        }
+
+        switch (state) {
+            case SEEK:
+                if (limelight.getTv() == 0) {
+                    seekTarget();
+                } else {
+                    shootTargeting();
+                }
+                break;
+            case WAIT:
+//                NO-OP
+                break;
+            case COUNTERSPIN:
+//                TODO: backdrive whatever gyro does to remain pointing in the same direction
+                break;
+            case WOF:
+                setpoint = WOF_POSITION;
+                pidEncoder.updateSetPoint(setpoint);
+                pidEncoder.updatePID();
+                double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(getPosition() - setpoint));
+                setMotor(output);
+                break;
+        }
+        if(mediator == null){
+            mediator = Mediator.getInstance();
+        }
+        double distance = mediator.targetDistance();
         limelight.setCurrentPipeline(calculatePipeline(distance));
-    }
-
-    private void set(double position) {
-
     }
 
     private void setMotor(double output) {
@@ -129,8 +162,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //        System.out.println("Turret Adj: " + turretAdjust);
     }
 
-    public double calcRPMGoal(boolean isLowHeight) {
-        if (isLowHeight) {
+    public double calcRPMGoal(ElevatorSubsytem.ElevatorState elevatorState) {
+        if (elevatorState == ElevatorSubsytem.ElevatorState.BOTTOM) {
             Double low = lowDistanceToRPM.getInterpolated(new InterpolatingDouble(limelight.getLowDistance())).value;
             return low == null ? 3000 : low;
         } else {
@@ -166,42 +199,46 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void seekTarget() {
-//        if (limelight.getTv() == 0d) {
-////            if(potPosition() > MIN_POSITION && potPosition() < MAX_POSITION && !rotatingClockwise){
-//            if (getPosition() >= MIN_POSITION && getPosition() <= MAX_POSITION && rotatingClockwise) {
-//                setMotor(.35);
-//            } else if (getPosition() > MAX_POSITION - 5) {
-//                setMotor(-.35);
-//                rotatingClockwise = false;
-//            } else if (getPosition() < MIN_POSITION + 5) {
-//                setMotor(.35);
-//                rotatingClockwise = true;
-//            }
-//        } else {
-            if (limelight.getTv() == 0d) {
-                setpoint = null;
-                pidEncoder.resetAccumulatedError();
+        if (limelight.getTv() == 0d) {
+            if (getPosition() >= MIN_POSITION && getPosition() <= MAX_POSITION && rotatingClockwise) {
+                setMotor(.35);
+            } else if (getPosition() > MAX_POSITION - 5) {
+                setMotor(-.35);
+                rotatingClockwise = false;
+            } else if (getPosition() < MIN_POSITION + 5) {
+                setMotor(.35);
+                rotatingClockwise = true;
             }
-            if (Math.abs(limelight.getAdjustedTx()) > 0.5 && setpoint == null) {
-                pidLimelight.updatePID();
-                double output = -pidLimelight.getOutput() + MIN_OUTPUT * Math.signum(limelight.getAdjustedTx());
+        }
+    }
+
+    private void shootTargeting() {
+        if (Math.abs(limelight.getAdjustedTx()) > 0.5 && setpoint == null) {
+            pidLimelight.updatePID();
+            double output = -pidLimelight.getOutput() + MIN_OUTPUT * Math.signum(limelight.getAdjustedTx());
 //                System.out.println("Limelight Output:" + output);
-                setMotor(output);
-            } else {
-                double position = getPosition();
-                if (setpoint == null) {
-                    setpoint = position + limelight.getAdjustedTx();
-                }
-                if (limelight.getAdjustedTx() > 3) {
-                    setpoint = null;
-                }
-                pidEncoder.updateSetPoint(setpoint);
-                pidEncoder.updatePID();
-                double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(position - setpoint));
-//                System.out.println("Output: " + output + "\t Setpoint: " + setpoint + "\t pos: " + position + "\t tx" + limelight.getAdjustedTx());
-                setMotor(output);
+            setMotor(output);
+        } else {
+            double position = getPosition();
+            if (setpoint == null) {
+                setpoint = position + limelight.getAdjustedTx();
             }
-//        }
+            if (limelight.getAdjustedTx() > 2) {
+                setpoint = null;
+            }
+            pidEncoder.updateSetPoint(setpoint);
+            pidEncoder.updatePID();
+            double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(position - setpoint));
+//                System.out.println("Output: " + output + "\t Setpoint: " + setpoint + "\t pos: " + position + "\t tx" + limelight.getAdjustedTx());
+            setMotor(output);
+        }
+    }
+
+    public enum TurretState {
+        SEEK,
+        WAIT,
+        COUNTERSPIN,
+        WOF
     }
 }
 

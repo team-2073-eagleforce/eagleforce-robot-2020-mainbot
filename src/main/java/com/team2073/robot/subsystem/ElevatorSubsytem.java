@@ -1,4 +1,4 @@
-package com.team2073.robot.subsystem.Elevator;
+package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -7,7 +7,9 @@ import com.team2073.common.motionmagic.MotionMagicHandler;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.robot.ApplicationContext;
+import com.team2073.robot.Limelight;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
@@ -29,6 +31,7 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
     private DigitalInput bottomLimit = appCtx.getElevatorBottomSensor();
     private ElevatorState currentState = ElevatorState.BOTTOM;
+    private Limelight limelight = appCtx.getLimelight();
 
     public ElevatorSubsytem() {
         elevatorMotor.setSelectedSensorPosition(0,0,10);
@@ -44,9 +47,21 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     }
     @Override
     public void onPeriodicAsync() {
+//        switch (currentState){
+//            case BOTTOM:
+//                double low = limelight.getLowDistance();
+//                SmartDashboard.putNumber("Limelight Distance" , low);
+//                calculateState(low);
+//                break;
+//            case TOP:
+//                double top = limelight.getHighDistance();
+//                SmartDashboard.putNumber("Limelight Distance" , top);
+//                calculateState(top);
+//                break;
+//        }
         profile.update(currentState.getValue(), KG);
-//        elevatorMotor.set(ControlMode.PercentOutput, .2);
-        System.out.println("Inches: " + elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH + "\t Output: " + elevatorMotor.getMotorOutputPercent());
+//        System.out.println("Inches: " + elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH + "\t Output: " + elevatorMotor.getMotorOutputPercent());
+
     }
 
     public enum ElevatorState {

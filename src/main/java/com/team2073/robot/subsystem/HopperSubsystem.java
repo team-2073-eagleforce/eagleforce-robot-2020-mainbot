@@ -43,6 +43,10 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 //        }
         checkJam();
 //        System.out.println(hopperMotor.getOutputCurrent());
+        if(lastState != state && lastState == HopperState.SHOOT){
+            shotReady = false;
+        }
+
         switch (state) {
             case STOP:
                 setMotor(0);
@@ -135,7 +139,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     public enum HopperState {
         STOP(0),
-        IDLE(20d),
+        IDLE(10d),
         PREP_SHOT(20d),
         SHOOT(30d),
         JAM(0d);

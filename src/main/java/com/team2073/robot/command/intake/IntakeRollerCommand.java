@@ -4,24 +4,22 @@ import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 
-public class IntakeToggleSolenoidsCommand extends AbstractLoggingCommand {
+public class IntakeRollerCommand extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
-    @Override
-    protected void initializeDelegate() {
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.INTAKE_OUT);
-    }
+    private final IntakeSubsystem intake = appCtx.getIntakeSubsystem();
 
     @Override
-    protected void executeDelegate() {
+    protected void initializeDelegate() {
+        intake.setRollerState(IntakeSubsystem.IntakeRollerState.INTAKE);
     }
 
     @Override
     protected void endDelegate() {
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.STOWED);
+        intake.setRollerState(IntakeSubsystem.IntakeRollerState.STOP);
     }
 
     @Override
     protected boolean isFinishedDelegate() {
-        return false;
+        return true;
     }
 }

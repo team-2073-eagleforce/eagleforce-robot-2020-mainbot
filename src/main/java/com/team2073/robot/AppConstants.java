@@ -65,8 +65,8 @@ public abstract class AppConstants {
         public static final double test = 3;
 
 
-        public static final double LIMELIGHT_HIGH_HEIGHT = 39d;
         public static final double LIMELIGHT_LOW_HEIGHT = 24.875d;
+        public static final double LIMELIGHT_HIGH_HEIGHT = LIMELIGHT_LOW_HEIGHT + 11d;
         public static final double LIMELIGHT_LENS_ANGLE = 15d;
         public static final double TARGET_HEIGHT = 81.25 - 3;
     }

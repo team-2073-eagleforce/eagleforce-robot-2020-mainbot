@@ -13,60 +13,72 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
 
     private boolean pistonsExtended = false;
 
-//    private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
-    private Solenoid pistonLeft = appCtx.getIntakeSolenoidLeft();
-    private Solenoid pistonRight = appCtx.getIntakeSolenoidRight();
-    private IntakeState state = IntakeState.DISABLED;
+    private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
+    private Solenoid pistonTop = appCtx.getIntakeSolenoidLeft();
+    private Solenoid pistonBottom = appCtx.getIntakeSolenoidRight();
+    private IntakePositionState positionState = IntakePositionState.STARTING_CONFIG;
+    private IntakeRollerState rollerState = IntakeRollerState.STOP;
 
-    public IntakeSubsystem(){
+    public IntakeSubsystem() {
         autoRegisterWithPeriodicRunner(10);
-//        intakeMotor.setOpenLoopRampRate(1);
+        intakeMotor.setOpenLoopRampRate(.25);
     }
 
     @Override
     public void onPeriodicAsync() {
-//        setPower(state.getPercent());
-        switch(state){
-            case DISABLED:
-                togglePistons(false);
+        setPower(rollerState.getPercent());
+        switch (positionState) {
+            case STARTING_CONFIG:
+                togglePistons(false, false);
                 break;
-
-            case STOWED:
-                togglePistons(false);
+            case STOW:
+                togglePistons(true, false);
                 break;
             case INTAKE_OUT:
-                togglePistons(true);
+                togglePistons(true, true);
                 break;
         }
 
+
     }
 
-    public void setPower(Double percent) {
-//        intakeMotor.set(percent);
-    }
-    public void set(IntakeState goalState) {
-        state = goalState;
+    private void setPower(Double percent) {
+        intakeMotor.set(percent);
     }
 
-    private void togglePistons(boolean value) {
-        pistonLeft.set(value);
-        pistonRight.set(value);
-        pistonsExtended = value;
+    public void setRollerState(IntakeRollerState state) {
+        this.rollerState = state;
     }
 
-    public enum IntakeState {
-        STOWED(0d),
+    public void setPosition(IntakePositionState goalState) {
+        positionState = goalState;
+    }
+
+    private void togglePistons(boolean topOut, boolean bottomOut) {
+        pistonTop.set(topOut);
+        pistonBottom.set(bottomOut);
+    }
+
+    public enum IntakePositionState {
+        STARTING_CONFIG,
+        INTAKE_OUT,
+        STOW,
+
+    }
+
+    public enum IntakeRollerState {
         INTAKE(1d),
         OUTTAKE(-.9),
         STOP(0d),
-        INTAKE_OUT(0d),
         DISABLED(0d);
 
         private Double percent;
-        IntakeState(Double percent) {
+
+        IntakeRollerState(Double percent) {
             this.percent = percent;
         }
-        public Double getPercent(){
+
+        public Double getPercent() {
             return percent;
         }
     }

@@ -1,6 +1,14 @@
 package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
+import com.team2073.robot.command.ElevatorHeightsCommand;
+import com.team2073.robot.command.MediatorCommand;
+import com.team2073.robot.command.intake.IntakePositionCommand;
+import com.team2073.robot.command.intake.IntakeRollerCommand;
+import com.team2073.robot.command.intake.OuttakeCommand;
+import com.team2073.robot.command.InverseTrigger;
+import com.team2073.robot.subsystem.ElevatorSubsytem;
+import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
@@ -18,6 +26,7 @@ public class OperatorInterface {
     private JoystickButton x = new JoystickButton(controller, 3);
     private JoystickButton y = new JoystickButton(controller, 4);
     private JoystickButton lb = new JoystickButton(controller, 5);
+    private InverseTrigger lbInverse = new InverseTrigger(lb);
     private JoystickButton rb = new JoystickButton(controller, 6);
     private JoystickButton controllerBack = new JoystickButton(controller, 7);
     private JoystickButton controllerStart = new JoystickButton(controller, 8);
@@ -43,6 +52,23 @@ public class OperatorInterface {
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
 
     public OperatorInterface(){
+
+    }
+
+    public void init(){
+        dPadUp.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.TOP));
+        dPadRight.whenActive(new MediatorCommand(Mediator.RobotState.WHEEL_OF_FORTUNE));
+        dPadDown.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.BOTTOM));
+
+        a.whileHeld(new IntakeRollerCommand());
+        b.whileHeld(new OuttakeCommand());
+        lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
+        lb.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
+        lbInverse.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
+
+        stickTwo.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
+        backTrigger.whenActive(new MediatorCommand(Mediator.RobotState.SHOOTING));
+        backTrigger.whenReleased(new MediatorCommand(Mediator.RobotState.STOW));
 
     }
 

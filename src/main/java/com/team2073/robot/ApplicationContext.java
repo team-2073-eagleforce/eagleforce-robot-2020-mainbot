@@ -1,21 +1,14 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.robot.math.ShooterReference;
 import com.team2073.robot.subsystem.*;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.team2073.robot.AppConstants;
-import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem;
+import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.DigitalInput;
-import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
-import com.team2073.robot.statespace.statespaceflywheel.subsystems.Flywheel;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Counter;
