@@ -57,6 +57,9 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     //  360 / ((32 / 2.875) * (1 / 2048) * tics) tics to degrees
     //  (int) ((360 / position) * (2.875 / 32) * 2048) degrees to tics
 
+    // TODO have turret move to right position
+    private String currentColor = "";
+    private String previousColor = "";
 
     public WOFManipulatorSubsystem() {
         offsetColor.put("Yellow", "Red");
@@ -144,9 +147,16 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
                 wofEncoder.reset();
                 setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(offsetColor.get(readColor()))).toString());
             } else {
+                currentColor = readColor();
+                if(!currentColor.equals(previousColor)){
+                    wofEncoder.reset();
+                    setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(offsetColor.get(currentColor))).toString());
+                    setpoint += 360/16d;
+                }
                 positionManager.setPoint(setpoint);
                 positionManager.newOutput();
                 setWOFMotor(positionManager.getOutput());
+                previousColor = currentColor;
             }
 
             //System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
