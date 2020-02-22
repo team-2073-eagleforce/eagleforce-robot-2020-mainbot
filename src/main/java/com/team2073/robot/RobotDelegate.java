@@ -2,17 +2,14 @@ package com.team2073.robot;
 
 
 import com.ctre.phoenix.sensors.PigeonIMU;
-import com.google.inject.internal.cglib.core.$DefaultGeneratorStrategy;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import com.team2073.robot.command.drive.AutonStarter;
+import com.team2073.robot.command.auton.TopSide10Ball;
+import com.team2073.robot.command.drive.AutonSelector;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDelegate extends AbstractRobotDelegate {
@@ -38,11 +35,11 @@ public class RobotDelegate extends AbstractRobotDelegate {
     public void robotInit() {
 //        appCtx.getIntakeSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
-        appCtx.getDriveSubsystem();
+//        appCtx.getDriveSubsystem();
 //        appCtx.getIntermediateSubsystem();
-//        Mediator.getInstance();
-//        oi = new OperatorInterface();
-//        oi.init();
+        Mediator.getInstance();
+        oi = new OperatorInterface();
+        oi.init();
 //        limelight = appCtx.getLimelight();
 //        hood = appCtx.getHoodSubsystem();
 //        turret = appCtx.getTurretSubsystem();
@@ -57,8 +54,17 @@ public class RobotDelegate extends AbstractRobotDelegate {
     }
 
     private boolean started = false;
+    private boolean end = false;
     @Override
     public void robotPeriodic() {
+
+
+            if(isAutonomous() && isEnabled()){
+                if(!started){
+                    new TopSide10Ball().start();
+                    started = true;
+                }
+            }
 //        if(RobotState.isEnabled() && !started){
 //            AutonStarter starter = new AutonStarter();
 //            starter.getAutonomousCommand().schedule();

@@ -11,7 +11,6 @@ public class IntakeRollerCommand extends AbstractLoggingCommand {
     @Override
     protected void initializeDelegate() {
         intake.setRollerState(IntakeSubsystem.IntakeRollerState.INTAKE);
-        System.out.println("RUN \n\n\n");
     }
 
     @Override

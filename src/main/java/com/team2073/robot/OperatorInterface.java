@@ -68,7 +68,6 @@ public class OperatorInterface {
         a.whileHeld(new IntakeRollerCommand());
         b.whileHeld(new OuttakeCommand());
         y.whenPressed(new HopperStopCommand());
-        x.whenPressed(new HopperFlipCommand());
         rightTrigger.whenActive(new HopperIdleCommand());
         lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
 //        lb.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
