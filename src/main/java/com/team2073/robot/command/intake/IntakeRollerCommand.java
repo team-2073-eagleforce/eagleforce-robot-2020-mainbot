@@ -11,6 +11,7 @@ public class IntakeRollerCommand extends AbstractLoggingCommand {
     @Override
     protected void initializeDelegate() {
         intake.setRollerState(IntakeSubsystem.IntakeRollerState.INTAKE);
+        System.out.println("RUN \n\n\n");
     }
 
     @Override
@@ -20,6 +21,6 @@ public class IntakeRollerCommand extends AbstractLoggingCommand {
 
     @Override
     protected boolean isFinishedDelegate() {
-        return true;
+        return false;
     }
 }

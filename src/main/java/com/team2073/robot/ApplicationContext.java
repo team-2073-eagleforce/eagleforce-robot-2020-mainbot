@@ -1,6 +1,7 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.robot.subsystem.*;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -37,8 +38,8 @@ public class ApplicationContext {
     private CANSparkMax rightSlave2;
     private CANSparkMax turretMotor;
     private CANSparkMax intermediateMotor;
-    private Solenoid intakeSolenoidLeft;
-    private Solenoid intakeSolenoidRight;
+    private Solenoid intakeSolenoidTop;
+    private Solenoid intakeSolenoidBottom;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
     private TalonSRX intermediateBagMotor;
@@ -50,6 +51,7 @@ public class ApplicationContext {
     private DigitalInput hopperSensor;
     private Encoder wofEncoder;
     private DigitalInput elevatorBottomSensor;
+    private PigeonIMU gyro;
 
     //Subsystem
     private TurretSubsystem turretSubsystem;
@@ -129,18 +131,18 @@ public class ApplicationContext {
         return intakeMotor;
     }
 
-    public Solenoid getIntakeSolenoidLeft() {
-        if (intakeSolenoidLeft == null) {
-            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
+    public Solenoid getIntakeSolenoidTop() {
+        if (intakeSolenoidTop == null) {
+            intakeSolenoidTop = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
         }
-        return intakeSolenoidLeft;
+        return intakeSolenoidTop;
     }
 
-    public Solenoid getIntakeSolenoidRight() {
-        if (intakeSolenoidRight == null) {
-            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
+    public Solenoid getIntakeSolenoidBottom() {
+        if (intakeSolenoidBottom == null) {
+            intakeSolenoidBottom = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
         }
-        return intakeSolenoidRight;
+        return intakeSolenoidBottom;
     }
 
     public IntakeSubsystem getIntakeSubsystem() {
@@ -337,5 +339,12 @@ public class ApplicationContext {
             elevatorSubsytem = new ElevatorSubsytem();
         }
         return elevatorSubsytem;
+    }
+
+    public PigeonIMU getGyro(){
+        if(gyro == null){
+            gyro = new PigeonIMU(GYRO_PORT);
+        }
+        return gyro;
     }
 }

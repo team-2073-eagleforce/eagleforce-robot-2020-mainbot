@@ -14,14 +14,15 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     private boolean pistonsExtended = false;
 
     private CANSparkMax intakeMotor = appCtx.getIntakeMotor();
-    private Solenoid pistonTop = appCtx.getIntakeSolenoidLeft();
-    private Solenoid pistonBottom = appCtx.getIntakeSolenoidRight();
+    private Solenoid pistonTop = appCtx.getIntakeSolenoidTop();
+    private Solenoid pistonBottom = appCtx.getIntakeSolenoidBottom();
     private IntakePositionState positionState = IntakePositionState.STARTING_CONFIG;
     private IntakeRollerState rollerState = IntakeRollerState.STOP;
 
     public IntakeSubsystem() {
-        autoRegisterWithPeriodicRunner(10);
-        intakeMotor.setOpenLoopRampRate(.25);
+        autoRegisterWithPeriodicRunner(20);
+        intakeMotor.setOpenLoopRampRate(.125);
+        intakeMotor.setInverted(true);
     }
 
     @Override
@@ -43,6 +44,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void setPower(Double percent) {
+        System.out.println("OUTPUT: "+ percent + "\n\n\n");
         intakeMotor.set(percent);
     }
 
@@ -67,7 +69,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum IntakeRollerState {
-        INTAKE(1d),
+        INTAKE(.75d),
         OUTTAKE(-.9),
         STOP(0d),
         DISABLED(0d);

@@ -28,6 +28,7 @@ public abstract class AppConstants {
         public static final int DRIVE_RIGHT_MASTER = 13;
         public static final int DRIVE_RIGHT_SLAVE_ONE = 14;
         public static final int DRIVE_RIGHT_SLAVE_TWO = 15;
+        public static final int GYRO_PORT = 17;
 
         //WOF
         public static final int WOF_ENCODER_A_DIO_PORT = 0;

@@ -43,23 +43,25 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
         m_motor2.configOpenloopRamp(0.25);
         m_motor3.configOpenloopRamp(0.25);
 
-//        m_motor2.follow(m_motor);
-//        m_motor3.follow(m_motor);
-
     }
 
     /**
      * Iterates the shooter control loop one cycle.
      */
     public void iterate(double velocity) {
-        m_wheel.setMeasuredVelocity(velocity);
-        m_wheel.update();
-
-        double batteryVoltage = RobotController.getBatteryVoltage();
-        double controllerVoltage = m_wheel.getControllerVoltage();
-        m_motor.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
-        m_motor2.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
-        m_motor3.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+        if(reference != null) {
+            m_wheel.setMeasuredVelocity(velocity);
+            m_wheel.update();
+            double batteryVoltage = RobotController.getBatteryVoltage();
+            double controllerVoltage = m_wheel.getControllerVoltage();
+            m_motor.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+            m_motor2.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+            m_motor3.set(ControlMode.PercentOutput, controllerVoltage / batteryVoltage);
+        }else{
+            m_motor.set(ControlMode.PercentOutput, 0d);
+            m_motor2.set(ControlMode.PercentOutput, 0d);
+            m_motor3.set(ControlMode.PercentOutput, 0d);
+        }
     }
 
     @Override
@@ -68,19 +70,20 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 //        System.out.println("Current Velocity: " + currentVelocity * 60 / (2*Math.PI) + "\t Output" + m_motor.getMotorOutputVoltage());
 
         if (reference != null) {
-            reference *= (2 * Math.PI / 60);
-            setReference(reference);
             enable();
+            reference *= (2 * Math.PI / 60d);
+            setReference(reference);
 
 //		System.out.println("Speed: " +  currentVelocity * 60 / (2*Math.PI) + "\t Kalman Estimated Velocity: " + getEstimatedVelocity());
             iterate(currentVelocity);
         } else {
+
+            iterate(0);
             reset();
         }
 
         csv.updateMainFile(iteration, currentVelocity * 60 / (2 * Math.PI), getEstimatedVelocity() * 60 / (2 * Math.PI),
                 getTalonVoltage(), RobotController.getBatteryVoltage(), rpm_reference);
-        endFile = false;
         iteration++;
     }
 
@@ -116,7 +119,6 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
         m_wheel.setVelocityReference(angularVelocity);
     }
 
-
     public void setRPM(Double rpm) {
         reference = rpm;
     }
@@ -131,10 +133,6 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
 
     public double getTalonVoltage() {
         return m_motor.getMotorOutputVoltage();
-    }
-
-    public boolean atShootingRPM(double angularVelocity) {
-        return false;
     }
 
     public double getAmerageDraw() {

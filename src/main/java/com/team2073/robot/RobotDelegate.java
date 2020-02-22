@@ -1,12 +1,18 @@
 package com.team2073.robot;
 
 
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.google.inject.internal.cglib.core.$DefaultGeneratorStrategy;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
+import com.team2073.robot.command.drive.AutonStarter;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDelegate extends AbstractRobotDelegate {
@@ -22,7 +28,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private TurretSubsystem turret;
     private Limelight limelight;
     private ElevatorSubsytem elevator;
-    private Servo servo;
+    private PigeonIMU gryo;
 
     public RobotDelegate(double period) {
         super(period);
@@ -30,26 +36,38 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
-
-        Mediator.getInstance();
-        servo = appCtx.getServo();
-//        limelight = appCtx.getLimelight();
-//        intermediate = appCtx.getIntermediateSubsystem();
+//        appCtx.getIntakeSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
+        appCtx.getDriveSubsystem();
+//        appCtx.getIntermediateSubsystem();
+//        Mediator.getInstance();
+//        oi = new OperatorInterface();
+//        oi.init();
+//        limelight = appCtx.getLimelight();
 //        hood = appCtx.getHoodSubsystem();
-////        DriveSubsystem drive = new DriveSubsystem();
 //        turret = appCtx.getTurretSubsystem();
 //        flywheel = appCtx.getFlywheelSubsystem();
 //        intermediate = appCtx.getIntermediateSubsystem();
 //        intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //        hopper.setState(HopperSubsystem.HopperState.IDLE);
 //        elevator = appCtx.getElevatorSubsystem();
-        SmartDashboard.putNumber("servo", 50);
+//        SmartDashboard.putNumber("servo", 50);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
+
     }
 
+    private boolean started = false;
     @Override
     public void robotPeriodic() {
+//        if(RobotState.isEnabled() && !started){
+//            AutonStarter starter = new AutonStarter();
+//            starter.getAutonomousCommand().schedule();
+//            started = true;
+//            CommandScheduler.getInstance().enable();
+//        }
+//        CommandScheduler.getInstance().run();
+
+        //System.out.println("Velocity: " +appCtx.getHopperMotor().getEncoder().getVelocity() + "\t Output: " + appCtx.getHopperMotor().getAppliedOutput());
 //        boolean hopper = appCtx.getHopperSensor().get();
 //        double pot = appCtx.getPotentiometer().get();
 //        double wofEncoder = appCtx.getWofEncoder().get();
@@ -83,18 +101,18 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        if (hopper.isShotReady() && isOperatorControl()) {
 //            intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
 //        }
-        double angle = SmartDashboard.getNumber("servo", 50);
-        servo.setAngle(angle);
+//        double angle = SmartDashboard.getNumber("servo", 50);
+//        servo.setAngle(angle);
 
 
 
-        if(controller.getPOV() == 180){
-            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
-        }else if(controller.getPOV() == 90){
-            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.WOF_HEIGHT);
-        }else if(controller.getPOV() == 0){
-            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
-        }
+//        if(controller.getPOV() == 180){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
+//        }else if(controller.getPOV() == 90){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.WOF_HEIGHT);
+//        }else if(controller.getPOV() == 0){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
+//        }
         //System.out.println("Hopper: " + hopper + "\t Pot: " + pot + "\t Wof Encoder: " + wofEncoder + "\t Elevator Sensor: " + elevatorSensor + "\t aChannel: " + aChannel);
     }
 
