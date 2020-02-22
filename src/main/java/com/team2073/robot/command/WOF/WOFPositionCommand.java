@@ -7,7 +7,7 @@ public class WOFPositionCommand extends AbstractLoggingCommand {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private String goal;
 
-    public WOFPositionCommand(String goal){
+    public WOFPositionCommand(){
         this.goal = goal;
     }
     @Override
@@ -20,6 +20,7 @@ public class WOFPositionCommand extends AbstractLoggingCommand {
         super.endDelegate();
         appCtx.getWofManipulatorSubsystem().setWOFMotor(0d);
         appCtx.getWofManipulatorSubsystem().setMotionSetpoint(null);
+        appCtx.getWofManipulatorSubsystem().setOffsetOnce();
     }
 
     @Override

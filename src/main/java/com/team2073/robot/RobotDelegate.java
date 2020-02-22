@@ -28,16 +28,17 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
+        oi = new OperatorInterface();
 //        intermediate = appCtx.getIntermediateSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
-        DriveSubsystem drive = appCtx.getDriveSubsystem();
+//        DriveSubsystem drive = appCtx.getDriveSubsystem();
 //        appCtx.getTurretSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
 //        intermediate = appCtx.getIntermediateSubsystem();
 //        intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //        hopper.setState(HopperSubsystem.HopperState.IDLE);
 //        flywheel = appCtx.getFlywheelSubsystem();
-        elevatorSubsytem = appCtx.getElevatorSubsystem();
+//        elevatorSubsytem = appCtx.getElevatorSubsystem();
         wofManipulatorSubsystem = appCtx.getWofManipulatorSubsystem();
     }
 

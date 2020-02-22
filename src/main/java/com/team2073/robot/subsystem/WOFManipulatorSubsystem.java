@@ -50,7 +50,7 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private Color rioBlueTarget = getTargetFromFile("Blue");
 
     private Double setpoint = null;
-    private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.008, 0d, .4d / 800, 0d, 0.7d);
+    private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.006, 0d, .4d / 800, 0d, .5d);
     private ProfileConfiguration positionConfiguration = new ProfileConfiguration(800d, 800 / .5, .01);
     private TrapezoidalProfileManager positionManager = new TrapezoidalProfileManager(positionControlLoop, positionConfiguration, this::position);
 
@@ -61,8 +61,11 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
     private String currentColor = "";
     private String previousColor = "";
 
+    private boolean offsetOnce = false;
+
     public WOFManipulatorSubsystem() {
-        offsetColor.put("Yellow", "Red");
+        autoRegisterWithPeriodicRunner();
+        offsetColor.put("Yellow", "Green");
         offsetColor.put("Red", "Blue");
         offsetColor.put("Green", "Yellow");
         offsetColor.put("Blue", "Red");
@@ -76,6 +79,8 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     @Override
     public void onPeriodic() {
+        //System.out.println("R: " + getRFromFile("Blue"));
+        System.out.println(readColor());
     }
 
     private String getGameData() {
@@ -145,34 +150,34 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
         if (!getGameData().equals("")) {
             if (setpoint == null) {
                 wofEncoder.reset();
-                setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(offsetColor.get(readColor()))).toString());
+                setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(readColor())).toString());
             } else {
-                currentColor = readColor();
-                if(!currentColor.equals(previousColor)){
-                    wofEncoder.reset();
-                    setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(offsetColor.get(currentColor))).toString());
-                    setpoint += 360/16d;
-                }
+//                if(!currentColor.equals(previousColor) && !offsetOnce){
+//                    System.out.println("Hi!!!!!!!!!!!");
+//                    offsetOnce = true;
+//                    wofEncoder.reset();
+//                    setpoint = wofColorCalculator.getSetpoint(new WOFColorCombo(colorMap.get(offsetColor.get(getGameData())), colorMap.get(readColor())).toString()) - 360/14d;
+//                }
                 positionManager.setPoint(setpoint);
                 positionManager.newOutput();
-                setWOFMotor(positionManager.getOutput());
-                previousColor = currentColor;
+                setWOFMotor(-positionManager.getOutput());
             }
 
-            //System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
+            System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
+            previousColor = currentColor;
         }
     }
 
     public void rotationControl() {
         if (setpoint == null) {
             wofEncoder.reset();
-            setpoint = 360 * 4.0;
+            setpoint = -360 * 4.0;
         } else {
             positionManager.setPoint(setpoint);
             positionManager.newOutput();
-            setWOFMotor(positionManager.getOutput());
+            setWOFMotor(-positionManager.getOutput());
         }
-        //System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position() + " color: " + readColor());
+        System.out.println("setpoint: " + setpoint + " output: " + positionManager.getOutput() + " position: " + position()/360 + " color: " + readColor());
     }
 
     private double position() {
@@ -234,25 +239,28 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     private double getRFromFile(String color) {
         try {
-            return Double.parseDouble(getColorValues(color)[1]);
+//            return Double.parseDouble(getColorValues(color)[0]);
+            return defaultValues(color)[0];
         } catch (Exception e) {
-            return defaultValues(color)[1];
+            return defaultValues(color)[0];
         }
     }
 
     private double getGFromFile(String color) {
         try {
-            return Double.parseDouble(getColorValues(color)[2]);
+//            return Double.parseDouble(getColorValues(color)[1]);
+            return defaultValues(color)[1];
         } catch (Exception e) {
-            return defaultValues(color)[2];
+            return defaultValues(color)[1];
         }
     }
 
     private double getBFromFile(String color) {
         try {
-            return Double.parseDouble(getColorValues(color)[3]);
+//            return Double.parseDouble(getColorValues(color)[2]);
+            return defaultValues(color)[2];
         } catch (Exception e) {
-            return defaultValues(color)[3];
+            return defaultValues(color)[2];
         }
     }
 
@@ -284,6 +292,10 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
             default:
                 return new double[]{0, 0, 0};
         }
+    }
+
+    public boolean setOffsetOnce(){
+        return offsetOnce = false;
     }
 }
 
