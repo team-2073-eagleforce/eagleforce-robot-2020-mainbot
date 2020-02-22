@@ -27,7 +27,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private static final double MAX_POSITION = 238;
     private static final double MIN_OUTPUT = 0.05;
 
-    private static final double WOF_POSITION = 45;
+    private static final double WOF_POSITION = 81.714;
     private RobotContext robotContext = RobotContext.getInstance();
     private ApplicationContext appCtx = ApplicationContext.getInstance();
     private Limelight limelight = appCtx.getLimelight();
