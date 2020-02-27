@@ -1,56 +1,103 @@
 package com.team2073.robot.subsystem.drive;
+
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
-import com.team2073.common.periodic.PeriodicRunnable;
+import com.team2073.common.util.ConversionUtil;
 import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.sql.SQLOutput;
+import java.util.List;
 
-import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.*;
+import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.DISTANCE_PER_MOTOR_REV_METERS;
+import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.kGyroReversed;
 
 
 public class DriveSubsystem implements AsyncPeriodicRunnable {
+    //    private GraphCSVUtil graph = new GraphCSVUtil("driveCalibration", "time", "leftVelocity");
+    private static DifferentialDriveVoltageConstraint autoVoltageConstraint =
+            new DifferentialDriveVoltageConstraint(
+                    new SimpleMotorFeedforward(Constants.DriveConstants.ksVolts,
+                            Constants.DriveConstants.kvVoltSecondsPerMeter,
+                            Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
+                    Constants.DriveConstants.DRIVE_KINEMATICS,
+                    12);
+    // Create config for trajectory
+    private static TrajectoryConfig config =
+            new TrajectoryConfig(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                    // Add kinematics to ensure max speed is actually obeyed
+                    .setKinematics(Constants.DriveConstants.DRIVE_KINEMATICS)
+                    // Apply the voltage constraint
+                    .addConstraint(autoVoltageConstraint);
+    // The gyro sensor
+    // Odometry class for tracking robot pose
+    private final DifferentialDriveOdometry m_odometry;
     private ApplicationContext appCtx = ApplicationContext.getInstance();
+    private final PigeonIMU gyro = appCtx.getGyro();
     private CANSparkMax leftMaster = appCtx.getLeftMaster();
     private CANSparkMax rightMaster = appCtx.getRightMaster();
     private CANSparkMax leftSlave1 = appCtx.getLeftSlave1();
     private CANSparkMax leftSlave2 = appCtx.getLeftSlave2();
     private CANSparkMax rightSlave1 = appCtx.getRightSlave1();
     private CANSparkMax rightSlave2 = appCtx.getRightSlave2();
-
-
     private CANEncoder leftEncoder = leftMaster.getEncoder();
     private CANEncoder rightEncoder = rightMaster.getEncoder();
-    // The gyro sensor
-    private final PigeonIMU gyro = new PigeonIMU(1);
-
-    // Odometry class for tracking robot pose
-    private final DifferentialDriveOdometry m_odometry;
     private CheesyDriveHelper cheesyDriveHelper = new CheesyDriveHelper();
     private Joystick joystick = appCtx.getDriveStick();
     private Joystick wheel = appCtx.getDriveWheel();
-    private double maxPercent = 1;
+    private double maxPercent = 1.0;
+    private double lastHeading;
+    private double lastTime;
+    private boolean wrote = true;
+
     /**
      * Creates a new DriveSubsystem.
      */
     public DriveSubsystem() {
         // Sets the distance per pulse for the encoders
+//        try {
+//            graph.initFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         autoRegisterWithPeriodicRunner(10);
 //        TODO:  MATH TO MAKE SURE UNITS ARE PROPER
-        leftEncoder.setPositionConversionFactor(distancePerRevMeters);
-        rightEncoder.setPositionConversionFactor(distancePerRevMeters);
-        leftEncoder.setVelocityConversionFactor(distancePerRevMeters);
-        leftEncoder.setVelocityConversionFactor(distancePerRevMeters);
+        leftSlave1.setInverted(true);
+        leftSlave2.setInverted(true);
+        leftMaster.setInverted(true);
+        rightSlave1.setInverted(false);
+        rightSlave2.setInverted(false);
+        rightMaster.setInverted(false);
+        leftMaster.setOpenLoopRampRate(.25);
+        leftSlave1.setOpenLoopRampRate(.25);
+        leftSlave2.setOpenLoopRampRate(.25);
+        rightMaster.setOpenLoopRampRate(.25);
+        rightSlave1.setOpenLoopRampRate(.25);
+        rightSlave2.setOpenLoopRampRate(.25);
+        leftSlave1.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        leftSlave2.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        leftMaster.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        rightSlave1.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        rightSlave2.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        rightMaster.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        leftEncoder.setPositionConversionFactor(DISTANCE_PER_MOTOR_REV_METERS);
+        rightEncoder.setPositionConversionFactor(DISTANCE_PER_MOTOR_REV_METERS);
+        leftEncoder.setVelocityConversionFactor(DISTANCE_PER_MOTOR_REV_METERS / 60);
+        rightEncoder.setVelocityConversionFactor(DISTANCE_PER_MOTOR_REV_METERS / 60);
         leftMaster.setSmartCurrentLimit(60);
         leftSlave1.setSmartCurrentLimit(60);
         leftSlave2.setSmartCurrentLimit(60);
@@ -59,9 +106,16 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         rightSlave2.setSmartCurrentLimit(60);
         leftEncoder.setMeasurementPeriod(10);
         rightEncoder.setMeasurementPeriod(10);
-
+        leftSlave1.follow(leftMaster);
+        leftSlave2.follow(leftMaster);
+        rightSlave1.follow(rightMaster);
+        rightSlave2.follow(rightMaster);
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
+                , Rotation2d.fromDegrees(getHeading()));
+//        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
+//                , Rotation2d.fromDegrees(getHeading()));
 
     }
 
@@ -74,7 +128,6 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     /**
      * Returns the currently-estimated pose of the robot.
-     *
      * @return The pose.
      */
     public Pose2d getPose() {
@@ -83,7 +136,6 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     /**
      * Returns the current wheel speeds of the robot.
-     *
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -108,10 +160,9 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
      * @param rightVolts the commanded right output
      */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        leftMaster.setVoltage(leftVolts);
-        rightMaster.setVoltage(-rightVolts);
+            leftMaster.setVoltage(leftVolts);
+            rightMaster.setVoltage(rightVolts);
     }
-
     /**
      * Resets the drive encoders to currently read a position of 0.
      */
@@ -163,17 +214,17 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         return Math.IEEEremainder(gyro.getFusedHeading(), 360) * (kGyroReversed ? -1.0 : 1.0);
     }
 
-
-    public void capTeleopOutput(double maxPercent){
+    public void capTeleopOutput(double maxPercent) {
         this.maxPercent = maxPercent;
     }
 
     private void teleopDrive() {
         DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(1));
+//        System.out.println(joystick.getRawAxis(1));
         double left = driveSignal.getLeft();
         double right = driveSignal.getRight();
-        left = Math.abs(left) > maxPercent ? maxPercent*Math.signum(left) : left;
-        right = Math.abs(right) > maxPercent ? maxPercent*Math.signum(right) : right;
+        left = Math.abs(left) > maxPercent ? maxPercent * Math.signum(left) : left;
+        right = Math.abs(right) > maxPercent ? maxPercent * Math.signum(right) : right;
         leftMaster.set(left);
         rightMaster.set(right);
     }
@@ -190,9 +241,6 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     }
 
-
-    private double lastHeading;
-    private double lastTime;
     /**
      * Returns the turn rate of the robot.
      *
@@ -200,39 +248,86 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
      */
     public double getTurnRate() {
         double heading = gyro.getFusedHeading();
-        double time = System.currentTimeMillis()/1000d;
-        double rate = (heading-lastHeading)/(time - lastTime) * (kGyroReversed ? -1.0 : 1.0);
+        double time = System.currentTimeMillis() / 1000d;
+        double rate = (heading - lastHeading) / (time - lastTime) * (kGyroReversed ? -1.0 : 1.0);
         lastHeading = heading;
         lastTime = time;
         return rate;
     }
 
-//    private ArrayList<Double> avgTime = new ArrayList<>();
-//    private double avg(ArrayList<Double> vals){
-//        double total = 0;
-//        for (int i = vals.size() - 10; i < vals.size(); i++) {
-//            total += vals.get(i);
-//        }
-//        return total/10;
-//    }
-//    int count = 0;
-
     @Override
     public void onPeriodicAsync() {
-//        updateOdometry();
+        updateOdometry();
+        double x = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getX());
 
-//        double time = Timer.getFPGATimestamp();
-//        avgTime.add(time-lastTime);
-//        count++;
-//        if(count % 10 == 0) {
-//            System.out.println(avg(avgTime));
-//            count = 0;
-//        }
-//        lastTime = time;
+        double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
+        double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
+//        System.out.println("X: " + x + "\t y: " + y + "\t theta: " +theta);
+//        System.out.println("LeftVel: " +getWheelSpeeds().leftMetersPerSecond  + "\trightVel: " + getWheelSpeeds().rightMetersPerSecond);
+        if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
+            if(leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast){
 
-
-        if(RobotState.isOperatorControl()){
+                leftSlave1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                leftSlave2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                leftMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                rightSlave1.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                rightSlave2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+                rightMaster.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            }
+//            graph.updateMainFile(Timer.getFPGATimestamp(), ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
+//            wrote = false;
             teleopDrive();
+        }
+//        if(RobotState.isDisabled() && !wrote){
+//            graph.writeToFile();
+//            wrote = true;
+//        }
+
+//        System.out.println("Velocity: " + ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
+    }
+
+    public enum AutoPaths {
+        PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                    new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d)),
+//                    new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(0d)),
+                    new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d))
+                ),
+//                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
+//                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
+//                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
+                config.setReversed(false))),
+        SHOOT_FIRST_FIVE(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(0d))),
+//                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
+//                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
+//                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
+                config.setReversed(true))),
+        TRENCH_RUN(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(210d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(20)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0))),
+                config.setReversed(false))),
+        TRENCH_RUN_RETURN(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(200d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0))),
+                config.setReversed(true)));
+
+
+
+
+        private Trajectory traj;
+
+        AutoPaths(Trajectory traj) {
+            this.traj = traj;
+        }
+
+        public Trajectory getTraj() {
+            return traj;
         }
     }
 }

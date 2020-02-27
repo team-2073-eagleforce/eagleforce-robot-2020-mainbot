@@ -43,7 +43,12 @@ public class Limelight {
         return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 
+    public double getDistanceWithElevator(double elevatorHeight){
+        return (TARGET_HEIGHT - (LIMELIGHT_LOW_HEIGHT+ elevatorHeight)) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+    }
+
     public double getLowDistance() {
+
         return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 

@@ -17,7 +17,7 @@ import com.team2073.robot.statespace.math.numbers.N1;
 @SuppressWarnings("MemberName")
 public class FlywheelController {
   // Angular velocity tolerance in radians/sec.
-  public static final double kTolerance = 10.0;
+  public static final double kTolerance = 350 * 2*Math.PI / 60d;
 
   // The current sensor measurement.
   private final Matrix<N1, N1> m_Y;

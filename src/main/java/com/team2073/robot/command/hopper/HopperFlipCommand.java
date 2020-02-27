@@ -4,12 +4,13 @@ import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.subsystem.HopperSubsystem;
 
-public class HopperShootCommand extends AbstractLoggingCommand {
+public class HopperFlipCommand extends AbstractLoggingCommand {
+
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.SHOOT);
+        appCtx.getHopperSubsystem().setState(HopperSubsystem.HopperState.FLIP);
     }
 
     @Override

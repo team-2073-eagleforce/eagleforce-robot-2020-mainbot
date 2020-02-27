@@ -1,21 +1,16 @@
 package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.team2073.robot.math.ShooterReference;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.team2073.robot.subsystem.ClimbSubsystem;
 import com.team2073.robot.subsystem.*;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.team2073.robot.AppConstants;
-import com.team2073.robot.subsystem.*;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem;
+import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.DigitalInput;
-import com.revrobotics.CANSparkMax;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
-import com.team2073.robot.statespace.statespaceflywheel.subsystems.Flywheel;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.Counter;
@@ -44,8 +39,10 @@ public class ApplicationContext {
     private CANSparkMax rightSlave2;
     private CANSparkMax turretMotor;
     private CANSparkMax intermediateMotor;
-    private Solenoid intakeSolenoidLeft;
-    private Solenoid intakeSolenoidRight;
+    private Solenoid intakeSolenoidTop;
+    private Solenoid intakeSolenoidBottom;
+    private Solenoid climbPistonSolenoid;
+    private Solenoid climbDriveSolenoid;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
     private TalonSRX intermediateBagMotor;
@@ -57,6 +54,7 @@ public class ApplicationContext {
     private DigitalInput hopperSensor;
     private Encoder wofEncoder;
     private DigitalInput elevatorBottomSensor;
+    private PigeonIMU gyro;
 
     //Subsystem
     private TurretSubsystem turretSubsystem;
@@ -68,6 +66,7 @@ public class ApplicationContext {
     private HoodSubsystem hoodSubsystem;
     private ElevatorSubsytem elevatorSubsytem;
     private Limelight limelight;
+    private ClimbSubsystem climbSubsystem;
 
     private TalonSRX shooterMotorOne;
     private VictorSPX shooterMotorTwo;
@@ -136,18 +135,32 @@ public class ApplicationContext {
         return intakeMotor;
     }
 
-    public Solenoid getIntakeSolenoidLeft() {
-        if (intakeSolenoidLeft == null) {
-            intakeSolenoidLeft = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
+    public Solenoid getIntakeSolenoidTop() {
+        if (intakeSolenoidTop == null) {
+            intakeSolenoidTop = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
         }
-        return intakeSolenoidLeft;
+        return intakeSolenoidTop;
     }
 
-    public Solenoid getIntakeSolenoidRight() {
-        if (intakeSolenoidRight == null) {
-            intakeSolenoidRight = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
+    public Solenoid getIntakeSolenoidBottom() {
+        if (intakeSolenoidBottom == null) {
+            intakeSolenoidBottom = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
         }
-        return intakeSolenoidRight;
+        return intakeSolenoidBottom;
+    }
+
+    public Solenoid getClimbPistonSolenoid() {
+        if (climbPistonSolenoid == null) {
+            climbPistonSolenoid = new Solenoid(CLIMB_PISTON_SOLENOID);
+        }
+        return climbPistonSolenoid;
+    }
+
+    public Solenoid getClimbDriveSolenoid() {
+        if (climbDriveSolenoid == null) {
+            climbDriveSolenoid = new Solenoid(CLIMB_PTO_SOLENOID);
+        }
+        return climbDriveSolenoid;
     }
 
     public IntakeSubsystem getIntakeSubsystem() {
@@ -344,5 +357,19 @@ public class ApplicationContext {
             elevatorSubsytem = new ElevatorSubsytem();
         }
         return elevatorSubsytem;
+    }
+
+    public ClimbSubsystem getClimbSubsystem() {
+        if(climbSubsystem == null){
+            climbSubsystem = new ClimbSubsystem();
+        }
+        return climbSubsystem;
+    }
+
+    public PigeonIMU getGyro(){
+        if(gyro == null){
+            gyro = new PigeonIMU(GYRO_PORT);
+        }
+        return gyro;
     }
 }

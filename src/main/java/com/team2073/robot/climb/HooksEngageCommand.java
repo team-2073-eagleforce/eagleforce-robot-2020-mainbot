@@ -1,16 +1,16 @@
-package com.team2073.robot.command.intake;
+package com.team2073.robot.climb;
 
 import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
-import com.team2073.robot.subsystem.IntakeSubsystem;
+import com.team2073.robot.subsystem.ClimbSubsystem;
+import com.team2073.robot.subsystem.HopperSubsystem;
 
-public class IntakeDisabledCommand extends AbstractLoggingCommand {
+public class HooksEngageCommand extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.DISABLED);
-
+        appCtx.getClimbSubsystem().setState(ClimbSubsystem.ClimbState.HOOKS);
     }
 
     @Override

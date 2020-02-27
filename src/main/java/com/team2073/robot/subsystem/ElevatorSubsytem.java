@@ -1,4 +1,4 @@
-package com.team2073.robot.subsystem.Elevator;
+package com.team2073.robot.subsystem;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -7,7 +7,9 @@ import com.team2073.common.motionmagic.MotionMagicHandler;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.robot.ApplicationContext;
+import com.team2073.robot.Limelight;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
@@ -22,6 +24,10 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 3, MAX_VELOCITY, MAX_VELOCITY / 0.3);
 
     private static final double ENCODER_TICS_PER_INCH = 7138.1;
+    private static final double MAX_HEIGHT = 11.5;
+    private static final double MIN_HEIGHT = 0;
+    private static final double LOW_ZERO = 0.04;
+    private static final double HIGH_ZERO = 0.8159;
     private static final double KG = 0.04;
     private static final double KV = .461/10d;
     private static final double KA = .0126;
@@ -29,6 +35,10 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
     private DigitalInput bottomLimit = appCtx.getElevatorBottomSensor();
     private ElevatorState currentState = ElevatorState.BOTTOM;
+    private Limelight limelight = appCtx.getLimelight();
+
+    private boolean hasZeroed = false;
+    private boolean pastSensor = false;
 
     public ElevatorSubsytem() {
         elevatorMotor.setSelectedSensorPosition(0,0,10);
@@ -40,13 +50,11 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
         elevatorMotor.setInverted(true);
         elevatorMotor.configPeakOutputForward(1,10);
         elevatorMotor.configPeakOutputReverse(-1,10);
-
     }
     @Override
     public void onPeriodicAsync() {
+        zeroElevator();
         profile.update(currentState.getValue(), KG);
-//        elevatorMotor.set(ControlMode.PercentOutput, .2);
-        System.out.println("Inches: " + elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH + "\t Output: " + elevatorMotor.getMotorOutputPercent());
     }
 
     public enum ElevatorState {
@@ -59,7 +67,6 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
         ElevatorState(Double height) {
             this.height = height;
         }
-
         public double getValue() {
             return height;
         }
@@ -101,8 +108,29 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     }
 
     public void zeroElevator() {
-        //values not permanent
-        elevatorMotor.setSelectedSensorPosition(converter.asTics(0), 0, 10);
+        if (!hasZeroed) {
+            boolean currentSensor = isAtBottom();
+            if (velocity() > 0) {
+                if (currentSensor != pastSensor){
+                    if (currentSensor){
+                        elevatorMotor.setSelectedSensorPosition(converter.asTics(LOW_ZERO));
+                    }else{
+                        elevatorMotor.setSelectedSensorPosition(converter.asTics(HIGH_ZERO));
+                    }
+                    hasZeroed = true;
+                }
+            } else if (velocity() < 0) {
+                if (currentSensor != pastSensor){
+                    if (currentSensor){
+                        elevatorMotor.setSelectedSensorPosition(converter.asTics(HIGH_ZERO));
+                    }else{
+                        elevatorMotor.setSelectedSensorPosition(converter.asTics(LOW_ZERO));
+                    }
+                    hasZeroed = true;
+                }
+            }
+            pastSensor = isAtBottom();
+        }
     }
 
     private class ElevatorPositionConverter implements PositionConverter {

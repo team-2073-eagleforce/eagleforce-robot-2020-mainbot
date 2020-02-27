@@ -1,9 +1,9 @@
-package com.team2073.robot.command.elevator;
+package com.team2073.robot.command;
 
 import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
-import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem;
-import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem.ElevatorState;
+import com.team2073.robot.subsystem.ElevatorSubsytem;
+import com.team2073.robot.subsystem.ElevatorSubsytem.ElevatorState;
 
 public class ElevatorHeightsCommand  extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();

@@ -1,16 +1,15 @@
-package com.team2073.robot.command.intake;
+package com.team2073.robot.climb;
 
 import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
-import com.team2073.robot.subsystem.IntakeSubsystem;
+import com.team2073.robot.subsystem.ClimbSubsystem;
 
-    public class IntakeStopCommand extends AbstractLoggingCommand {
+public class PTOEngageCommand extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
 
     @Override
     protected void initializeDelegate() {
-        appCtx.getIntakeSubsystem().set(IntakeSubsystem.IntakeState.STOP);
-
+        appCtx.getClimbSubsystem().setState(ClimbSubsystem.ClimbState.PTO);
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.team2073.robot.subsystem;
 import com.team2073.common.pathfollowing.math.InterpolatingDouble;
 import com.team2073.common.pathfollowing.math.InterpolatingTreeMap;
 import com.team2073.common.periodic.PeriodicRunnable;
-import com.team2073.common.util.MathUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import edu.wpi.first.wpilibj.Servo;
@@ -16,8 +15,8 @@ public class HoodSubsystem implements PeriodicRunnable {
     private double setPoint = 0;
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> hoodToServo = new InterpolatingTreeMap<>();
 
-    private static final double RETRACTED_HOOD_ANGLE = 40.0;
-    private static final double EXTENDED_HOOD_ANGLE = 140.0;
+    private static final double RETRACTED_HOOD_ANGLE = 144.0;
+    private static final double EXTENDED_HOOD_ANGLE = 46.0;
 
     public HoodSubsystem() {
         autoRegisterWithPeriodicRunner();
@@ -31,10 +30,10 @@ public class HoodSubsystem implements PeriodicRunnable {
     @Override
     public void onPeriodic() {
         if (state != HoodState.CALCULATED) {
-            determineHoodAngle();
+//            determineHoodAngle();
             servo.setAngle(state.getServoDegree());
         }else{
-            servo.setAngle(state.getServoDegree());
+            servo.setAngle(setPoint);
         }
     }
 
@@ -47,11 +46,27 @@ public class HoodSubsystem implements PeriodicRunnable {
         setPoint = hoodAngleToServoAngle(hoodAngle);
     }
 
-    public void determineHoodAngle(){
+    public void determineHoodAngle(boolean shooting){
         if(limelight.getTv() > 0) {
             setHood(HoodState.EXTENDED);
         }else {
             setHood(HoodState.RETRACTED);
+        }
+    }
+
+    private void calculateState(Double distance) {
+        if(distance == null){
+            state = HoodState.CLOSE_SHOT;
+            return;
+        }
+        if (state == HoodState.RETRACTED) {
+            if (distance > 132) {
+                state = HoodState.EXTENDED;
+            }
+        } else {
+            if (distance < 108) {
+                state = HoodState.RETRACTED;
+            }
         }
     }
 
@@ -65,7 +80,8 @@ public class HoodSubsystem implements PeriodicRunnable {
 
     public enum HoodState {
         RETRACTED(144.0),
-        EXTENDED(46.0),
+        EXTENDED(34.0),
+        CLOSE_SHOT(144d),
         CALCULATED(null);
 
         private Double servoDegree;

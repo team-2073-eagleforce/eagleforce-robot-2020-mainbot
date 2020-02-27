@@ -44,10 +44,14 @@ public class WOFManipulatorSubsystem implements PeriodicRunnable {
 
     private Encoder wofEncoder = appCtx.getWofEncoder();
 
-    private Color rioGreenTarget = getTargetFromFile("Green");
-    private Color rioRedTarget = getTargetFromFile("Red");
-    private Color rioYellowTarget = getTargetFromFile("Yellow");
-    private Color rioBlueTarget = getTargetFromFile("Blue");
+    private Color rioGreenTarget;
+    private Color rioRedTarget;
+    private Color rioYellowTarget;
+    private Color rioBlueTarget;
+//    private Color rioGreenTarget = getTargetFromFile("Green");
+//    private Color rioRedTarget = getTargetFromFile("Red");
+//    private Color rioYellowTarget = getTargetFromFile("Yellow");
+//    private Color rioBlueTarget = getTargetFromFile("Blue");
 
     private Double setpoint = null;
     private MotionProfileControlloop positionControlLoop = new MotionProfileControlloop(0.008, 0d, .4d / 800, 0d, 0.7d);

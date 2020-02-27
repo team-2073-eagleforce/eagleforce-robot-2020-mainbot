@@ -1,15 +1,17 @@
 package com.team2073.robot;
 
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import com.team2073.robot.subsystem.Elevator.ElevatorSubsytem;
-import com.team2073.robot.subsystem.FlywheelSubsystem;
-import com.team2073.robot.subsystem.HopperSubsystem;
-import com.team2073.robot.subsystem.IntermediateSubsystem;
-import com.team2073.robot.subsystem.WOFManipulatorSubsystem;
-import com.team2073.robot.subsystem.drive.DriveSubsystem;
+import com.team2073.robot.command.auton.TopSide10Ball;
+import com.team2073.robot.command.drive.AutonSelector;
+import com.team2073.robot.subsystem.*;
+import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class RobotDelegate extends AbstractRobotDelegate {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -17,10 +19,14 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private WOFManipulatorSubsystem wofManipulatorSubsystem;
     private OperatorInterface oi;
     private IntermediateSubsystem intermediate;
-    private ElevatorSubsytem elevatorSubsytem;
     private HopperSubsystem hopper;
     private Joystick controller = appCtx.getController();
     private FlywheelSubsystem flywheel;
+//    private HoodSubsystem hood;
+    private TurretSubsystem turret;
+    private Limelight limelight;
+    private ElevatorSubsytem elevator;
+    private PigeonIMU gryo;
 
     public RobotDelegate(double period) {
         super(period);
@@ -28,29 +34,65 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
-//        intermediate = appCtx.getIntermediateSubsystem();
+//        appCtx.getIntakeSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
-        DriveSubsystem drive = appCtx.getDriveSubsystem();
-//        appCtx.getTurretSubsystem();
-//        hopper = appCtx.getHopperSubsystem();
+//        appCtx.getDriveSubsystem();
+//        appCtx.getIntermediateSubsystem();
+        Mediator.getInstance();
+        oi = new OperatorInterface();
+        oi.init();
+//        limelight = appCtx.getLimelight();
+//        turret = appCtx.getTurretSubsystem();
+//        flywheel = appCtx.getFlywheelSubsystem();
 //        intermediate = appCtx.getIntermediateSubsystem();
 //        intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //        hopper.setState(HopperSubsystem.HopperState.IDLE);
-//        flywheel = appCtx.getFlywheelSubsystem();
-        elevatorSubsytem = appCtx.getElevatorSubsystem();
-        wofManipulatorSubsystem = appCtx.getWofManipulatorSubsystem();
+//        elevator = appCtx.getElevatorSubsystem();
+//        SmartDashboard.putNumber("servo", 50);
+        SmartDashboard.putNumber("Flywheel RPM", 5000);
+
     }
 
+    private boolean started = false;
+    private boolean end = false;
     @Override
     public void robotPeriodic() {
+
+
+            if(isAutonomous() && isEnabled()){
+                if(!started){
+                    new TopSide10Ball().start();
+                    started = true;
+                }
+            }
+//        if(RobotState.isEnabled() && !started){
+//            AutonStarter starter = new AutonStarter();
+//            starter.getAutonomousCommand().schedule();
+//            started = true;
+//            CommandScheduler.getInstance().enable();
+//        }
+//        CommandScheduler.getInstance().run();
+
+        //System.out.println("Velocity: " +appCtx.getHopperMotor().getEncoder().getVelocity() + "\t Output: " + appCtx.getHopperMotor().getAppliedOutput());
 //        boolean hopper = appCtx.getHopperSensor().get();
 //        double pot = appCtx.getPotentiometer().get();
 //        double wofEncoder = appCtx.getWofEncoder().get();
 //        boolean elevatorSensor = appCtx.getElevatorBottomSensor().get();
 //        double aChannel = appCtx.getAChannel().get();
+
 //        if (!isOperatorControl()) {
-//            flywheel.reset();
+//
 //            hopper.setShotReady(false);
+//
+//        }
+//        if (isDisabled()) {
+//            intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
+//            hopper.setState(HopperSubsystem.HopperState.IDLE);
+//            hopper.setShotReady(false);
+//        }
+//        if (controller.getRawButton(5)) {
+//
+//            flywheel.reset();
 //        }
 //
 //        if (controller.getRawButton(1)) {
@@ -65,26 +107,21 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        if (hopper.isShotReady() && isOperatorControl()) {
 //            intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
 //        }
-        if (isEnabled()) {
-            if (controller.getPOV() == 180) {
-                elevatorSubsytem.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
-            }
+//        double angle = SmartDashboard.getNumber("servo", 50);
+//        servo.setAngle(angle);
 
-            if (controller.getPOV() == 0) {
-                elevatorSubsytem.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
-            }
 
-            if (controller.getPOV() == 90){
-                elevatorSubsytem.setElevatorState(ElevatorSubsytem.ElevatorState.WOF_HEIGHT);
-            }
-        }
 
-//        if (controller.getRawButton(9)){
-//            elevatorSubsytem.setPower(-.2);
+//        if(controller.getPOV() == 180){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
+//        }else if(controller.getPOV() == 90){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.WOF_HEIGHT);
+//        }else if(controller.getPOV() == 0){
+//            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
 //        }
-
         //System.out.println("Hopper: " + hopper + "\t Pot: " + pot + "\t Wof Encoder: " + wofEncoder + "\t Elevator Sensor: " + elevatorSensor + "\t aChannel: " + aChannel);
     }
+
 
     @Override
     public void testInit() {
