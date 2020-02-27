@@ -34,12 +34,19 @@ public class Limelight {
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(currentPipeline.getPipeline());
     }
 
+    public void setLedOn(boolean on){
+        if(on){
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+        }else{
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        }
+    }
+
     public Pipeline getCurrentPipeline(){
         return currentPipeline;
     }
 
     public double getHighDistance() {
-        //return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE));
         return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
     }
 
@@ -63,20 +70,6 @@ public class Limelight {
     public double getAdjustedTx() {
         return getTx() + xOffset;
     }
-
-//    public void changeConfig(Target target) {
-//        switch (target) {
-//            case PLACE_HATCH:
-//                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-//                break;
-//            case PICKUP_HATCH:
-//                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
-//                break;
-//            case PLACE_CARGO:
-//                NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(2);
-//                break;
-//        }
-//    }
 
     public enum Target {
         TRENCH(209d),

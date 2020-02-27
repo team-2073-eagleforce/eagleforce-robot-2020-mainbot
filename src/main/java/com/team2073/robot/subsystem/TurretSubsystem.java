@@ -8,25 +8,26 @@ import com.team2073.common.pathfollowing.math.InterpolatingDouble;
 import com.team2073.common.pathfollowing.math.InterpolatingTreeMap;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.util.MathUtil;
-import com.team2073.robot.AppConstants;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import com.team2073.robot.Limelight.Pipeline;
 import com.team2073.robot.Mediator;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.RobotState;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private static final double POT_MAX_VALUE = 0.9315;
     private static final double POT_MIN_VALUE = 0.5485;
+
+    private static final double FACE_FRONT_POSITION = 35; // TODO: CHECK then REMOVE and offset MIN/MAX position
+
     //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
     //private Mediator mediator = Mediator.getInstance();
     private static final double KP_LIMELIGHT = 0.0125; // 0.015
     private static final double KP_ENCODER = 0.0033;
     private static final double acceptableError = 0.05;
-    private static final double MIN_POSITION = 0;
-    private static final double MAX_POSITION = 238;
+    private static final double MIN_POSITION = 0 - FACE_FRONT_POSITION;
+    private static final double MAX_POSITION = 238 - FACE_FRONT_POSITION;
     private static final double MIN_OUTPUT = 0.05;
 
     private static final double WOF_POSITION = 81.714;
@@ -42,13 +43,14 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.0005, 0.0, 0.15);
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
-    private boolean deadZone = false;
 
     private Double setpoint = null;
     private Mediator mediator;
     private TurretState state = TurretState.WAIT;
-    private double autoSetpoint = 0;
     /*
+
+    THE DIRECTION OF DRIVE GYRO AND TURRET ARE FLIPPED FROM EACHOTHER MAKE SURE MATH UNDERSTANDS THAT
+
     Use limelight to turn to center the image
     Zoom in to stabilize image
     Calculate distance using limelight and lidar?
@@ -120,55 +122,55 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
+//        System.out.println("Turret: " + getPosition());
+
+        if (mediator == null) {
+            mediator = Mediator.getInstance();
+        }
+
         if (!hasZeroed && encoder.getVelocity() <= 0.005) {
             encoder.setPosition(potPosition());
             hasZeroed = true;
         }
-//        System.out.println("Turret: " + getPosition());
+
         if (limelight.getTv() == 0d) {
-            setpoint = null;
             pidEncoder.resetAccumulatedError();
         }
 
         switch (state) {
+            case WOF:
+                setpoint = WOF_POSITION;
+                pidControlloop();
+                break;
+            case GYRO:
+                limelight.setLedOn(false);
+                setpoint = mediator.robotAngleToTarget();
+                pidControlloop();
+                break;
+            case WAIT:
+                turretMotor.set(0);
+                break;
+            case FACE_FRONT:
+                setpoint = 0d;
+                pidControlloop();
+                break;
             case SEEK:
+                double distance = mediator.targetDistance();
+                limelight.setCurrentPipeline(calculatePipeline(distance));
                 if (limelight.getTv() == 0) {
                     seekTarget();
                 } else {
                     shootTargeting();
                 }
                 break;
-            case AUTO:
-                    if(getPosition() < autoSetpoint - 3){
-                        setMotor(.25);
-                    }else if(getPosition() > autoSetpoint + 3){
-                        setMotor(-.25);
-                    }else{
-                        setMotor(0);
-                    }
-                break;
-            case WAIT:
-//                NO-OP
-                break;
-            case COUNTERSPIN:
-//                TODO: backdrive whatever gyro does to remain pointing in the same direction
-                break;
-            case WOF:
-                setpoint = WOF_POSITION;
-                pidEncoder.updateSetPoint(setpoint);
-                pidEncoder.updatePID();
-                double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(getPosition() - setpoint));
-                setMotor(output);
-                break;
         }
-        if(mediator == null){
-            mediator = Mediator.getInstance();
-        }
-        double distance = mediator.targetDistance();
-        limelight.setCurrentPipeline(calculatePipeline(distance));
+
     }
 
-    private void setMotor(double output) {
+    private void pidControlloop() {
+        pidEncoder.updateSetPoint(setpoint);
+        pidEncoder.updatePID();
+        double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(getPosition() - setpoint));
         turretMotor.set(output);
     }
 
@@ -176,32 +178,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         lastTurretAngle = turretAngle + limelightTx;
     }
 
-    public void setAutoSetpoint(double autoSetpoint) {
-        this.autoSetpoint = autoSetpoint;
-    }
-
     public double predictTurretAngle() {
         return lastTurretAngle;
-    }
-
-    public void centerToTarget() {
-        double turretAdjust = 0;
-        double tx = limelight.getTx();
-
-        if (tx > acceptableError) {
-//            turretAdjust = KP * (tx - acceptableError);
-            turretAdjust = KP_LIMELIGHT * tx;
-            turretAdjust += MIN_OUTPUT;
-        } else if (tx < -acceptableError) {
-//            turretAdjust = KP * (tx + acceptableError);
-            turretAdjust = KP_LIMELIGHT * tx;
-            turretAdjust -= MIN_OUTPUT;
-        } else {
-            turretAdjust = 0;
-        }
-
-        setMotor(turretAdjust);
-//        System.out.println("Turret Adj: " + turretAdjust);
     }
 
     public double calcRPMGoal(ElevatorSubsytem.ElevatorState elevatorState) {
@@ -214,9 +192,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
 
     }
-    private void setAutoSeekPosition(double position){
-        this.autoSetpoint = position;
-    }
+
     private double potPosition() {
         return MathUtil.map(potentiometer.get(), POT_MIN_VALUE, POT_MAX_VALUE, MIN_POSITION, MAX_POSITION);
     }
@@ -245,12 +221,12 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private void seekTarget() {
         if (limelight.getTv() == 0d) {
             if (getPosition() >= MIN_POSITION + 15 && getPosition() <= MAX_POSITION - 15 && rotatingClockwise) {
-                setMotor(.25);
+                setpoint = MAX_POSITION - 10;
             } else if (getPosition() > MAX_POSITION - 15) {
-                setMotor(-.25);
+                setpoint = MIN_POSITION + 10;
                 rotatingClockwise = false;
             } else if (getPosition() < MIN_POSITION + 15) {
-                setMotor(.25);
+                setpoint = MAX_POSITION - 10;
                 rotatingClockwise = true;
             }
         }
@@ -260,9 +236,10 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         if (Math.abs(limelight.getAdjustedTx()) > 0.5 && setpoint == null) {
             pidLimelight.updatePID();
             double output = -pidLimelight.getOutput() + MIN_OUTPUT * Math.signum(limelight.getAdjustedTx());
-//                System.out.println("Limelight Output:" + output);
-            setMotor(output);
+            turretMotor.set(output);
         } else {
+//            TODO: THIS MATH NEEDS TO BE SUPER CHECKED
+            mediator.setRobotAngleToTargetOffset(mediator.robotAngleToTarget() - getPosition() + limelight.getAdjustedTx());
             double position = getPosition();
             if (limelight.getAdjustedTx() > 2) {
                 setpoint = null;
@@ -270,20 +247,16 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             if (setpoint == null) {
                 setpoint = position + limelight.getAdjustedTx();
             }
-            pidEncoder.updateSetPoint(setpoint);
-            pidEncoder.updatePID();
-            double output = pidEncoder.getOutput() + MIN_OUTPUT * Math.signum(-(position - setpoint));
-//                System.out.println("Output: " + output + "\t Setpoint: " + setpoint + "\t pos: " + position + "\t tx" + limelight.getAdjustedTx());
-            setMotor(output);
+            pidControlloop();
         }
     }
 
     public enum TurretState {
         SEEK,
+        GYRO,
         WAIT,
-        COUNTERSPIN,
-        WOF,
-        AUTO;
+        FACE_FRONT,
+        WOF;
     }
 }
 

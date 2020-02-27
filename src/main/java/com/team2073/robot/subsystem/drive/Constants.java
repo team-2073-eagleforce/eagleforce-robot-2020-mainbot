@@ -1,7 +1,12 @@
 package com.team2073.robot.subsystem.drive;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 
-import static com.team2073.common.util.ConversionUtil.*;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+
+import static com.team2073.common.util.ConversionUtil.feetToMeters;
+import static com.team2073.common.util.ConversionUtil.inchesToMeters;
 
 public final class Constants {
     public static final class CheesyDriveConstants {
@@ -20,13 +25,14 @@ public final class Constants {
         public static final double kQuickStopScalar = 5.0;
 
     }
+
     public static final class DriveConstants {
 
         public static final double TRACK_WIDTH_METERS = 0.74118;
         public static final double TRACK_WIDTH_INCHES = inchesToMeters(TRACK_WIDTH_METERS);
         public static final double WHEEL_DIAMETER_INCHES = 4.025;
         public static final double WHEEL_DIAMETER_METERS = inchesToMeters(WHEEL_DIAMETER_INCHES);
-        public static final double GEAR_RATIO = 56/12d;
+        public static final double GEAR_RATIO = 56 / 12d;
         public static final double DISTANCE_PER_MOTOR_REV_INCHES = WHEEL_DIAMETER_INCHES * Math.PI / GEAR_RATIO;
         public static final double DISTANCE_PER_MOTOR_REV_METERS = inchesToMeters(DISTANCE_PER_MOTOR_REV_INCHES);
 
@@ -35,21 +41,25 @@ public final class Constants {
 
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS =
                 new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
-
-
         public static final boolean kGyroReversed = true;
-
-        // These are example values only - DO NOT USE THESE FOR YOUR OWN ROBOT!
-        // These characterization values MUST be determined either experimentally or theoretically
-        // for *your* robot's drive.
-        // The Robot Characterization Toolsuite provides a convenient tool for obtaining these
-        // values for your robot.
         public static final double ksVolts = 0.222;
         public static final double kvVoltSecondsPerMeter = 1.81;
         public static final double kaVoltSecondsSquaredPerMeter = 0.433;
-
-        // Example value only - as above, this must be tuned for your drive!
         public static final double kPDriveVel = 1.5;
+
+        public static DifferentialDriveVoltageConstraint autoVoltageConstraint =
+                new DifferentialDriveVoltageConstraint(
+                        new SimpleMotorFeedforward(Constants.DriveConstants.ksVolts,
+                                Constants.DriveConstants.kvVoltSecondsPerMeter,
+                                Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
+                        Constants.DriveConstants.DRIVE_KINEMATICS,
+                        12);
+
+        public static TrajectoryConfig config =
+                new TrajectoryConfig(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                        Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                        .setKinematics(Constants.DriveConstants.DRIVE_KINEMATICS)
+                        .addConstraint(autoVoltageConstraint);
     }
 
     public static final class AutoConstants {

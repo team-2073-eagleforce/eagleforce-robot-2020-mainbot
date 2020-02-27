@@ -9,7 +9,6 @@ import com.team2073.common.position.converter.PositionConverter;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
@@ -54,7 +53,7 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         zeroElevator();
-        profile.update(currentState.getValue(), KG);
+        profile.update(currentState.getHeight(), KG);
     }
 
     public enum ElevatorState {
@@ -67,7 +66,7 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
         ElevatorState(Double height) {
             this.height = height;
         }
-        public double getValue() {
+        public double getHeight() {
             return height;
         }
     }

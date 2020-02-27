@@ -8,41 +8,21 @@ import com.team2073.common.util.ConversionUtil;
 import com.team2073.robot.ApplicationContext;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotState;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
-import java.sql.SQLOutput;
 import java.util.List;
 
-import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.DISTANCE_PER_MOTOR_REV_METERS;
-import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.kGyroReversed;
+import static com.team2073.robot.subsystem.drive.Constants.DriveConstants.*;
 
 
 public class DriveSubsystem implements AsyncPeriodicRunnable {
     //    private GraphCSVUtil graph = new GraphCSVUtil("driveCalibration", "time", "leftVelocity");
-    private static DifferentialDriveVoltageConstraint autoVoltageConstraint =
-            new DifferentialDriveVoltageConstraint(
-                    new SimpleMotorFeedforward(Constants.DriveConstants.ksVolts,
-                            Constants.DriveConstants.kvVoltSecondsPerMeter,
-                            Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
-                    Constants.DriveConstants.DRIVE_KINEMATICS,
-                    12);
-    // Create config for trajectory
-    private static TrajectoryConfig config =
-            new TrajectoryConfig(Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                    // Add kinematics to ensure max speed is actually obeyed
-                    .setKinematics(Constants.DriveConstants.DRIVE_KINEMATICS)
-                    // Apply the voltage constraint
-                    .addConstraint(autoVoltageConstraint);
+
     // The gyro sensor
     // Odometry class for tracking robot pose
     private final DifferentialDriveOdometry m_odometry;
@@ -64,18 +44,15 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     private double lastTime;
     private boolean wrote = true;
 
+    //  a starting heading of zero means that our intake starts facing directly away from the target
+    private double startingHeading = 0;
+
+
     /**
      * Creates a new DriveSubsystem.
      */
     public DriveSubsystem() {
-        // Sets the distance per pulse for the encoders
-//        try {
-//            graph.initFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         autoRegisterWithPeriodicRunner(10);
-//        TODO:  MATH TO MAKE SURE UNITS ARE PROPER
         leftSlave1.setInverted(true);
         leftSlave2.setInverted(true);
         leftMaster.setInverted(true);
@@ -114,9 +91,19 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
         m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
                 , Rotation2d.fromDegrees(getHeading()));
+        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees() - 50;
+
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
 //                , Rotation2d.fromDegrees(getHeading()));
 
+    }
+
+    public double getStartingHeading() {
+        return startingHeading;
+    }
+
+    public void setStartingHeading(double startingHeading) {
+        this.startingHeading = startingHeading;
     }
 
     public void updateOdometry() {
@@ -128,6 +115,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     /**
      * Returns the currently-estimated pose of the robot.
+     *
      * @return The pose.
      */
     public Pose2d getPose() {
@@ -136,6 +124,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     /**
      * Returns the current wheel speeds of the robot.
+     *
      * @return The current wheel speeds.
      */
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -160,9 +149,10 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
      * @param rightVolts the commanded right output
      */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-            leftMaster.setVoltage(leftVolts);
-            rightMaster.setVoltage(rightVolts);
+        leftMaster.setVoltage(leftVolts);
+        rightMaster.setVoltage(rightVolts);
     }
+
     /**
      * Resets the drive encoders to currently read a position of 0.
      */
@@ -220,7 +210,6 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
     private void teleopDrive() {
         DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(1));
-//        System.out.println(joystick.getRawAxis(1));
         double left = driveSignal.getLeft();
         double right = driveSignal.getRight();
         left = Math.abs(left) > maxPercent ? maxPercent * Math.signum(left) : left;
@@ -263,9 +252,8 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
         double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
 //        System.out.println("X: " + x + "\t y: " + y + "\t theta: " +theta);
-//        System.out.println("LeftVel: " +getWheelSpeeds().leftMetersPerSecond  + "\trightVel: " + getWheelSpeeds().rightMetersPerSecond);
         if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
-            if(leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast){
+            if (leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast) {
 
                 leftSlave1.setIdleMode(CANSparkMax.IdleMode.kBrake);
                 leftSlave2.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -289,21 +277,15 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     public enum AutoPaths {
         PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                    new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d)),
 //                    new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(0d)),
-                    new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d))
+                        new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d))
                 ),
-//                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
-//                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
-//                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
                 config.setReversed(false))),
         SHOOT_FIRST_FIVE(TrajectoryGenerator.generateTrajectory(
                 List.of(
                         new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d)),
                         new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(0d))),
-//                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
-//                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
-//                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
                 config.setReversed(true))),
         TRENCH_RUN(TrajectoryGenerator.generateTrajectory(
                 List.of(
@@ -316,8 +298,6 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                         new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0)),
                         new Pose2d(ConversionUtil.inchesToMeters(200d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0))),
                 config.setReversed(true)));
-
-
 
 
         private Trajectory traj;
