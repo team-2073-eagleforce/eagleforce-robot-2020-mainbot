@@ -9,6 +9,7 @@ import com.team2073.robot.command.drive.AutonSelector;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -41,7 +42,6 @@ public class RobotDelegate extends AbstractRobotDelegate {
         oi = new OperatorInterface();
         oi.init();
 //        limelight = appCtx.getLimelight();
-//        hood = appCtx.getHoodSubsystem();
 //        turret = appCtx.getTurretSubsystem();
 //        flywheel = appCtx.getFlywheelSubsystem();
 //        intermediate = appCtx.getIntermediateSubsystem();

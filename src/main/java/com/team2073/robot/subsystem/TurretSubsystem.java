@@ -8,11 +8,13 @@ import com.team2073.common.pathfollowing.math.InterpolatingDouble;
 import com.team2073.common.pathfollowing.math.InterpolatingTreeMap;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
 import com.team2073.common.util.MathUtil;
+import com.team2073.robot.AppConstants;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Limelight;
 import com.team2073.robot.Limelight.Pipeline;
 import com.team2073.robot.Mediator;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.RobotState;
 
 public class TurretSubsystem implements AsyncPeriodicRunnable {
 
@@ -45,6 +47,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private Double setpoint = null;
     private Mediator mediator;
     private TurretState state = TurretState.WAIT;
+    private double autoSetpoint = 0;
     /*
     Use limelight to turn to center the image
     Zoom in to stabilize image
@@ -121,7 +124,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             encoder.setPosition(potPosition());
             hasZeroed = true;
         }
-
+//        System.out.println("Turret: " + getPosition());
         if (limelight.getTv() == 0d) {
             setpoint = null;
             pidEncoder.resetAccumulatedError();
@@ -134,6 +137,15 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
                 } else {
                     shootTargeting();
                 }
+                break;
+            case AUTO:
+                    if(getPosition() < autoSetpoint - 3){
+                        setMotor(.25);
+                    }else if(getPosition() > autoSetpoint + 3){
+                        setMotor(-.25);
+                    }else{
+                        setMotor(0);
+                    }
                 break;
             case WAIT:
 //                NO-OP
@@ -162,6 +174,10 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     public void updateTargetSighting(double turretAngle, double limelightTx) {
         lastTurretAngle = turretAngle + limelightTx;
+    }
+
+    public void setAutoSetpoint(double autoSetpoint) {
+        this.autoSetpoint = autoSetpoint;
     }
 
     public double predictTurretAngle() {
@@ -198,7 +214,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
 
     }
-
+    private void setAutoSeekPosition(double position){
+        this.autoSetpoint = position;
+    }
     private double potPosition() {
         return MathUtil.map(potentiometer.get(), POT_MIN_VALUE, POT_MAX_VALUE, MIN_POSITION, MAX_POSITION);
     }
@@ -213,7 +231,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private Pipeline calculatePipeline(double distance) {
         if (limelight.getCurrentPipeline() == Pipeline.CLOSE) {
-            if (distance > 156) {
+            if (distance > 156 && limelight.getTx() < 6d) {
                 return Pipeline.FAR;
             }
         } else {
@@ -226,12 +244,12 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private void seekTarget() {
         if (limelight.getTv() == 0d) {
-            if (getPosition() >= MIN_POSITION && getPosition() <= MAX_POSITION && rotatingClockwise) {
+            if (getPosition() >= MIN_POSITION + 15 && getPosition() <= MAX_POSITION - 15 && rotatingClockwise) {
                 setMotor(.25);
-            } else if (getPosition() > MAX_POSITION - 5) {
+            } else if (getPosition() > MAX_POSITION - 15) {
                 setMotor(-.25);
                 rotatingClockwise = false;
-            } else if (getPosition() < MIN_POSITION + 5) {
+            } else if (getPosition() < MIN_POSITION + 15) {
                 setMotor(.25);
                 rotatingClockwise = true;
             }
@@ -264,7 +282,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         SEEK,
         WAIT,
         COUNTERSPIN,
-        WOF
+        WOF,
+        AUTO;
     }
 }
 

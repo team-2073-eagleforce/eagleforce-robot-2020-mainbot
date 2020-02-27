@@ -38,13 +38,15 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
             case INTAKE_OUT:
                 togglePistons(true, true);
                 break;
+            case AUTO_INTAKE:
+                togglePistons(false, true);
+                break;
         }
 
 
     }
 
     private void setPower(Double percent) {
-        System.out.println("OUTPUT: "+ percent + "\n\n\n");
         intakeMotor.set(percent);
     }
 
@@ -65,11 +67,12 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
         STARTING_CONFIG,
         INTAKE_OUT,
         STOW,
+        AUTO_INTAKE,
 
     }
 
     public enum IntakeRollerState {
-        INTAKE(.75d),
+        INTAKE(.9d),
         OUTTAKE(-.9),
         STOP(0d),
         DISABLED(0d);

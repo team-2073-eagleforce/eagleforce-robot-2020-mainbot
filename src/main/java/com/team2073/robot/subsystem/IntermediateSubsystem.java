@@ -37,7 +37,8 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
 
     private void setPower(Double bottomRPM, Double topPercent) {
         if(state != IntermediateState.WAIT_FOR_WOF) {
-            pid.setReference(bottomRPM, ControlType.kVelocity);
+//            pid.setReference(bottomRPM, ControlType.kVelocity);
+            bottomMotor.set(bottomRPM/MAX_VELOCITY);
             topMotor.set(ControlMode.PercentOutput, topPercent);
         }else{
             bottomMotor.set(0);

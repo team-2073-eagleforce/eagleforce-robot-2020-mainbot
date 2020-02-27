@@ -30,7 +30,7 @@ public class HoodSubsystem implements PeriodicRunnable {
     @Override
     public void onPeriodic() {
         if (state != HoodState.CALCULATED) {
-            determineHoodAngle();
+//            determineHoodAngle();
             servo.setAngle(state.getServoDegree());
         }else{
             servo.setAngle(setPoint);
@@ -46,7 +46,7 @@ public class HoodSubsystem implements PeriodicRunnable {
         setPoint = hoodAngleToServoAngle(hoodAngle);
     }
 
-    public void determineHoodAngle(){
+    public void determineHoodAngle(boolean shooting){
         if(limelight.getTv() > 0) {
             setHood(HoodState.EXTENDED);
         }else {
@@ -54,7 +54,11 @@ public class HoodSubsystem implements PeriodicRunnable {
         }
     }
 
-    private void calculateState(double distance) {
+    private void calculateState(Double distance) {
+        if(distance == null){
+            state = HoodState.CLOSE_SHOT;
+            return;
+        }
         if (state == HoodState.RETRACTED) {
             if (distance > 132) {
                 state = HoodState.EXTENDED;
@@ -76,7 +80,8 @@ public class HoodSubsystem implements PeriodicRunnable {
 
     public enum HoodState {
         RETRACTED(144.0),
-        EXTENDED(46.0),
+        EXTENDED(34.0),
+        CLOSE_SHOT(144d),
         CALCULATED(null);
 
         private Double servoDegree;

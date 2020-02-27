@@ -22,8 +22,8 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private CANPIDController pid = hopperMotor.getPIDController();
     private HopperState state = HopperState.IDLE;
     private HopperState lastState = HopperState.STOP;
-
     private Timer jamTimer = new Timer();
+    private Timer shotReadyTimer = new Timer();
     private boolean shotReady = false;
 
     public HopperSubsystem(){
@@ -105,14 +105,25 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     public void setShotReady(boolean ready) {
         this.shotReady = ready;
     }
-
+    private boolean started = false;
     private void shootingPosition() {
-        if (hopperSensor.get() && !shotReady) {
+        if (hopperSensor.get() && !shotReady && !started) {
             setMotor(state.getRpm());
-        } else if (!shotReady){
+        } else if (!shotReady && !hopperSensor.get() && !started){
             setMotor(0d);
-            shotReady = true;
+            hopperMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+            shotReadyTimer.start();
             hopperEncoder.setPosition(0d);
+            started = true;
+        }else if (!shotReady && shotReadyTimer.hasPeriodPassed(.5) && started){
+            shotReady = true;
+            shotReadyTimer.reset();
+            shotReadyTimer.stop();
+            started = false;
+            setMotor(0);
+        }else if(shotReady){
+            setMotor(0d);
         }
 
     }
@@ -135,7 +146,8 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void setMotor(double rpm) {
-        pid.setReference(rpm, ControlType.kVelocity);
+//        pid.setReference(rpm, ControlType.kVelocity);
+        hopperMotor.set(rpm/MAX_RPM);
     }
 
     private void setMotorOpenLoop(double rpm){
@@ -167,9 +179,9 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     public enum HopperState {
         STOP(0),
-        IDLE(10d),
-        PREP_SHOT(20d),
-        SHOOT(20d),
+        IDLE(20d),
+        PREP_SHOT(30d),
+        SHOOT(35d),
         JAM(0d),
         FLIP(40d);
 

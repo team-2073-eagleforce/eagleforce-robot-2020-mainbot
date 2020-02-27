@@ -112,7 +112,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         rightSlave2.follow(rightMaster);
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(120d), Rotation2d.fromDegrees(-90d))
+        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
                 , Rotation2d.fromDegrees(getHeading()));
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
 //                , Rotation2d.fromDegrees(getHeading()));
@@ -262,7 +262,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
         double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
         double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
-        System.out.println("X: " + x + "\t y: " + y + "\t theta: " +theta);
+//        System.out.println("X: " + x + "\t y: " + y + "\t theta: " +theta);
 //        System.out.println("LeftVel: " +getWheelSpeeds().leftMetersPerSecond  + "\trightVel: " + getWheelSpeeds().rightMetersPerSecond);
         if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
             if(leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast){
@@ -276,7 +276,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
             }
 //            graph.updateMainFile(Timer.getFPGATimestamp(), ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
 //            wrote = false;
-//            teleopDrive();
+            teleopDrive();
         }
 //        if(RobotState.isDisabled() && !wrote){
 //            graph.writeToFile();
@@ -287,21 +287,11 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum AutoPaths {
-        // Poses are in feet.
-//        VAL(TrajectoryGenerator.generateTrajectory(List.of(
-////                new Pose2d(ConversionUtil.feetToMeters(130d), ConversionUtil.feetToMeters(120d), new Rotation2d(-90d)),
-////                new Pose2d(ConversionUtil.feetToMeters(228d), ConversionUtil.feetToMeters(40d), new Rotation2d(-65d)),
-////                new Pose2d(ConversionUtil.feetToMeters(228d), ConversionUtil.feetToMeters(40d), new Rotation2d(115d)),
-////                new Pose2d(ConversionUtil.feetToMeters(160d), ConversionUtil.feetToMeters(112d), new Rotation2d(180d)),
-////                new Pose2d(ConversionUtil.feetToMeters(160d), ConversionUtil.feetToMeters(112), new Rotation2d(0)),
-//                new Pose2d(ConversionUtil.feetToMeters(390d), ConversionUtil.feetToMeters(112), new Rotation2d(0))),
-//                config)),
-
         PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                    new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(120d), Rotation2d.fromDegrees(-90d)),
-                    new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(0d)),
-                    new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(-60d))
+                    new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d)),
+//                    new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(0d)),
+                    new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d))
                 ),
 //                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
 //                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
@@ -309,20 +299,23 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                 config.setReversed(false))),
         SHOOT_FIRST_FIVE(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(-60)),
-                        new Pose2d(ConversionUtil.inchesToMeters(160d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0))),
+                        new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(-70d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(0d))),
 //                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
 //                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
 //                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
                 config.setReversed(true))),
         TRENCH_RUN(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(160d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(260d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0))),
-//                        new Pose2d(ConversionUtil.feetToMeters(0d), ConversionUtil.feetToMeters(0d), new Rotation2d(0)),
-//                        List.of(new Translation2d(ConversionUtil.feetToMeters(5),ConversionUtil.feetToMeters(1.5))),
-//                        new Pose2d(ConversionUtil.feetToMeters(10d), ConversionUtil.feetToMeters(3d), new Rotation2d(0)),
-                config.setReversed(false)));
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(210d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(20)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0))),
+                config.setReversed(false))),
+        TRENCH_RUN_RETURN(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(200d), ConversionUtil.inchesToMeters(94d), Rotation2d.fromDegrees(0))),
+                config.setReversed(true)));
 
 
 

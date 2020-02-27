@@ -82,28 +82,28 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
             reset();
         }
 
-        csv.updateMainFile(iteration, currentVelocity * 60 / (2 * Math.PI), getEstimatedVelocity() * 60 / (2 * Math.PI),
-                getTalonVoltage(), RobotController.getBatteryVoltage(), rpm_reference);
+//        csv.updateMainFile(iteration, currentVelocity * 60 / (2 * Math.PI), getEstimatedVelocity() * 60 / (2 * Math.PI),
+//                getTalonVoltage(), RobotController.getBatteryVoltage(), rpm_reference);
         iteration++;
     }
 
 
     public void init() {
-        try {
-            csv.initFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            csv.initFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void reset() {
         disable();
         counter.reset();
-        if (!endFile) {
-            csv.writeToFile();
-            System.out.println(System.getProperty("user.home"));
-            endFile = true;
-        }
+//        if (!endFile) {
+//            csv.writeToFile();
+//            System.out.println(System.getProperty("user.home"));
+//            endFile = true;
+//        }
         m_wheel.reset();
     }
 

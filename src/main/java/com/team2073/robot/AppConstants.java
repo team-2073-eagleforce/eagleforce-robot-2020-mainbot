@@ -14,8 +14,8 @@ public abstract class AppConstants {
 
         //Intake
         public static final int INTAKE_MOTOR_PORT = 7;
-        public static final int INTAKE_SOLENOID_TOP_PORT = 0; // Practice bot needs plumbing change
-        public static final int INTAKE_SOLENOID_BOTTOM_PORT = 1;
+        public static final int INTAKE_SOLENOID_TOP_PORT = 1;
+        public static final int INTAKE_SOLENOID_BOTTOM_PORT = 0;
 
         //Hopper
         public static final int HOPPER_MOTOR_ID = 4;
@@ -34,8 +34,6 @@ public abstract class AppConstants {
         public static final int WOF_ENCODER_A_DIO_PORT = 0;
         public static final int WOF_ENCODER_B_DIO_PORT = 1;
 
-        //Shooter - Current settings are for the test board
-
         //turret
         public static final int TURRET_MOTOR_PORT = 8;
         public static final int TURRET_POT_ANALOG_PORT = 3;
@@ -51,6 +49,10 @@ public abstract class AppConstants {
         public static final int INTERMEDIATE_MASTER = 10; //change number
         public static final int INTERMEDIATE_SLAVE = 12; //change number;
 
+        //Climb
+        public static final int CLIMB_PISTON_SOLENOID = 3;
+        public static final int CLIMB_PTO_SOLENOID = 2;
+
         // Control System
         public static final int PDB_PORT = 0;
     }
@@ -60,11 +62,9 @@ public abstract class AppConstants {
     }
 
     public abstract static class Shooter {
-        public static final double NO_TARGET_RPM = 3250;
+        public static final double NO_TARGET_RPM = 7000d;
         public static final double DEFAULT_LONG_RPM = 6250;
         public static final double ZOOM_RANGE_INCHES = 12*20;
-        public static final double test = 3;
-
 
         public static final double LIMELIGHT_LOW_HEIGHT = 24.875d;
         public static final double LIMELIGHT_HIGH_HEIGHT = LIMELIGHT_LOW_HEIGHT + 11d;

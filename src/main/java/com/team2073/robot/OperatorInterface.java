@@ -1,8 +1,11 @@
 package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
+import com.team2073.common.trigger.MultiTrigger;
 import com.team2073.robot.command.ElevatorHeightsCommand;
 import com.team2073.robot.command.MediatorCommand;
+import com.team2073.robot.command.intake.IntakePositionCommand;
+import com.team2073.robot.command.intake.ToggleIntakePositionCommand;
 import com.team2073.robot.command.shooter.RPMCommand;
 import com.team2073.robot.command.shooter.RPMTrigger;
 import com.team2073.robot.command.hopper.HopperFlipCommand;
@@ -12,9 +15,12 @@ import com.team2073.robot.command.intake.IntakeRollerCommand;
 import com.team2073.robot.command.intake.OuttakeCommand;
 import com.team2073.robot.command.InverseTrigger;
 import com.team2073.robot.subsystem.ElevatorSubsytem;
+import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
+
+import javax.print.attribute.standard.Media;
 
 public class OperatorInterface {
 
@@ -42,6 +48,7 @@ public class OperatorInterface {
     private JoystickButton stickThree = new JoystickButton(driveStick, 3);
     private JoystickButton stickFour = new JoystickButton(driveStick, 4);
     private JoystickButton stickFive = new JoystickButton(driveStick, 5);
+    private JoystickButton stickSix = new JoystickButton(driveStick, 6);
     private JoystickButton stickTen = new JoystickButton(driveStick, 10);
 
     private JoystickButton leftPaddle = new JoystickButton(driveWheel, 1);
@@ -55,6 +62,7 @@ public class OperatorInterface {
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
 
     private RPMTrigger rpmTrigger = new RPMTrigger();
+    private MultiTrigger ptoEngage = new MultiTrigger(leftWheelButton, rightWheelButton);
 
     public OperatorInterface(){
 
@@ -69,15 +77,22 @@ public class OperatorInterface {
         b.whileHeld(new OuttakeCommand());
         y.whenPressed(new HopperStopCommand());
         rightTrigger.whenActive(new HopperIdleCommand());
-        lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
-//        lb.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
+//        lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
+        lb.toggleWhenActive(new ToggleIntakePositionCommand());
 //        lbInverse.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
 
+        stickThree.whenActive(new CloseShotCommand(true));
+        stickThree.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
+
+        stickTwo.whenActive(new CloseShotCommand(false));
         stickTwo.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
         backTrigger.whenActive(new MediatorCommand(Mediator.RobotState.SHOOTING));
         backTrigger.whenReleased(new MediatorCommand(Mediator.RobotState.STOW));
 
         rpmTrigger.whenActive(new RPMCommand());
+
+        stickSix.whenPressed(new MediatorCommand(Mediator.RobotState.PREP_CLIMB));
+        stickFive.whenPressed(new MediatorCommand(Mediator.RobotState.CLIMB));
 
     }
 

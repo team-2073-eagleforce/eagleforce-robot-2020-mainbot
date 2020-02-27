@@ -2,6 +2,7 @@ package com.team2073.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.team2073.robot.subsystem.ClimbSubsystem;
 import com.team2073.robot.subsystem.*;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -40,6 +41,8 @@ public class ApplicationContext {
     private CANSparkMax intermediateMotor;
     private Solenoid intakeSolenoidTop;
     private Solenoid intakeSolenoidBottom;
+    private Solenoid climbPistonSolenoid;
+    private Solenoid climbDriveSolenoid;
     private AnalogPotentiometer potentiometer; // WARNING: Change port
     private Servo servo; // WARNING: Change channel
     private TalonSRX intermediateBagMotor;
@@ -63,6 +66,7 @@ public class ApplicationContext {
     private HoodSubsystem hoodSubsystem;
     private ElevatorSubsytem elevatorSubsytem;
     private Limelight limelight;
+    private ClimbSubsystem climbSubsystem;
 
     private TalonSRX shooterMotorOne;
     private VictorSPX shooterMotorTwo;
@@ -143,6 +147,20 @@ public class ApplicationContext {
             intakeSolenoidBottom = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
         }
         return intakeSolenoidBottom;
+    }
+
+    public Solenoid getClimbPistonSolenoid() {
+        if (climbPistonSolenoid == null) {
+            climbPistonSolenoid = new Solenoid(CLIMB_PISTON_SOLENOID);
+        }
+        return climbPistonSolenoid;
+    }
+
+    public Solenoid getClimbDriveSolenoid() {
+        if (climbDriveSolenoid == null) {
+            climbDriveSolenoid = new Solenoid(CLIMB_PTO_SOLENOID);
+        }
+        return climbDriveSolenoid;
     }
 
     public IntakeSubsystem getIntakeSubsystem() {
@@ -339,6 +357,13 @@ public class ApplicationContext {
             elevatorSubsytem = new ElevatorSubsytem();
         }
         return elevatorSubsytem;
+    }
+
+    public ClimbSubsystem getClimbSubsystem() {
+        if(climbSubsystem == null){
+            climbSubsystem = new ClimbSubsystem();
+        }
+        return climbSubsystem;
     }
 
     public PigeonIMU getGyro(){

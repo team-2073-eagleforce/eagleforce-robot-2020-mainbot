@@ -25,7 +25,12 @@ public class Mediator implements AsyncPeriodicRunnable {
     private ElevatorSubsytem elevator;
     private FlywheelSubsystem flywheel;
     private Limelight limelight;
+    private ClimbSubsystem climb;
+    private boolean closeShot;
 
+    public void setCloseShot(boolean closeShot){
+        this.closeShot = closeShot;
+    }
 
     private Mediator() {
         autoRegisterWithPeriodicRunner(10);
@@ -39,6 +44,7 @@ public class Mediator implements AsyncPeriodicRunnable {
         elevator = appCtx.getElevatorSubsystem();
         flywheel = appCtx.getFlywheelSubsystem();
         limelight = appCtx.getLimelight();
+        climb = appCtx.getClimbSubsystem();
     }
 
     public static Mediator getInstance() {
@@ -70,21 +76,33 @@ public class Mediator implements AsyncPeriodicRunnable {
                 }
                 break;
             case PREP_SHOT:
-                hopper.setState(HopperState.PREP_SHOT);
-                hood.determineHoodAngle();
-                elevator.setElevatorState(calcElevatorShotHeight());
-                turret.setState(TurretSubsystem.TurretState.SEEK);
-
+//                hopper.setState(HopperState.PREP_SHOT);
+                if(!closeShot) {
+                    hood.setHood(HoodSubsystem.HoodState.EXTENDED);
+                    elevator.setElevatorState(calcElevatorShotHeight());
+                    turret.setState(TurretSubsystem.TurretState.SEEK);
+                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+                }else{
+                    elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
+                    turret.setAutoSetpoint(35d);
+                    turret.setState(TurretSubsystem.TurretState.AUTO);
+                    flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
+                    hood.setHood(HoodSubsystem.HoodState.CLOSE_SHOT);
+                }
 //                flywheel.setRPM(SmartDashboard.getNumber("Flywheel RPM", 5000));
-                flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
 
 //                Turret calcs rpm for shooter,
 
                 break;
             case SHOOTING:
                 drive.capTeleopOutput(0);
-                if (flywheel.atReference()) {
-                    desiredState = PREP_SHOT;
+                if (!flywheel.atReference()) {
+                    if(!closeShot) {
+                        flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+                    }else{
+                        flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
+                    }
+                    break;
                 }
                 hopper.setState(HopperState.SHOOT);
                 if (hopper.isShotReady()) {
@@ -94,6 +112,7 @@ public class Mediator implements AsyncPeriodicRunnable {
             case STOW:
                 if (lastState != desiredState) {
                     drive.capTeleopOutput(1);
+                    hood.determineHoodAngle(false);
 //                    intake.setPosition(IntakePositionState.STOW);
                     hopper.setState(HopperState.IDLE);
                     hood.setHood(HoodSubsystem.HoodState.RETRACTED);
@@ -115,13 +134,15 @@ public class Mediator implements AsyncPeriodicRunnable {
             case PREP_CLIMB:
                 if (lastState != desiredState) {
                     drive.capTeleopOutput(MAX_DRIVE_PERCENT_IN_CLIMB);
-                    intake.setPosition(IntakePositionState.STARTING_CONFIG);
+                    intake.setPosition(IntakePositionState.INTAKE_OUT);
                     hopper.setState(HopperState.STOP);
-//                    climb.extendOrSomething
+                    climb.setState(ClimbSubsystem.ClimbState.HOOKS);
                 }
                 break;
             case CLIMB:
 //                elevator.goDown
+                climb.setState(ClimbSubsystem.ClimbState.PTO);
+
                 break;
             case DISABLED:
                 break;

@@ -49,12 +49,12 @@ public final class Constants {
         public static final double kaVoltSecondsSquaredPerMeter = 0.433;
 
         // Example value only - as above, this must be tuned for your drive!
-        public static final double kPDriveVel = 2.5;
+        public static final double kPDriveVel = 1.5;
     }
 
     public static final class AutoConstants {
         public static final double maxSpeedFeetPerSecond = 14;
-        public static final double maxAccelerationMetersPerSecondSquared = 5;
+        public static final double maxAccelerationMetersPerSecondSquared = 6;
 
         public static final double kMaxSpeedMetersPerSecond = feetToMeters(maxSpeedFeetPerSecond);
         public static final double kMaxAccelerationMetersPerSecondSquared = feetToMeters(maxAccelerationMetersPerSecondSquared);

@@ -53,9 +53,8 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     }
     @Override
     public void onPeriodicAsync() {
+        zeroElevator();
         profile.update(currentState.getValue(), KG);
-        System.out.println("Inches: " + elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH + "\t Output: " + elevatorMotor.getMotorOutputPercent());
-        SmartDashboard.putNumber("Inches",elevatorMotor.getSelectedSensorPosition()/ENCODER_TICS_PER_INCH);
     }
 
     public enum ElevatorState {
@@ -115,21 +114,19 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
                 if (currentSensor != pastSensor){
                     if (currentSensor){
                         elevatorMotor.setSelectedSensorPosition(converter.asTics(LOW_ZERO));
-                        hasZeroed = true;
                     }else{
                         elevatorMotor.setSelectedSensorPosition(converter.asTics(HIGH_ZERO));
-                        hasZeroed = true;
                     }
+                    hasZeroed = true;
                 }
             } else if (velocity() < 0) {
                 if (currentSensor != pastSensor){
                     if (currentSensor){
                         elevatorMotor.setSelectedSensorPosition(converter.asTics(HIGH_ZERO));
-                        hasZeroed = true;
                     }else{
                         elevatorMotor.setSelectedSensorPosition(converter.asTics(LOW_ZERO));
-                        hasZeroed = true;
                     }
+                    hasZeroed = true;
                 }
             }
             pastSensor = isAtBottom();
