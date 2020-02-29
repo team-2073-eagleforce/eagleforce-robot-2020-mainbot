@@ -85,7 +85,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                     flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
                 } else {
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
-                    turret.setState(TurretSubsystem.TurretState.GYRO);
+                    turret.setState(TurretSubsystem.TurretState.FACE_FRONT);
                     flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
                     hood.setHood(HoodSubsystem.HoodState.CLOSE_SHOT);
                 }
@@ -96,15 +96,17 @@ public class Mediator implements AsyncPeriodicRunnable {
                 break;
             case SHOOTING:
                 drive.capTeleopOutput(0);
-                if (!flywheel.atReference()) {
-                    if (!closeShot) {
-                        flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
-                    } else {
-                        flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
-                    }
-                    break;
-                }
-                if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
+//                if (!flywheel.atReference()) {
+//                    if (!closeShot) {
+//                        flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+//                    } else {
+//                        flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
+//                    }
+//                    break;
+//                }
+                if(elevator.getSetpoint() == null){
+                    hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
+                }else if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
                     hopper.setState(HopperState.ELEVATOR_UP_SHOOT);
                 } else {
                     hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
@@ -125,6 +127,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                     intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
                     flywheel.setRPM(null);
                     hopper.setShotReady(false);
+                    turret.resetReachedClosest();
                 }
 
                 break;
@@ -179,7 +182,11 @@ public class Mediator implements AsyncPeriodicRunnable {
     }
 
     public double robotAngleToTarget() {
-        return drive.getPose().getRotation().getDegrees() + 180 + angleToTargetOffset;
+        double angle = drive.getPose().getRotation().getDegrees();
+        if( angle > 180){
+            angle -= 360;
+        }
+        return angle + 180 + angleToTargetOffset;
     }
 
     public void setRobotAngleToTargetOffset(double offset) {

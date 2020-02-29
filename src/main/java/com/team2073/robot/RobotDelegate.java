@@ -22,11 +22,12 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private HopperSubsystem hopper;
     private Joystick controller = appCtx.getController();
     private FlywheelSubsystem flywheel;
-//    private HoodSubsystem hood;
+    private HoodSubsystem hood;
     private TurretSubsystem turret;
     private Limelight limelight;
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
+    private Servo servo = appCtx.getServo();
 
     public RobotDelegate(double period) {
         super(period);
@@ -50,6 +51,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        elevator = appCtx.getElevatorSubsystem();
 //        SmartDashboard.putNumber("servo", 50);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
+//        SmartDashboard.putNumber("servo", servo.getAngle());
 
     }
 

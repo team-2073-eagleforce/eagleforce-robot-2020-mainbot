@@ -3,7 +3,6 @@ package com.team2073.robot.command.auton;
 import com.team2073.common.util.CommandUtil;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.Mediator;
-import com.team2073.robot.command.AutonTurretCommand;
 import com.team2073.robot.command.MediatorCommand;
 import com.team2073.robot.command.TurretCommand;
 import com.team2073.robot.command.drive.AutonSelector;
@@ -28,8 +27,7 @@ public class TopSide10Ball extends CommandGroup {
 		addParallel(new HopperIdleCommand());
 		addParallel(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
 		addParallel(new IntakeRollerCommand(), 15);
-		addParallel(new AutonTurretCommand(215));
-		addParallel(new TurretCommand(TurretSubsystem.TurretState.AUTO));
+		addParallel(new TurretCommand(TurretSubsystem.TurretState.GYRO));
 		addParallel(CommandUtil.waitBefore(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.STOW), 3.5));
 		addSequential(new RamseteCommand(DriveSubsystem.AutoPaths.PICK_FIRST_2.getTraj(), drive));
 		addParallel(CommandUtil.waitBefore(new MediatorCommand(Mediator.RobotState.PREP_SHOT), 1));
@@ -40,8 +38,7 @@ public class TopSide10Ball extends CommandGroup {
 		addSequential(new MediatorCommand(Mediator.RobotState.STOW));
 		addSequential(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
 		addParallel(new HopperIdleCommand());
-		addParallel(new AutonTurretCommand(210));
-		addParallel(new TurretCommand(TurretSubsystem.TurretState.AUTO));
+		addParallel(new TurretCommand(TurretSubsystem.TurretState.GYRO));
 		addSequential(new RamseteCommand(DriveSubsystem.AutoPaths.TRENCH_RUN.getTraj(), drive));
 		addParallel(CommandUtil.waitBefore(new MediatorCommand(Mediator.RobotState.PREP_SHOT), 1.5));
 		addSequential(new RamseteCommand(DriveSubsystem.AutoPaths.TRENCH_RUN_RETURN.getTraj(), drive));

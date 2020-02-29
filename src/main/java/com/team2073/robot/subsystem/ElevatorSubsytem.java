@@ -53,7 +53,8 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         zeroElevator();
-        profile.update(currentState.getHeight(), KG);
+        setpoint = currentState.getHeight();
+        profile.update(setpoint, KG);
     }
 
     public enum ElevatorState {

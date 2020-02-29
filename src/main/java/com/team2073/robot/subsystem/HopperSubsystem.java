@@ -1,6 +1,7 @@
 package com.team2073.robot.subsystem;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
@@ -52,6 +53,13 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
             hasFlipped = false;
             checkJam();
         }
+//        System.out.println(
+//                CANError.fromInt(hopperMotor.getFaults()) + "\t " + hopperMotor.getStickyFaults());
+
+        if(CANError.fromInt(hopperMotor.getFaults()) == CANError.kInvalid){
+            hopperMotor.clearFaults();
+        }
+
         switch (state) {
             case STOP:
             case JAM:
@@ -177,7 +185,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     public enum HopperState {
         STOP(0),
-        IDLE(20d),
+        IDLE(17d),
         PREP_SHOT(30d),
         ELEVATOR_UP_SHOOT(35d),
         ELEVATOR_DOWN_SHOOT(50d),

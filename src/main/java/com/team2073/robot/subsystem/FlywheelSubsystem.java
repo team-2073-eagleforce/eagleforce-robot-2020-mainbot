@@ -24,8 +24,7 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
     private GraphCSVUtil csv = new GraphCSVUtil("shooter", "iterations", "velocity (rpm)",
             "Estimated Velocity", "Talon Output (V)", "Battery Voltage (V)", "Reference");
     //    private double rpm_reference = 4710; good for a dist of 133.5 in from front bumper rail
-    private double rpm_reference = 6200;
-    private Double reference = rpm_reference * 2 * Math.PI / 60; // 130"
+    private Double reference = null; // 130"
     private boolean endFile = false;
     private double iteration = 0;
     private boolean enabled;
@@ -62,48 +61,54 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
             m_motor2.set(ControlMode.PercentOutput, 0d);
             m_motor3.set(ControlMode.PercentOutput, 0d);
         }
+        System.out.println("Motor1 Output: " + m_motor.getMotorOutputVoltage() + "\tMotor2 Output: " + m_motor2.getMotorOutputVoltage() + "\tMotor3 Output: " + m_motor3.getMotorOutputVoltage() + "\t Controller Output: " + getControllerVoltage());
     }
-
+    private boolean isEnabled = false;
     @Override
     public void onPeriodicAsync() {
         double currentVelocity = counter.getVelocity();
 //        System.out.println("Current Velocity: " + currentVelocity * 60 / (2*Math.PI) + "\t Output" + m_motor.getMotorOutputVoltage());
 
         if (reference != null) {
-            enable();
-            reference *= (2 * Math.PI / 60d);
+            if(!isEnabled) {
+                enable();
+                enabled = true;
+            }
             setReference(reference);
 
 //		System.out.println("Speed: " +  currentVelocity * 60 / (2*Math.PI) + "\t Kalman Estimated Velocity: " + getEstimatedVelocity());
             iterate(currentVelocity);
+            csv.updateMainFile(iteration, currentVelocity * 60 / (2 * Math.PI), getEstimatedVelocity() * 60 / (2 * Math.PI),
+                    getTalonVoltage(), RobotController.getBatteryVoltage(), reference);
+            iteration++;
         } else {
 
             iterate(0);
-            reset();
+            if(enabled){
+                reset();
+                enabled = false;
+            }
         }
 
-//        csv.updateMainFile(iteration, currentVelocity * 60 / (2 * Math.PI), getEstimatedVelocity() * 60 / (2 * Math.PI),
-//                getTalonVoltage(), RobotController.getBatteryVoltage(), rpm_reference);
-        iteration++;
     }
 
 
     public void init() {
-//        try {
-//            csv.initFile();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            csv.initFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void reset() {
         disable();
         counter.reset();
-//        if (!endFile) {
-//            csv.writeToFile();
-//            System.out.println(System.getProperty("user.home"));
-//            endFile = true;
-//        }
+        if (!endFile) {
+            csv.writeToFile();
+            System.out.println(System.getProperty("user.home"));
+            endFile = true;
+        }
         m_wheel.reset();
     }
 
@@ -120,7 +125,11 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
     }
 
     public void setRPM(Double rpm) {
-        reference = rpm;
+        if(rpm == null){
+            reference = null;
+            return;
+        }
+        reference = rpm * (2 * Math.PI / 60d);;
     }
 
     public boolean atReference() {

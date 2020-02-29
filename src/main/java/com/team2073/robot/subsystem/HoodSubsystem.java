@@ -79,9 +79,9 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
 
     public enum HoodState {
-        RETRACTED(144.0),
-        EXTENDED(34.0),
-        CLOSE_SHOT(144d),
+        RETRACTED(158.0),
+        EXTENDED(45.0),
+        CLOSE_SHOT(158d),
         CALCULATED(null);
 
         private Double servoDegree;
