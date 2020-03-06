@@ -1,25 +1,17 @@
 package com.team2073.robot;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.team2073.robot.subsystem.ClimbSubsystem;
-import com.team2073.robot.subsystem.*;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.revrobotics.CANSparkMax;
-import com.team2073.robot.subsystem.ElevatorSubsytem;
-import edu.wpi.first.wpilibj.DigitalInput;
+import com.team2073.robot.constants.AppConstants;
 import com.team2073.robot.statespace.ShooterVelocityCounter;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
-import edu.wpi.first.wpilibj.Encoder;
+import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 
-import static com.revrobotics.CANSparkMaxLowLevel.*;
-import static com.team2073.robot.AppConstants.Ports.*;
+import static com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class ApplicationContext {
 
@@ -77,7 +69,7 @@ public class ApplicationContext {
     private ShooterVelocityCounter velocityCounter;
     private FlywheelSubsystem flywheelSubsystem;
 
-
+    private AppConstants constants = AppConstants.getInstance();
 
     public static ApplicationContext getInstance() {
         if (instance == null) {
@@ -88,41 +80,41 @@ public class ApplicationContext {
 
     public Joystick getController() {
         if (controller == null) {
-            controller = new Joystick(CONTROLLER_PORT);
+            controller = new Joystick(constants.CONTROLLER_PORT);
         }
         return controller;
     }
 
     public Joystick getDriveWheel() {
         if (driveWheel == null) {
-            driveWheel = new Joystick(WHEEL_PORT);
+            driveWheel = new Joystick(constants.WHEEL_PORT);
         }
         return driveWheel;
     }
 
     public Joystick getDriveStick() {
         if (driveStick == null) {
-            driveStick = new Joystick(JOYSTICK_PORT);
+            driveStick = new Joystick(constants.JOYSTICK_PORT);
         }
         return driveStick;
     }
 
     public CANSparkMax getHopperMotor() {
-        if(hopperMotor == null) {
-            hopperMotor = new CANSparkMax(HOPPER_MOTOR_ID, MotorType.kBrushless);
+        if (hopperMotor == null) {
+            hopperMotor = new CANSparkMax(constants.HOPPER_MOTOR_ID, MotorType.kBrushless);
         }
         return hopperMotor;
     }
 
     public DigitalInput getHopperSensor() {
-        if(hopperSensor == null) {
-            hopperSensor = new DigitalInput(HOPPER_SENSOR_DIO_PORT);
+        if (hopperSensor == null) {
+            hopperSensor = new DigitalInput(constants.HOPPER_SENSOR_DIO_PORT);
         }
         return hopperSensor;
     }
 
     public HopperSubsystem getHopperSubsystem() {
-        if(hopperSubsystem == null) {
+        if (hopperSubsystem == null) {
             hopperSubsystem = new HopperSubsystem();
         }
         return hopperSubsystem;
@@ -130,35 +122,35 @@ public class ApplicationContext {
 
     public CANSparkMax getIntakeMotor() {
         if (intakeMotor == null) {
-            intakeMotor = new CANSparkMax(INTAKE_MOTOR_PORT, MotorType.kBrushless);
+            intakeMotor = new CANSparkMax(constants.INTAKE_MOTOR_PORT, MotorType.kBrushless);
         }
         return intakeMotor;
     }
 
     public Solenoid getIntakeSolenoidTop() {
         if (intakeSolenoidTop == null) {
-            intakeSolenoidTop = new Solenoid(INTAKE_SOLENOID_TOP_PORT);
+            intakeSolenoidTop = new Solenoid(constants.INTAKE_SOLENOID_TOP_PORT);
         }
         return intakeSolenoidTop;
     }
 
     public Solenoid getIntakeSolenoidBottom() {
         if (intakeSolenoidBottom == null) {
-            intakeSolenoidBottom = new Solenoid(INTAKE_SOLENOID_BOTTOM_PORT);
+            intakeSolenoidBottom = new Solenoid(constants.INTAKE_SOLENOID_BOTTOM_PORT);
         }
         return intakeSolenoidBottom;
     }
 
     public Solenoid getClimbPistonSolenoid() {
         if (climbPistonSolenoid == null) {
-            climbPistonSolenoid = new Solenoid(CLIMB_PISTON_SOLENOID);
+            climbPistonSolenoid = new Solenoid(constants.CLIMB_PISTON_SOLENOID);
         }
         return climbPistonSolenoid;
     }
 
     public Solenoid getClimbDriveSolenoid() {
         if (climbDriveSolenoid == null) {
-            climbDriveSolenoid = new Solenoid(CLIMB_PTO_SOLENOID);
+            climbDriveSolenoid = new Solenoid(constants.CLIMB_PTO_SOLENOID);
         }
         return climbDriveSolenoid;
     }
@@ -171,52 +163,51 @@ public class ApplicationContext {
     }
 
 
-
     public TurretSubsystem getTurretSubsystem() {
-        if(turretSubsystem == null) {
+        if (turretSubsystem == null) {
             turretSubsystem = new TurretSubsystem();
         }
         return turretSubsystem;
     }
 
     public CANSparkMax getLeftMaster() {
-        if(leftMaster == null){
-            leftMaster = new CANSparkMax(DRIVE_LEFT_MASTER, MotorType.kBrushless);
+        if (leftMaster == null) {
+            leftMaster = new CANSparkMax(constants.DRIVE_LEFT_MASTER, MotorType.kBrushless);
         }
         return leftMaster;
     }
 
     public CANSparkMax getRightMaster() {
-        if(rightMaster == null){
-            rightMaster = new CANSparkMax(DRIVE_RIGHT_MASTER, MotorType.kBrushless);
+        if (rightMaster == null) {
+            rightMaster = new CANSparkMax(constants.DRIVE_RIGHT_MASTER, MotorType.kBrushless);
         }
         return rightMaster;
     }
 
     public CANSparkMax getLeftSlave1() {
-        if(leftSlave1 == null){
-            leftSlave1 = new CANSparkMax(DRIVE_LEFT_SLAVE_ONE, MotorType.kBrushless);
+        if (leftSlave1 == null) {
+            leftSlave1 = new CANSparkMax(constants.DRIVE_LEFT_SLAVE_ONE, MotorType.kBrushless);
         }
         return leftSlave1;
     }
 
     public CANSparkMax getLeftSlave2() {
-        if(leftSlave2 == null){
-            leftSlave2 = new CANSparkMax(DRIVE_LEFT_SLAVE_TWO, MotorType.kBrushless);
+        if (leftSlave2 == null) {
+            leftSlave2 = new CANSparkMax(constants.DRIVE_LEFT_SLAVE_TWO, MotorType.kBrushless);
         }
         return leftSlave2;
     }
 
     public CANSparkMax getRightSlave1() {
-        if(rightSlave1 == null){
-            rightSlave1 = new CANSparkMax(DRIVE_RIGHT_SLAVE_ONE, MotorType.kBrushless);
+        if (rightSlave1 == null) {
+            rightSlave1 = new CANSparkMax(constants.DRIVE_RIGHT_SLAVE_ONE, MotorType.kBrushless);
         }
         return rightSlave1;
     }
 
     public CANSparkMax getRightSlave2() {
-        if(rightSlave2 == null){
-            rightSlave2 = new CANSparkMax(DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
+        if (rightSlave2 == null) {
+            rightSlave2 = new CANSparkMax(constants.DRIVE_RIGHT_SLAVE_TWO, MotorType.kBrushless);
         }
         return rightSlave2;
     }
@@ -229,57 +220,57 @@ public class ApplicationContext {
     }
 
 
-    public WOFManipulatorSubsystem getWofManipulatorSubsystem (){
-        if(wofManipulatorSubsystem == null){
+    public WOFManipulatorSubsystem getWofManipulatorSubsystem() {
+        if (wofManipulatorSubsystem == null) {
             wofManipulatorSubsystem = new WOFManipulatorSubsystem();
         }
         return wofManipulatorSubsystem;
     }
 
     public Encoder getWofEncoder() {
-        if (wofEncoder == null){
-            wofEncoder = new Encoder(WOF_ENCODER_A_DIO_PORT, WOF_ENCODER_B_DIO_PORT);
+        if (wofEncoder == null) {
+            wofEncoder = new Encoder(constants.WOF_ENCODER_A_DIO_PORT, constants.WOF_ENCODER_B_DIO_PORT);
         }
         return wofEncoder;
     }
 
     public TalonSRX getShooterMotorOne() {
-        if(shooterMotorOne == null){
-            shooterMotorOne = new TalonSRX(SHOOTER_MASTER);
+        if (shooterMotorOne == null) {
+            shooterMotorOne = new TalonSRX(constants.SHOOTER_MASTER);
         }
         return shooterMotorOne;
     }
 
     public VictorSPX getShooterMotorTwo() {
-        if(shooterMotorTwo == null){
-            shooterMotorTwo = new VictorSPX(SHOOTER_SLAVE_ONE);
+        if (shooterMotorTwo == null) {
+            shooterMotorTwo = new VictorSPX(constants.SHOOTER_SLAVE_ONE);
         }
         return shooterMotorTwo;
     }
 
     public VictorSPX getShooterMotorThree() {
-        if(shooterMotorThree == null){
-            shooterMotorThree = new VictorSPX(SHOOTER_SLAVE_TWO);
+        if (shooterMotorThree == null) {
+            shooterMotorThree = new VictorSPX(constants.SHOOTER_SLAVE_TWO);
         }
         return shooterMotorThree;
     }
 
     public Counter getAChannel() {
-        if(AChannel == null){
-            AChannel = new Counter(SHOOTER_ENCODER_A_DIO);
+        if (AChannel == null) {
+            AChannel = new Counter(constants.SHOOTER_ENCODER_A_DIO);
         }
         return AChannel;
     }
 
     public ShooterVelocityCounter getVelocityCounter() {
-        if(velocityCounter == null){
+        if (velocityCounter == null) {
             velocityCounter = new ShooterVelocityCounter();
         }
         return velocityCounter;
     }
 
     public FlywheelSubsystem getFlywheelSubsystem() {
-        if(flywheelSubsystem == null){
+        if (flywheelSubsystem == null) {
             flywheelSubsystem = new FlywheelSubsystem();
         }
         return flywheelSubsystem;
@@ -287,88 +278,92 @@ public class ApplicationContext {
 
 
     public AnalogPotentiometer getPotentiometer() {
-        if(potentiometer == null){
-            potentiometer = new AnalogPotentiometer(TURRET_POT_ANALOG_PORT);
+        if (potentiometer == null) {
+            potentiometer = new AnalogPotentiometer(constants.TURRET_POT_ANALOG_PORT);
         }
         return potentiometer;
     }
 
     public Limelight getLimelight() {
-        if(limelight == null){
+        if (limelight == null) {
             limelight = new Limelight();
         }
         return limelight;
     }
 
     public Servo getServo() {
-        if(servo == null){
-            servo = new Servo(HOOD_SERVO_PWM_PORT);
+        if (servo == null) {
+            servo = new Servo(constants.HOOD_SERVO_PWM_PORT);
         }
         return servo;
     }
-    public CANSparkMax getTurretMotor(){
-        if (turretMotor == null){
-            turretMotor = new CANSparkMax(TURRET_MOTOR_PORT, MotorType.kBrushless);
+
+    public CANSparkMax getTurretMotor() {
+        if (turretMotor == null) {
+            turretMotor = new CANSparkMax(constants.TURRET_MOTOR_PORT, MotorType.kBrushless);
         }
         return turretMotor;
     }
+
     public IntermediateSubsystem getIntermediateSubsystem() {
-        if (intermediateSubsystem == null){
+        if (intermediateSubsystem == null) {
             intermediateSubsystem = new IntermediateSubsystem();
         }
         return intermediateSubsystem;
     }
+
     public CANSparkMax getIntermediateMotor() {
         if (intermediateMotor == null) {
-            intermediateMotor = new CANSparkMax(INTERMEDIATE_MASTER, MotorType.kBrushless);
+            intermediateMotor = new CANSparkMax(constants.INTERMEDIATE_MASTER, MotorType.kBrushless);
         }
         return intermediateMotor;
     }
+
     public TalonSRX getBagMotor() {
         if (intermediateBagMotor == null) {
-            intermediateBagMotor = new TalonSRX(INTERMEDIATE_SLAVE);
+            intermediateBagMotor = new TalonSRX(constants.INTERMEDIATE_SLAVE);
         }
         return intermediateBagMotor;
     }
 
     public HoodSubsystem getHoodSubsystem() {
-        if(hoodSubsystem == null){
+        if (hoodSubsystem == null) {
             hoodSubsystem = new HoodSubsystem();
         }
         return hoodSubsystem;
     }
 
-    public DigitalInput getElevatorBottomSensor(){
-        if(elevatorBottomSensor == null){
-            elevatorBottomSensor = new DigitalInput(ELEVATOR_BOTTOM_DIO_PORT);
+    public DigitalInput getElevatorBottomSensor() {
+        if (elevatorBottomSensor == null) {
+            elevatorBottomSensor = new DigitalInput(constants.ELEVATOR_BOTTOM_DIO_PORT);
         }
         return elevatorBottomSensor;
     }
 
-    public TalonFX getElevatorMotor(){
-        if (elevatorMotor == null){
-            elevatorMotor = new TalonFX(ELEVATOR_MOTOR_PORT);
+    public TalonFX getElevatorMotor() {
+        if (elevatorMotor == null) {
+            elevatorMotor = new TalonFX(constants.ELEVATOR_MOTOR_PORT);
         }
         return elevatorMotor;
     }
 
     public ElevatorSubsytem getElevatorSubsystem() {
-        if (elevatorSubsytem == null){
+        if (elevatorSubsytem == null) {
             elevatorSubsytem = new ElevatorSubsytem();
         }
         return elevatorSubsytem;
     }
 
     public ClimbSubsystem getClimbSubsystem() {
-        if(climbSubsystem == null){
+        if (climbSubsystem == null) {
             climbSubsystem = new ClimbSubsystem();
         }
         return climbSubsystem;
     }
 
-    public PigeonIMU getGyro(){
-        if(gyro == null){
-            gyro = new PigeonIMU(GYRO_PORT);
+    public PigeonIMU getGyro() {
+        if (gyro == null) {
+            gyro = new PigeonIMU(constants.GYRO_PORT);
         }
         return gyro;
     }

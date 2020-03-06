@@ -1,13 +1,13 @@
 package com.team2073.robot;
 
+import com.team2073.robot.constants.AppConstants;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
-import static com.team2073.robot.AppConstants.Shooter.*;
 
 public class Limelight {
 
     private double xOffset = 0d;
     private Pipeline currentPipeline = Pipeline.CLOSE;
+    private AppConstants constants = AppConstants.getInstance();
 
     public double getTx() {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
@@ -29,34 +29,34 @@ public class Limelight {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tvert").getDouble(0);
     }
 
+    public void setLedOn(boolean on) {
+        if (on) {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
+        } else {
+            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        }
+    }
+
+    public Pipeline getCurrentPipeline() {
+        return currentPipeline;
+    }
+
     public void setCurrentPipeline(Pipeline currentPipeline) {
         this.currentPipeline = currentPipeline;
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(currentPipeline.getPipeline());
     }
 
-    public void setLedOn(boolean on){
-        if(on){
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(3);
-        }else{
-            NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
-        }
-    }
-
-    public Pipeline getCurrentPipeline(){
-        return currentPipeline;
-    }
-
     public double getHighDistance() {
-        return (TARGET_HEIGHT - LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+        return (constants.TARGET_HEIGHT - constants.LIMELIGHT_HIGH_HEIGHT) / (Math.tan(Math.toRadians(getTy() + constants.LIMELIGHT_LENS_ANGLE)));
     }
 
-    public double getDistanceWithElevator(double elevatorHeight){
-        return (TARGET_HEIGHT - (LIMELIGHT_LOW_HEIGHT+ elevatorHeight)) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+    public double getDistanceWithElevator(double elevatorHeight) {
+        return (constants.TARGET_HEIGHT - (constants.LIMELIGHT_LOW_HEIGHT + elevatorHeight)) / (Math.tan(Math.toRadians(getTy() + constants.LIMELIGHT_LENS_ANGLE)));
     }
 
     public double getLowDistance() {
 
-        return (TARGET_HEIGHT - LIMELIGHT_LOW_HEIGHT) / (Math.tan(Math.toRadians(getTy() + LIMELIGHT_LENS_ANGLE)));
+        return (constants.TARGET_HEIGHT - constants.LIMELIGHT_LOW_HEIGHT) / (Math.tan(Math.toRadians(getTy() + constants.LIMELIGHT_LENS_ANGLE)));
     }
 
     public double getAreaBasedDistance() {

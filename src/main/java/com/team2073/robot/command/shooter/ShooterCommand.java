@@ -16,6 +16,7 @@ public class ShooterCommand extends AbstractLoggingCommand {
     @Override
     protected void executeDelegate() {
         mediator.setDesiredState(state);
+        System.out.println("Running ShooterCommand");
     }
 
     @Override

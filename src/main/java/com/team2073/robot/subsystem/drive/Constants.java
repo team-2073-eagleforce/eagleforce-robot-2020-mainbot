@@ -19,6 +19,7 @@ public final class Constants {
         public static final double kHighNegInertiaScalar = 4.0;
 
         public static final double kHighSensitivity = 0.85;
+        public static final double kPointTurnSensitivity = 0.8;
 
         public static final double kQuickStopDeadband = 0.5;
         public static final double kQuickStopWeight = 0.1;
@@ -63,7 +64,7 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double maxSpeedFeetPerSecond = 14;
+        public static final double maxSpeedFeetPerSecond = 14; //14
         public static final double maxAccelerationMetersPerSecondSquared = 6;
 
         public static final double kMaxSpeedMetersPerSecond = feetToMeters(maxSpeedFeetPerSecond);

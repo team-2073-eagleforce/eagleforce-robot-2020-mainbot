@@ -4,14 +4,14 @@ package com.team2073.robot;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import com.team2073.robot.command.auton.TopSide10Ball;
-import com.team2073.robot.command.drive.AutonSelector;
+import com.team2073.robot.command.auton.TrenchToSide;
+import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
-import com.team2073.robot.subsystem.ElevatorSubsytem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static com.team2073.robot.Main.isMain;
 
 public class RobotDelegate extends AbstractRobotDelegate {
     private ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -28,6 +28,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
     private Servo servo = appCtx.getServo();
+    private boolean started = false;
+    private boolean end = false;
 
     public RobotDelegate(double period) {
         super(period);
@@ -35,14 +37,19 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
+        if (isMain) {
+            try {
+                new MainBotConstants().applyMainbotChanges();
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 //        appCtx.getIntakeSubsystem();
 //        hopper = appCtx.getHopperSubsystem();
 //        appCtx.getDriveSubsystem();
-//        appCtx.getIntermediateSubsystem();
         Mediator.getInstance();
         oi = new OperatorInterface();
         oi.init();
-//        limelight = appCtx.getLimelight();
 //        turret = appCtx.getTurretSubsystem();
 //        flywheel = appCtx.getFlywheelSubsystem();
 //        intermediate = appCtx.getIntermediateSubsystem();
@@ -55,18 +62,17 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     }
 
-    private boolean started = false;
-    private boolean end = false;
     @Override
     public void robotPeriodic() {
 
 
-            if(isAutonomous() && isEnabled()){
-                if(!started){
-                    new TopSide10Ball().start();
-                    started = true;
-                }
+        if (isAutonomous() && isEnabled()) {
+            if (!started) {
+//                    new TopSide10Ball().start();
+                new TrenchToSide().start();
+                started = true;
             }
+        }
 //        if(RobotState.isEnabled() && !started){
 //            AutonStarter starter = new AutonStarter();
 //            starter.getAutonomousCommand().schedule();
@@ -113,7 +119,6 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        servo.setAngle(angle);
 
 
-
 //        if(controller.getPOV() == 180){
 //            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
 //        }else if(controller.getPOV() == 90){
@@ -122,6 +127,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //            elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
 //        }
         //System.out.println("Hopper: " + hopper + "\t Pot: " + pot + "\t Wof Encoder: " + wofEncoder + "\t Elevator Sensor: " + elevatorSensor + "\t aChannel: " + aChannel);
+//        limelight.setLedOn(true);
+//        System.out.println("LOW Distance: " + limelight.getLowDistance() + "\tHIGH Distance: " + limelight.getHighDistance());
     }
 
 

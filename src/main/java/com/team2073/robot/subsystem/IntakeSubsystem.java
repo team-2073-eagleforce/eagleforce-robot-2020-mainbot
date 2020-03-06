@@ -28,6 +28,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         setPower(rollerState.getPercent());
+//        System.out.println("Intake: " + intakeMotor.getAppliedOutput());
         switch (positionState) {
             case STARTING_CONFIG:
                 togglePistons(false, false);
@@ -41,6 +42,8 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
             case AUTO_INTAKE:
                 togglePistons(false, true);
                 break;
+            case FEEDER_STATION:
+                togglePistons(false, true);
         }
 
 
@@ -68,12 +71,13 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
         INTAKE_OUT,
         STOW,
         AUTO_INTAKE,
+        FEEDER_STATION,
 
     }
 
     public enum IntakeRollerState {
-        INTAKE(.9d),
-        OUTTAKE(-.9),
+        INTAKE(1d),
+        OUTTAKE(-.9d),
         STOP(0d),
         DISABLED(0d);
 

@@ -1,13 +1,13 @@
 package com.team2073.robot;
 
 import com.team2073.common.periodic.AsyncPeriodicRunnable;
+import com.team2073.robot.constants.AppConstants;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.HopperSubsystem.HopperState;
 import com.team2073.robot.subsystem.IntakeSubsystem.IntakePositionState;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import static com.team2073.robot.AppConstants.Mediator.MAX_DRIVE_PERCENT_IN_CLIMB;
 import static com.team2073.robot.Mediator.RobotState.*;
 
 public class Mediator implements AsyncPeriodicRunnable {
@@ -28,6 +28,7 @@ public class Mediator implements AsyncPeriodicRunnable {
     private ClimbSubsystem climb;
     private boolean closeShot;
     private double angleToTargetOffset = 0;
+    private AppConstants constants = AppConstants.getInstance();
 
     private Mediator() {
         autoRegisterWithPeriodicRunner(10);
@@ -42,6 +43,7 @@ public class Mediator implements AsyncPeriodicRunnable {
         flywheel = appCtx.getFlywheelSubsystem();
         limelight = appCtx.getLimelight();
         climb = appCtx.getClimbSubsystem();
+
     }
 
     public static Mediator getInstance() {
@@ -57,10 +59,10 @@ public class Mediator implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
+        SmartDashboard.putNumber("LimelightDistance", targetDistance());
         if ((desiredState != CLIMB && desiredState != PREP_CLIMB) && (lastState == CLIMB || lastState == PREP_CLIMB)) {
             drive.capTeleopOutput(1);
         }
-        SmartDashboard.putNumber("LimelightDistance", targetDistance());
         switch (desiredState) {
             case STARTING_CONFIG:
                 if (lastState != desiredState) {
@@ -86,7 +88,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                 } else {
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
                     turret.setState(TurretSubsystem.TurretState.FACE_FRONT);
-                    flywheel.setRPM(AppConstants.Shooter.NO_TARGET_RPM);
+                    flywheel.setRPM(constants.NO_TARGET_RPM);
                     hood.setHood(HoodSubsystem.HoodState.CLOSE_SHOT);
                 }
 //                flywheel.setRPM(SmartDashboard.getNumber("Flywheel RPM", 5000));
@@ -117,6 +119,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                 break;
             case STOW:
                 if (lastState != desiredState) {
+                    System.out.println("Mediator STOW");
                     drive.capTeleopOutput(1);
                     hood.determineHoodAngle(false);
 //                    intake.setPosition(IntakePositionState.STOW);
@@ -135,12 +138,13 @@ public class Mediator implements AsyncPeriodicRunnable {
                 if (lastState != desiredState) {
                     intermediate.set(IntermediateSubsystem.IntermediateState.WAIT_FOR_WOF);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.WOF_HEIGHT);
+                    turret.setState(TurretSubsystem.TurretState.WOF);
                 }
 
                 break;
             case PREP_CLIMB:
                 if (lastState != desiredState) {
-                    drive.capTeleopOutput(MAX_DRIVE_PERCENT_IN_CLIMB);
+                    drive.capTeleopOutput(constants.MAX_DRIVE_PERCENT_IN_CLIMB);
                     intake.setPosition(IntakePositionState.INTAKE_OUT);
                     hopper.setState(HopperState.STOP);
                     climb.setState(ClimbSubsystem.ClimbState.HOOKS);
@@ -196,6 +200,11 @@ public class Mediator implements AsyncPeriodicRunnable {
     public void setDesiredState(RobotState state) {
         this.desiredState = state;
     }
+
+    public RobotState getCurrentState(){
+        return desiredState;
+    }
+
 
     public enum RobotState {
         STARTING_CONFIG,

@@ -89,9 +89,13 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         rightSlave2.follow(rightMaster);
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
-        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
+//        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
+//                , Rotation2d.fromDegrees(getHeading()));
+//        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees() - 50;
+
+        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
                 , Rotation2d.fromDegrees(getHeading()));
-        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees() - 50;
+        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees();
 
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
 //                , Rotation2d.fromDegrees(getHeading()));
@@ -251,7 +255,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
         double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
         double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
-//        System.out.println("X: " + x + "\t y: " + y + "\t theta: " +theta);
+        //System.out.println("X: " + x + "\t y: " + y + "\t theta: " + theta);
         if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
             if (leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast) {
 
@@ -309,5 +313,36 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         public Trajectory getTraj() {
             return traj;
         }
+    }
+
+    public enum AutoPathTrench {
+        PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
+                ),
+                config.setReversed(false))),
+        TRENCH_TO_SHOOT(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(120d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(0d))),
+                config.setReversed(true))),
+        THREE_BALL_RUN(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                new Pose2d(ConversionUtil.inchesToMeters(120d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(0d)),
+//                new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))),
+                config.setReversed(false)));
+
+        private Trajectory traj;
+
+        AutoPathTrench(Trajectory traj) {
+            this.traj = traj;
+        }
+
+        public Trajectory getTraj() {
+            return traj;
+        }
+
     }
 }

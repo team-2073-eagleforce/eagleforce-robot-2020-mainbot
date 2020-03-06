@@ -61,7 +61,7 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
             m_motor2.set(ControlMode.PercentOutput, 0d);
             m_motor3.set(ControlMode.PercentOutput, 0d);
         }
-        System.out.println("Motor1 Output: " + m_motor.getMotorOutputVoltage() + "\tMotor2 Output: " + m_motor2.getMotorOutputVoltage() + "\tMotor3 Output: " + m_motor3.getMotorOutputVoltage() + "\t Controller Output: " + getControllerVoltage());
+//        System.out.println("Motor1 Output: " + m_motor.getMotorOutputVoltage() + "\tMotor2 Output: " + m_motor2.getMotorOutputVoltage() + "\tMotor3 Output: " + m_motor3.getMotorOutputVoltage() + "\t Controller Output: " + getControllerVoltage());
     }
     private boolean isEnabled = false;
     @Override

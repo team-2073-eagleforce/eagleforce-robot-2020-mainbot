@@ -4,18 +4,18 @@ import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.subsystem.IntakeSubsystem;
 
-public class OuttakeCommand extends AbstractLoggingCommand {
-    private final ApplicationContext appCtx = ApplicationContext.getInstance();
-    private final IntakeSubsystem intake = appCtx.getIntakeSubsystem();
+public class ToggleFeederStationCommand extends AbstractLoggingCommand {
+
+    private IntakeSubsystem intake = ApplicationContext.getInstance().getIntakeSubsystem();
 
     @Override
     protected void initializeDelegate() {
-        intake.setRollerState(IntakeSubsystem.IntakeRollerState.OUTTAKE);
+        intake.setPosition(IntakeSubsystem.IntakePositionState.FEEDER_STATION);
     }
 
     @Override
     protected void endDelegate() {
-        intake.setRollerState(IntakeSubsystem.IntakeRollerState.STOP);
+        intake.setPosition(IntakeSubsystem.IntakePositionState.STOW);
     }
 
     @Override

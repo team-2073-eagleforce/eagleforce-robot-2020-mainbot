@@ -22,7 +22,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
     private DigitalInput hopperSensor = appCtx.getHopperSensor();
     private CANEncoder hopperEncoder = hopperMotor.getEncoder();
     private CANPIDController pid = hopperMotor.getPIDController();
-    private HopperState state = HopperState.IDLE;
+    private HopperState state = HopperState.STOP;
     private HopperState lastState = HopperState.STOP;
     private Timer jamTimer = new Timer();
     private Timer shotReadyTimer = new Timer();
@@ -49,25 +49,19 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
-        if (state != HopperState.FLIP) {
-            hasFlipped = false;
             checkJam();
-        }
-//        System.out.println(
-//                CANError.fromInt(hopperMotor.getFaults()) + "\t " + hopperMotor.getStickyFaults());
 
-        if(CANError.fromInt(hopperMotor.getFaults()) == CANError.kInvalid){
+        if (CANError.fromInt(hopperMotor.getFaults()) == CANError.kInvalid) {
             hopperMotor.clearFaults();
         }
 
         switch (state) {
             case STOP:
+                setMotor(0);
+                break;
             case JAM:
             case IDLE:
                 setMotor(state.getRpm());
-                break;
-            case FLIP:
-                flip();
                 break;
             case PREP_SHOT:
                 shootingPosition();
@@ -82,25 +76,6 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
                 break;
         }
         lastState = state;
-    }
-
-    private void flip() {
-        if (initialFlipPosition == null && !hasFlipped) {
-            initialFlipPosition = getPosition();
-        }
-//        System.out.println("Initial: " + initialFlipPosition + "\t pos: " + getPosition());
-        if (initialFlipPosition == null) {
-            return;
-        }
-
-        if (getPosition() < initialFlipPosition + (1 / 2d)) {
-            setMotorOpenLoop(state.getRpm());
-        } else {
-            hasFlipped = true;
-            initialFlipPosition = null;
-            setMotorOpenLoop(0d);
-        }
-
     }
 
     public void setState(HopperState state) {
@@ -189,8 +164,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
         PREP_SHOT(30d),
         ELEVATOR_UP_SHOOT(35d),
         ELEVATOR_DOWN_SHOOT(50d),
-        JAM(0d),
-        FLIP(40d);
+        JAM(0d);
 
         private double rpm;
 

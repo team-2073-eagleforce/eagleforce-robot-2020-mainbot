@@ -15,6 +15,6 @@ public class HopperStopCommand extends AbstractLoggingCommand {
 
     @Override
     protected boolean isFinishedDelegate() {
-        return true;
+        return false;
     }
 }

@@ -30,7 +30,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private static final double MAX_POSITION = 221.8 - 12.6716;
     private static final double MIN_OUTPUT = 0.05;
 
-    private static final double WOF_POSITION = 81.714;
+    private static final double WOF_POSITION = 81.714 - 35.328 - 12.6716;
     boolean ifReachedClosest = false;
     boolean reachedMax = false;
     boolean reachedMin = false;
@@ -81,6 +81,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //            }
 //        }
 //    }
+
     private boolean adjusted = false;
 
     public TurretSubsystem() {
@@ -101,44 +102,45 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private void initializeMap() {
 //       Recording on 2/17/2020
-        lowDistanceToRPM.put(new InterpolatingDouble(189.5d), new InterpolatingDouble(5300d));
-        lowDistanceToRPM.put(new InterpolatingDouble(200d), new InterpolatingDouble(5375d));
-        lowDistanceToRPM.put(new InterpolatingDouble(214d), new InterpolatingDouble(5450d));
-        lowDistanceToRPM.put(new InterpolatingDouble(225d), new InterpolatingDouble(5500d));
-        lowDistanceToRPM.put(new InterpolatingDouble(235.4d), new InterpolatingDouble(5545d));
-        lowDistanceToRPM.put(new InterpolatingDouble(245.5d), new InterpolatingDouble(5625d));
-        lowDistanceToRPM.put(new InterpolatingDouble(263.7d), new InterpolatingDouble(5700d));
-        lowDistanceToRPM.put(new InterpolatingDouble(273d), new InterpolatingDouble(5775d));
-        lowDistanceToRPM.put(new InterpolatingDouble(285d), new InterpolatingDouble(5850d));
-        lowDistanceToRPM.put(new InterpolatingDouble(300d), new InterpolatingDouble(5960d));
-        lowDistanceToRPM.put(new InterpolatingDouble(312d), new InterpolatingDouble(6025d));
-        lowDistanceToRPM.put(new InterpolatingDouble(325d), new InterpolatingDouble(6065d));
-        lowDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6150d));
-        lowDistanceToRPM.put(new InterpolatingDouble(341d), new InterpolatingDouble(6300d));
-        lowDistanceToRPM.put(new InterpolatingDouble(359d), new InterpolatingDouble(6450d));
-        lowDistanceToRPM.put(new InterpolatingDouble(380d), new InterpolatingDouble(6650d));
-        lowDistanceToRPM.put(new InterpolatingDouble(428d), new InterpolatingDouble(7300d));
-        lowDistanceToRPM.put(new InterpolatingDouble(475d), new InterpolatingDouble(8300d));
+        lowDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(5300d));
+        lowDistanceToRPM.put(new InterpolatingDouble(192d), new InterpolatingDouble(5375d));
+        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(5450d));
+        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(5500d));
+        lowDistanceToRPM.put(new InterpolatingDouble(228d), new InterpolatingDouble(5545d));
+        lowDistanceToRPM.put(new InterpolatingDouble(240d), new InterpolatingDouble(5625d));
+        lowDistanceToRPM.put(new InterpolatingDouble(252d), new InterpolatingDouble(5700d));
+        lowDistanceToRPM.put(new InterpolatingDouble(264d), new InterpolatingDouble(5775d));
+        lowDistanceToRPM.put(new InterpolatingDouble(276d), new InterpolatingDouble(5850d));
+        lowDistanceToRPM.put(new InterpolatingDouble(288d), new InterpolatingDouble(5960d));
+        lowDistanceToRPM.put(new InterpolatingDouble(300d), new InterpolatingDouble(6025d));
+        lowDistanceToRPM.put(new InterpolatingDouble(312d), new InterpolatingDouble(6065d));
+        lowDistanceToRPM.put(new InterpolatingDouble(324d), new InterpolatingDouble(6150d));
+        lowDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6300d));
+        lowDistanceToRPM.put(new InterpolatingDouble(348d), new InterpolatingDouble(6450d));
+        lowDistanceToRPM.put(new InterpolatingDouble(360d), new InterpolatingDouble(6650d));
+        lowDistanceToRPM.put(new InterpolatingDouble(408d), new InterpolatingDouble(7300d));
+        lowDistanceToRPM.put(new InterpolatingDouble(450d), new InterpolatingDouble(8300d));
 
         highDistanceToRPM.put(new InterpolatingDouble(72d), new InterpolatingDouble(6475d));
-        highDistanceToRPM.put(new InterpolatingDouble(82d), new InterpolatingDouble(6000d));
-        highDistanceToRPM.put(new InterpolatingDouble(97.5d), new InterpolatingDouble(5300d));
-        highDistanceToRPM.put(new InterpolatingDouble(110d), new InterpolatingDouble(5000d));
-        highDistanceToRPM.put(new InterpolatingDouble(126d), new InterpolatingDouble(4805d));
-        highDistanceToRPM.put(new InterpolatingDouble(138.7d), new InterpolatingDouble(4800d));
-        highDistanceToRPM.put(new InterpolatingDouble(148.7d), new InterpolatingDouble(4800d));
-        highDistanceToRPM.put(new InterpolatingDouble(159.4d), new InterpolatingDouble(4850d));
-        highDistanceToRPM.put(new InterpolatingDouble(173.6d), new InterpolatingDouble(4900d));
-        highDistanceToRPM.put(new InterpolatingDouble(189.5d), new InterpolatingDouble(4965d));
-        highDistanceToRPM.put(new InterpolatingDouble(344d), new InterpolatingDouble(6050d));
-        highDistanceToRPM.put(new InterpolatingDouble(361d), new InterpolatingDouble(6150d));
-        highDistanceToRPM.put(new InterpolatingDouble(385d), new InterpolatingDouble(6350d));
-        highDistanceToRPM.put(new InterpolatingDouble(447d), new InterpolatingDouble(7100d));
+        highDistanceToRPM.put(new InterpolatingDouble(84d), new InterpolatingDouble(6000d));
+        highDistanceToRPM.put(new InterpolatingDouble(96d), new InterpolatingDouble(5300d));
+        highDistanceToRPM.put(new InterpolatingDouble(108d), new InterpolatingDouble(5000d));
+        highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(4805d));
+        highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(4800d));
+        highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(4800d));
+        highDistanceToRPM.put(new InterpolatingDouble(156d), new InterpolatingDouble(4850d));
+        highDistanceToRPM.put(new InterpolatingDouble(168d), new InterpolatingDouble(4900d));
+        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(4965d));
+        highDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6050d));
+        highDistanceToRPM.put(new InterpolatingDouble(348d), new InterpolatingDouble(6150d));
+        highDistanceToRPM.put(new InterpolatingDouble(360d), new InterpolatingDouble(6350d));
+        highDistanceToRPM.put(new InterpolatingDouble(408d), new InterpolatingDouble(7100d));
 
     }
-
+/*
     @Override
     public void onPeriodicAsync() {
+//        System.out.println("Turret Position: " + getPosition() + " POT value: " + potentiometer.get() + " OutputPer: " + turretMotor.getAppliedOutput());
 
         if (mediator == null) {
             mediator = Mediator.getInstance();
@@ -190,7 +192,12 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         }
 
     }
-
+*/
+    @Override
+    public void onPeriodicAsync(){
+        System.out.println(turretMotor.getAppliedOutput());
+        turretMotor.set(.2);
+    }
     private void pidControlloop() {
         setpoint = setpoint > MAX_POSITION ? MAX_POSITION - 5 : setpoint;
         setpoint = setpoint < MIN_POSITION ? MIN_POSITION + 5 : setpoint;
@@ -235,7 +242,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private Pipeline calculatePipeline(double distance) {
         if (limelight.getCurrentPipeline() == Pipeline.CLOSE) {
-            if (distance > 156 && limelight.getTx() < 6d) {
+            if (distance > 170 && limelight.getTx() < 6d) {
                 return Pipeline.FAR;
             }
         } else {
@@ -309,7 +316,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             if (setpoint == null) {
                 setpoint = position + limelight.getAdjustedTx();
             }
-//            System.out.println("PID TX: " + limelight.getAdjustedTx() + "\t PIDError: " + pidEncoder.getError() + "\t Setpoint: " + setpoint + "\t Pos: " + getPosition());
+            System.out.println("PID TX: " + limelight.getAdjustedTx() + "\t PIDError: " + pidEncoder.getError() + "\t Setpoint: " + setpoint + "\t Pos: " + getPosition());
             pidControlloop();
         }
     }

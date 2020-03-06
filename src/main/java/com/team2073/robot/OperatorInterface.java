@@ -2,25 +2,25 @@ package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
 import com.team2073.common.trigger.MultiTrigger;
+import com.team2073.robot.command.WOFModeTrigger;
 import com.team2073.robot.command.ElevatorHeightsCommand;
+import com.team2073.robot.command.InverseTrigger;
 import com.team2073.robot.command.MediatorCommand;
-import com.team2073.robot.command.intake.IntakePositionCommand;
+import com.team2073.robot.command.WOF.ResetWOFCommand;
+import com.team2073.robot.command.WOF.WOFPositionCommand;
+import com.team2073.robot.command.WOF.WOFRotationCommand;
+import com.team2073.robot.command.hopper.HopperToggleCommand;
+import com.team2073.robot.command.intake.IntakeRollerCommand;
+import com.team2073.robot.command.intake.OuttakeCommand;
+import com.team2073.robot.command.intake.ToggleFeederStationCommand;
 import com.team2073.robot.command.intake.ToggleIntakePositionCommand;
 import com.team2073.robot.command.shooter.RPMCommand;
 import com.team2073.robot.command.shooter.RPMTrigger;
-import com.team2073.robot.command.hopper.HopperFlipCommand;
-import com.team2073.robot.command.hopper.HopperIdleCommand;
-import com.team2073.robot.command.hopper.HopperStopCommand;
-import com.team2073.robot.command.intake.IntakeRollerCommand;
-import com.team2073.robot.command.intake.OuttakeCommand;
-import com.team2073.robot.command.InverseTrigger;
 import com.team2073.robot.subsystem.ElevatorSubsytem;
-import com.team2073.robot.subsystem.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.buttons.POVButton;
-
-import javax.print.attribute.standard.Media;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 public class OperatorInterface {
 
@@ -63,22 +63,30 @@ public class OperatorInterface {
 
     private RPMTrigger rpmTrigger = new RPMTrigger();
     private MultiTrigger ptoEngage = new MultiTrigger(leftWheelButton, rightWheelButton);
+    private MultiTrigger resetAndNotStart;
+    private Trigger resetWofTrigger;
 
-    public OperatorInterface(){
+    public OperatorInterface() {
 
     }
 
-    public void init(){
+    public void init() {
+        resetWofTrigger = new WOFModeTrigger(() -> !Mediator.getInstance().getCurrentState().equals(Mediator.RobotState.WHEEL_OF_FORTUNE));
+        resetAndNotStart = new MultiTrigger(resetWofTrigger, new InverseTrigger(controllerStart), new InverseTrigger(controllerBack));
         dPadUp.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.TOP));
         dPadRight.whenActive(new MediatorCommand(Mediator.RobotState.WHEEL_OF_FORTUNE));
         dPadDown.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.BOTTOM));
+        dPadLeft.whenActive(new MediatorCommand(Mediator.RobotState.STOW));
 
         a.whileHeld(new IntakeRollerCommand());
-        b.whileHeld(new OuttakeCommand());
-        y.whenPressed(new HopperStopCommand());
-        rightTrigger.whenActive(new HopperIdleCommand());
+        this.b.whileHeld(new OuttakeCommand());
+        x.toggleWhenPressed(new HopperToggleCommand());
 //        lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
         lb.toggleWhenActive(new ToggleIntakePositionCommand());
+        rb.toggleWhenActive(new ToggleFeederStationCommand());
+        resetAndNotStart.whenActive(new ResetWOFCommand());
+        controllerBack.whenActive(new WOFPositionCommand());
+        controllerStart.whenActive(new WOFRotationCommand());
 //        lbInverse.toggleWhenActive(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
 
         stickThree.whenActive(new CloseShotCommand(true));
