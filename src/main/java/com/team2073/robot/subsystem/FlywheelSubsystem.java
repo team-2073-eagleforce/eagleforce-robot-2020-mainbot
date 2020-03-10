@@ -37,10 +37,10 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
         TalonUtil.resetVictor(m_motor3, TalonUtil.ConfigurationType.SENSOR);
         m_motor.setInverted(true);
         m_motor2.setInverted(false);
-        m_motor3.setInverted(true);
-        m_motor.configOpenloopRamp(0.25);
-        m_motor2.configOpenloopRamp(0.25);
-        m_motor3.configOpenloopRamp(0.25);
+        m_motor3.setInverted(false);
+        m_motor.configOpenloopRamp(0.3);
+        m_motor2.configOpenloopRamp(0.3);
+        m_motor3.configOpenloopRamp(0.3);
 
     }
 

@@ -3,11 +3,61 @@ package com.team2073.robot;
 import com.team2073.robot.constants.AppConstants;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+import java.util.ArrayList;
+
 public class Limelight {
 
     private double xOffset = 0d;
     private Pipeline currentPipeline = Pipeline.CLOSE;
     private AppConstants constants = AppConstants.getInstance();
+    private ArrayList<FrameData> lastFrames = new ArrayList<>();
+
+    public Limelight() {
+        lastFrames.add(new FrameData(0, 0, 0, 0, 0));
+        lastFrames.add(new FrameData(0, 0, 0, 0, 0));
+        lastFrames.add(new FrameData(0, 0, 0, 0, 0));
+        lastFrames.add(new FrameData(0, 0, 0, 0, 0));
+        lastFrames.add(new FrameData(0, 0, 0, 0, 0));
+    }
+
+    public boolean isBlind() {
+        boolean blind = true;
+        for (FrameData frame : lastFrames) {
+            if (frame.tv != 0) {
+                blind = false;
+                break;
+            }
+        }
+        return blind;
+    }
+
+    public boolean hasCleanImage() {
+        boolean blind = false;
+        for (FrameData frame : lastFrames) {
+            if (frame.tv == 0) {
+                blind = true;
+                break;
+            }
+        }
+        return blind;
+    }
+
+    public double averageDistance() {
+        double sum = 0;
+        int cnt = 0;
+        for (FrameData frame : lastFrames) {
+            sum += frame.getDistance();
+            cnt++;
+        }
+        return sum / cnt;
+    }
+
+    public void updateFrame(double distance) {
+        while (lastFrames.size() >= 5) {
+            lastFrames.remove(0);
+        }
+        lastFrames.add(new FrameData(getAdjustedTx(), getTy(), getTv(), getTa(), distance));
+    }
 
     public double getTx() {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
@@ -51,7 +101,7 @@ public class Limelight {
     }
 
     public double getDistanceWithElevator(double elevatorHeight) {
-        return (constants.TARGET_HEIGHT - (constants.LIMELIGHT_LOW_HEIGHT + elevatorHeight)) / (Math.tan(Math.toRadians(getTy() + constants.LIMELIGHT_LENS_ANGLE)));
+        return (constants.TARGET_HEIGHT - (constants.LIMELIGHT_LOW_HEIGHT + elevatorHeight - .25)) / (Math.tan(Math.toRadians(getTy() + constants.LIMELIGHT_LENS_ANGLE)));
     }
 
     public double getLowDistance() {
@@ -98,4 +148,42 @@ public class Limelight {
             return pipeline;
         }
     }
+
+    public class FrameData {
+        private double tx;
+        private double ty;
+        private double tv;
+        private double ta;
+        private double distance;
+
+        public FrameData(double tx, double ty, double tv, double ta, double distance) {
+            this.tx = tx;
+            this.ty = ty;
+            this.tv = tv;
+            this.ta = ta;
+            this.distance = distance;
+        }
+
+        public double getTx() {
+            return tx;
+        }
+
+        public double getTy() {
+            return ty;
+        }
+
+        public double getTv() {
+            return tv;
+        }
+
+        public double getTa() {
+            return ta;
+        }
+
+        public double getDistance() {
+            return distance;
+        }
+
+    }
+
 }

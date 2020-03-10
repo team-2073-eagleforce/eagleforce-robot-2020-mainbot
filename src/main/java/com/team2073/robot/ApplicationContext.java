@@ -314,14 +314,14 @@ public class ApplicationContext {
 
     public CANSparkMax getIntermediateMotor() {
         if (intermediateMotor == null) {
-            intermediateMotor = new CANSparkMax(constants.INTERMEDIATE_MASTER, MotorType.kBrushless);
+            intermediateMotor = new CANSparkMax(constants.INTERMEDIATE_NEO, MotorType.kBrushless);
         }
         return intermediateMotor;
     }
 
     public TalonSRX getBagMotor() {
         if (intermediateBagMotor == null) {
-            intermediateBagMotor = new TalonSRX(constants.INTERMEDIATE_SLAVE);
+            intermediateBagMotor = new TalonSRX(constants.INTERMEDIATE_BAG);
         }
         return intermediateBagMotor;
     }

@@ -38,8 +38,8 @@ public class AppConstants {
     public int HOOD_SERVO_PWM_PORT = 9;
 
     //Intermediate
-    public int INTERMEDIATE_MASTER = 10; //change number
-    public int INTERMEDIATE_SLAVE = 12; //change number;
+    public int INTERMEDIATE_NEO = 10; //change number
+    public int INTERMEDIATE_BAG = 12; //change number;
     //Climb
     public int CLIMB_PISTON_SOLENOID = 3;
     public int CLIMB_PTO_SOLENOID = 2;
@@ -52,8 +52,10 @@ public class AppConstants {
     public double ZOOM_RANGE_INCHES = 12 * 20;
     public double LIMELIGHT_LOW_HEIGHT = 25d;
     public double LIMELIGHT_HIGH_HEIGHT = LIMELIGHT_LOW_HEIGHT + 11d;
-    public double LIMELIGHT_LENS_ANGLE = 19.5d;
-    public double TARGET_HEIGHT = 80.5d;
+//    public double LIMELIGHT_LENS_ANGLE = 19.5d;
+//    public double TARGET_HEIGHT = 80.5d;
+    public double LIMELIGHT_LENS_ANGLE = 18d;
+    public double TARGET_HEIGHT = 81d;
 
     private AppConstants() {
     }

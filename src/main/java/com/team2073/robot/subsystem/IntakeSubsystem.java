@@ -28,7 +28,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         setPower(rollerState.getPercent());
-//        System.out.println("Intake: " + intakeMotor.getAppliedOutput());
+//        hln("Intake: " + intakeMotor.getAppliedOutput());
         switch (positionState) {
             case STARTING_CONFIG:
                 togglePistons(false, false);

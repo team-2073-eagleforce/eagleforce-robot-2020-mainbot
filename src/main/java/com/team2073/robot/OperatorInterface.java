@@ -2,13 +2,13 @@ package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
 import com.team2073.common.trigger.MultiTrigger;
-import com.team2073.robot.command.WOFModeTrigger;
 import com.team2073.robot.command.ElevatorHeightsCommand;
 import com.team2073.robot.command.InverseTrigger;
 import com.team2073.robot.command.MediatorCommand;
 import com.team2073.robot.command.WOF.ResetWOFCommand;
 import com.team2073.robot.command.WOF.WOFPositionCommand;
 import com.team2073.robot.command.WOF.WOFRotationCommand;
+import com.team2073.robot.command.WOFModeTrigger;
 import com.team2073.robot.command.hopper.HopperToggleCommand;
 import com.team2073.robot.command.intake.IntakeRollerCommand;
 import com.team2073.robot.command.intake.OuttakeCommand;
@@ -60,6 +60,8 @@ public class OperatorInterface {
 
     private ControllerTriggerTrigger rightWheelButton = new ControllerTriggerTrigger(driveWheel, 3);
     private ControllerTriggerTrigger leftWheelButton = new ControllerTriggerTrigger(driveWheel, 2);
+    private JoystickButton L3 = new JoystickButton(driveWheel, 9);
+    private JoystickButton R3 = new JoystickButton(driveWheel, 10);
 
     private RPMTrigger rpmTrigger = new RPMTrigger();
     private MultiTrigger ptoEngage = new MultiTrigger(leftWheelButton, rightWheelButton);
@@ -96,11 +98,10 @@ public class OperatorInterface {
         stickTwo.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
         backTrigger.whenActive(new MediatorCommand(Mediator.RobotState.SHOOTING));
         backTrigger.whenReleased(new MediatorCommand(Mediator.RobotState.STOW));
-
         rpmTrigger.whenActive(new RPMCommand());
 
-        stickSix.whenPressed(new MediatorCommand(Mediator.RobotState.PREP_CLIMB));
-        stickFive.whenPressed(new MediatorCommand(Mediator.RobotState.CLIMB));
+        L3.whenPressed(new MediatorCommand(Mediator.RobotState.PREP_CLIMB));
+        R3.whenPressed(new MediatorCommand(Mediator.RobotState.CLIMB));
 
     }
 

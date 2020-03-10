@@ -4,11 +4,11 @@ package com.team2073.robot;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
-import com.team2073.robot.command.auton.TrenchToSide;
+import com.team2073.robot.command.auton.Shoot3Pick5Straight;
 import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static com.team2073.robot.Main.isMain;
@@ -27,7 +27,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private Limelight limelight;
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
-    private Servo servo = appCtx.getServo();
+    //    private Servo servo = appCtx.getServo();
     private boolean started = false;
     private boolean end = false;
 
@@ -37,6 +37,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
+        CameraServer.getInstance().startAutomaticCapture();
         if (isMain) {
             try {
                 new MainBotConstants().applyMainbotChanges();
@@ -56,7 +57,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //        hopper.setState(HopperSubsystem.HopperState.IDLE);
 //        elevator = appCtx.getElevatorSubsystem();
-//        SmartDashboard.putNumber("servo", 50);
+//        SmartDashboard.putNumber("servo", 0);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
 //        SmartDashboard.putNumber("servo", servo.getAngle());
 
@@ -69,10 +70,11 @@ public class RobotDelegate extends AbstractRobotDelegate {
         if (isAutonomous() && isEnabled()) {
             if (!started) {
 //                    new TopSide10Ball().start();
-                new TrenchToSide().start();
+                new Shoot3Pick5Straight().start();
                 started = true;
             }
         }
+
 //        if(RobotState.isEnabled() && !started){
 //            AutonStarter starter = new AutonStarter();
 //            starter.getAutonomousCommand().schedule();

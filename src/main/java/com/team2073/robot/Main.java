@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 public class Main {
 
-    public static final boolean isMain = false;
+    public static final boolean isMain = true;
     public static void main(String... args) throws NoSuchFieldException, IllegalAccessException {
 
         RobotApplication.start(() -> new RobotDelegate(.01));

@@ -47,7 +47,7 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
 
     public void determineHoodAngle(boolean shooting){
-        if(limelight.getTv() > 0) {
+        if(!limelight.isBlind()) {
             setHood(HoodState.EXTENDED);
         }else {
             setHood(HoodState.RETRACTED);
@@ -79,9 +79,12 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
 
     public enum HoodState {
+//        Practice Bot:
+//        RETRACTED(158.0),
+//        EXTENDED(45.0),
         RETRACTED(158.0),
-        EXTENDED(45.0),
-        CLOSE_SHOT(158d),
+        EXTENDED(43.0),
+        CLOSE_SHOT(145d),
         CALCULATED(null);
 
         private Double servoDegree;

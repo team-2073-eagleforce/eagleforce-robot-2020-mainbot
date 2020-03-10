@@ -21,6 +21,6 @@ public class ElevatorHeightsCommand  extends AbstractLoggingCommand {
 
     @Override
     protected boolean isFinishedDelegate() {
-        return false;
+        return true;
     }
 }

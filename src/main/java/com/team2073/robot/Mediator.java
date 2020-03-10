@@ -59,7 +59,8 @@ public class Mediator implements AsyncPeriodicRunnable {
 
     @Override
     public void onPeriodicAsync() {
-        SmartDashboard.putNumber("LimelightDistance", targetDistance());
+        SmartDashboard.putNumber("LimelightDistance", smoothTargetDistance());
+        limelight.updateFrame(instantTargetDistance());
         if ((desiredState != CLIMB && desiredState != PREP_CLIMB) && (lastState == CLIMB || lastState == PREP_CLIMB)) {
             drive.capTeleopOutput(1);
         }
@@ -70,6 +71,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                     intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //                    intake.setPosition(IntakePositionState.STARTING_CONFIG);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
+                    limelight.setLedOn(true);
                 }
                 break;
             case INTAKE_BALL:
@@ -106,9 +108,9 @@ public class Mediator implements AsyncPeriodicRunnable {
 //                    }
 //                    break;
 //                }
-                if(elevator.getSetpoint() == null){
+                if (elevator.getSetpoint() == null) {
                     hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
-                }else if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
+                } else if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
                     hopper.setState(HopperState.ELEVATOR_UP_SHOOT);
                 } else {
                     hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
@@ -163,13 +165,13 @@ public class Mediator implements AsyncPeriodicRunnable {
 
     private ElevatorSubsytem.ElevatorState calcElevatorShotHeight() {
         if (elevator.getCurrentState() == ElevatorSubsytem.ElevatorState.TOP) {
-            if (targetDistance() > 210 /*&& targetDistance() < 280*/) {
+            if (smoothTargetDistance() > 210 /*&& targetDistance() < 280*/) {
                 return ElevatorSubsytem.ElevatorState.BOTTOM;
             } else {
                 return ElevatorSubsytem.ElevatorState.TOP;
             }
         } else {
-            if (targetDistance() < 190 /*|| targetDistance() > 300d*/) {
+            if (smoothTargetDistance() < 190 /*|| targetDistance() > 300d*/) {
                 return ElevatorSubsytem.ElevatorState.TOP;
             } else {
                 return ElevatorSubsytem.ElevatorState.BOTTOM;
@@ -178,16 +180,24 @@ public class Mediator implements AsyncPeriodicRunnable {
 
     }
 
-    public double targetDistance() {
+    public double smoothTargetDistance() {
+        if (limelight.isBlind()) {
+            return 6 * 12;
+        }
+        return limelight.averageDistance();
+    }
+
+    public double instantTargetDistance() {
         if (limelight.getTv() == 0) {
             return 6 * 12;
         }
         return limelight.getDistanceWithElevator(elevator.position());
     }
 
+
     public double robotAngleToTarget() {
         double angle = drive.getPose().getRotation().getDegrees();
-        if( angle > 180){
+        if (angle > 180) {
             angle -= 360;
         }
         return angle + 180 + angleToTargetOffset;
@@ -201,7 +211,7 @@ public class Mediator implements AsyncPeriodicRunnable {
         this.desiredState = state;
     }
 
-    public RobotState getCurrentState(){
+    public RobotState getCurrentState() {
         return desiredState;
     }
 

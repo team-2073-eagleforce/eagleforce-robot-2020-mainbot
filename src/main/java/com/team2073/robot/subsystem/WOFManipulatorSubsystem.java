@@ -111,7 +111,7 @@ public class WOFManipulatorSubsystem implements AsyncPeriodicRunnable {
             case ROTATION:
                 if (setpoint == null) {
                     wofEncoder.reset();
-                    System.out.println(wofEncoder.getDistance());
+//                    System.out.println(wofEncoder.getDistance());
                     setpoint = 360 * 3.25;
                 } else {
                     positionManager.setPoint(setpoint);

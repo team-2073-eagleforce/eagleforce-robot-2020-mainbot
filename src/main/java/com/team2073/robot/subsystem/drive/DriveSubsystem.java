@@ -213,7 +213,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     }
 
     private void teleopDrive() {
-        DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(1));
+        DriveSignal driveSignal = cheesyDriveHelper.cheesyDrive(-joystick.getRawAxis(1), adjustWheel(wheel.getRawAxis(0)), wheel.getRawButton(5));
         double left = driveSignal.getLeft();
         double right = driveSignal.getRight();
         left = Math.abs(left) > maxPercent ? maxPercent * Math.signum(left) : left;
@@ -255,7 +255,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 
         double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
         double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
-        //System.out.println("X: " + x + "\t y: " + y + "\t theta: " + theta);
+        System.out.println("X: " + x + "\t y: " + y + "\t theta: " + theta);
         if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
             if (leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast) {
 
@@ -269,6 +269,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //            graph.updateMainFile(Timer.getFPGATimestamp(), ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
 //            wrote = false;
             teleopDrive();
+//            System.out.println(gyro.getFusedHeading());
         }
 //        if(RobotState.isDisabled() && !wrote){
 //            graph.writeToFile();
@@ -329,9 +330,15 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                 config.setReversed(true))),
         THREE_BALL_RUN(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                new Pose2d(ConversionUtil.inchesToMeters(120d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(120d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(0d)),
 //                new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
-                new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))),
+                        new Pose2d(ConversionUtil.inchesToMeters(300d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))),
+                config.setReversed(false))),
+        DOWN_THE_TRENCH(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
+                ),
                 config.setReversed(false)));
 
         private Trajectory traj;

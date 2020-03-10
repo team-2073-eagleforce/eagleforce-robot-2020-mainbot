@@ -20,15 +20,15 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     private TalonFX elevatorMotor = appCtx.getElevatorMotor();
     private ElevatorPositionConverter converter = new ElevatorPositionConverter();
     // distances are in inches
-    private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 3, MAX_VELOCITY, MAX_VELOCITY / 0.3);
+    private MotionMagicHandler profile = new MotionMagicHandler(elevatorMotor, converter, 2, MAX_VELOCITY, MAX_VELOCITY / 0.1);
 
     private static final double ENCODER_TICS_PER_INCH = 7138.1;
     private static final double MAX_HEIGHT = 11.5;
     private static final double MIN_HEIGHT = 0;
-    private static final double LOW_ZERO = 0.04;
+    private static final double LOW_ZERO = 0.0;
     private static final double HIGH_ZERO = 0.8159;
-    private static final double KG = 0.04;
-    private static final double KV = .461/10d;
+    private static final double KG = 0.05;
+    private static final double KV = .461/12d;
     private static final double KA = .0126;
     private static final double KP = 0.04;
 
@@ -59,7 +59,7 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
 
     public enum ElevatorState {
         BOTTOM(.25),
-        TOP(11d),
+        TOP(11.25d),
         WOF_HEIGHT(8.25);
 
         private Double height;
