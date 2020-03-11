@@ -93,8 +93,9 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //                , Rotation2d.fromDegrees(getHeading()));
 //        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees() - 50;
 
-        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
-                , Rotation2d.fromDegrees(getHeading()));
+//
+//        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d -28), Rotation2d.fromDegrees(0d))
+//                , Rotation2d.fromDegrees(getHeading()));
         startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees();
 
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
@@ -115,6 +116,13 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //        TODO: Make sure positions are in meters
         m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(),
                 rightEncoder.getPosition());
+    }
+
+    public void resetPosition(double x, double y, double angle){
+        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(x), ConversionUtil.inchesToMeters(y), Rotation2d.fromDegrees(angle))
+                , Rotation2d.fromDegrees(getHeading()));
+
+        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees();
     }
 
     /**
@@ -251,11 +259,11 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     @Override
     public void onPeriodicAsync() {
         updateOdometry();
-        double x = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getX());
-
-        double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
-        double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
-        System.out.println("X: " + x + "\t y: " + y + "\t theta: " + theta);
+//        double x = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getX());
+//
+//        double y = ConversionUtil.metersToFeet(m_odometry.getPoseMeters().getTranslation().getY());
+//        double theta = m_odometry.getPoseMeters().getRotation().getDegrees();
+//        System.out.println("X: " + x + "\t y: " + y + "\t theta: " + theta);
         if (RobotState.isOperatorControl() && RobotState.isEnabled()) {
             if (leftMaster.getIdleMode() == CANSparkMax.IdleMode.kCoast) {
 
@@ -336,10 +344,17 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                 config.setReversed(false))),
         DOWN_THE_TRENCH(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
-                        new Pose2d(ConversionUtil.inchesToMeters(265d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
+                        new Pose2d(ConversionUtil.inchesToMeters(130d), ConversionUtil.inchesToMeters(112d - 30), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(260d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(370d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d))
                 ),
-                config.setReversed(false)));
+                config.setReversed(false))),
+        LEAVE_THE_TRENCH(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(370d), ConversionUtil.inchesToMeters(112d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(80d), Rotation2d.fromDegrees(0d))
+                ),
+                config.setReversed(true)));
 
         private Trajectory traj;
 

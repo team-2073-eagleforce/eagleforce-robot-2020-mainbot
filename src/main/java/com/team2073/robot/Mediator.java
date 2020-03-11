@@ -32,6 +32,7 @@ public class Mediator implements AsyncPeriodicRunnable {
 
     private Mediator() {
         autoRegisterWithPeriodicRunner(10);
+        limelight = appCtx.getLimelight();
         drive = appCtx.getDriveSubsystem();
         intake = appCtx.getIntakeSubsystem();
         hopper = appCtx.getHopperSubsystem();
@@ -41,7 +42,6 @@ public class Mediator implements AsyncPeriodicRunnable {
         hood = appCtx.getHoodSubsystem();
         elevator = appCtx.getElevatorSubsystem();
         flywheel = appCtx.getFlywheelSubsystem();
-        limelight = appCtx.getLimelight();
         climb = appCtx.getClimbSubsystem();
 
     }
@@ -164,6 +164,9 @@ public class Mediator implements AsyncPeriodicRunnable {
     }
 
     private ElevatorSubsytem.ElevatorState calcElevatorShotHeight() {
+        if (limelight.getCurrentPipeline() == Limelight.Pipeline.FAR) {
+            return ElevatorSubsytem.ElevatorState.BOTTOM;
+        }
         if (elevator.getCurrentState() == ElevatorSubsytem.ElevatorState.TOP) {
             if (smoothTargetDistance() > 210 /*&& targetDistance() < 280*/) {
                 return ElevatorSubsytem.ElevatorState.BOTTOM;

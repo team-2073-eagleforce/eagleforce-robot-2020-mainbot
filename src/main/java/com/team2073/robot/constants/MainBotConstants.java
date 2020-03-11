@@ -51,7 +51,9 @@ public class MainBotConstants {
     public double ZOOM_RANGE_INCHES = 12 * 20;
     public double LIMELIGHT_LOW_HEIGHT = 25d;
     public double LIMELIGHT_HIGH_HEIGHT = LIMELIGHT_LOW_HEIGHT + 11d;
-    public double LIMELIGHT_LENS_ANGLE = 15d;
+//    public double LIMELIGHT_LENS_ANGLE = 15d;
+    public double LIMELIGHT_LENS_ANGLE = 16d;
+
     public double TARGET_HEIGHT = 81;
 
     public void applyMainbotChanges() throws NoSuchFieldException, IllegalAccessException {

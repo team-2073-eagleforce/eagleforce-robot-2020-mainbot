@@ -7,8 +7,10 @@ import com.team2073.common.robot.AbstractRobotDelegate;
 import com.team2073.robot.command.auton.Shoot3Pick5Straight;
 import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
+import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import static com.team2073.robot.Main.isMain;
@@ -27,9 +29,12 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private Limelight limelight;
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
+    private DriveSubsystem drive;
     //    private Servo servo = appCtx.getServo();
     private boolean started = false;
     private boolean end = false;
+    private AutoRun autonomous;
+    private SendableChooser<AutoRun> autonRun;
 
     public RobotDelegate(double period) {
         super(period);
@@ -37,6 +42,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotInit() {
+        autonRun = new SendableChooser<>();
+        autonomous = AutoRun.SHOOT_THREE;
         CameraServer.getInstance().startAutomaticCapture();
         if (isMain) {
             try {
@@ -45,32 +52,43 @@ public class RobotDelegate extends AbstractRobotDelegate {
                 e.printStackTrace();
             }
         }
-//        appCtx.getIntakeSubsystem();
-//        hopper = appCtx.getHopperSubsystem();
-//        appCtx.getDriveSubsystem();
+
         Mediator.getInstance();
         oi = new OperatorInterface();
         oi.init();
-//        turret = appCtx.getTurretSubsystem();
-//        flywheel = appCtx.getFlywheelSubsystem();
-//        intermediate = appCtx.getIntermediateSubsystem();
-//        intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
-//        hopper.setState(HopperSubsystem.HopperState.IDLE);
-//        elevator = appCtx.getElevatorSubsystem();
+        drive = appCtx.getDriveSubsystem();
 //        SmartDashboard.putNumber("servo", 0);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
+
+        autonRun.addOption("TEST", AutoRun.TEST);
+        autonRun.addOption("SHOOT THREE", AutoRun.SHOOT_THREE);
+        autonRun.addOption("TOP TEN", AutoRun.TOP_TEN);
+        autonRun.addOption("TRENCH", AutoRun.TRENCH);
+        SmartDashboard.putData(autonRun);
 //        SmartDashboard.putNumber("servo", servo.getAngle());
 
     }
 
     @Override
     public void robotPeriodic() {
-
+        if(isDisabled()) {
+            autonomous = autonRun.getSelected();
+        }
 
         if (isAutonomous() && isEnabled()) {
             if (!started) {
+                System.out.println("STARTED");
+                if (autonomous == AutoRun.TEST){
+                    drive.resetPosition(100d, 100d, 0d);
+
+                } else if (autonomous == AutoRun.SHOOT_THREE){
+                    drive.resetPosition(130d, 112d -28, 0d);
+                    new Shoot3Pick5Straight().start();
+
+                } else {
+                    System.out.println("NOTHING SET");
+                }
 //                    new TopSide10Ball().start();
-                new Shoot3Pick5Straight().start();
                 started = true;
             }
         }
@@ -143,4 +161,12 @@ public class RobotDelegate extends AbstractRobotDelegate {
     public void testPeriodic() {
         wofManipulatorSubsystem.calibrate();
     }
+
+    public enum AutoRun {
+        TEST,
+        SHOOT_THREE,
+        TOP_TEN,
+        TRENCH;
+    }
+
 }

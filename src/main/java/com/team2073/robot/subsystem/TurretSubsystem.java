@@ -196,7 +196,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
                     }
 
                 } else if (swapTimerStarted) {
-                    if (!swapTimer.hasPeriodPassed(.3)) {
+                    if (!swapTimer.hasPeriodPassed(.5)) {
+                        turretMotor.set(0);
                         return;
                     } else {
                         swapTimerStarted = false;
@@ -281,7 +282,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         if (Math.abs(MIN_POSITION - getPosition()) < Math.abs(MAX_POSITION - getPosition()) && !ifReachedClosest) {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 15) {
-                output = -0.45;
+                output = -0.3;
             }
 
             if (getPosition() <= MIN_POSITION + 18) {
@@ -290,7 +291,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             }
         } else {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 14 && !ifReachedClosest) {
-                output = 0.45;
+                output = 0.3;
             }
 
             if (getPosition() >= MAX_POSITION - 15) {
@@ -301,9 +302,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         if (ifReachedClosest) {
             if (reachedMin && !(getPosition() > MAX_POSITION - 20)) {
-                output = 0.45;
+                output = 0.3;
             } else if (reachedMax && !(getPosition() < MIN_POSITION + 15)) {
-                output = -.45;
+                output = -.3;
             } else {
                 resetReachedClosest();
             }
