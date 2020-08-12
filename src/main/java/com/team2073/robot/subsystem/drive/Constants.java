@@ -45,7 +45,7 @@ public final class Constants {
         public static final boolean kGyroReversed = true;
         public static final double ksVolts = 0.222;
         public static final double kvVoltSecondsPerMeter = 1.81;
-        public static final double kaVoltSecondsSquaredPerMeter = 0.433;
+        public static final double kaVoltSecondsSquaredPerMeter = 0.4;
         public static final double kPDriveVel = 1.5;
 
         public static DifferentialDriveVoltageConstraint autoVoltageConstraint =
@@ -65,7 +65,7 @@ public final class Constants {
 
     public static final class AutoConstants {
         public static final double maxSpeedFeetPerSecond = 14; //14
-        public static final double maxAccelerationMetersPerSecondSquared = 6;
+        public static final double maxAccelerationMetersPerSecondSquared = 5.5;
 
         public static final double kMaxSpeedMetersPerSecond = feetToMeters(maxSpeedFeetPerSecond);
         public static final double kMaxAccelerationMetersPerSecondSquared = feetToMeters(maxAccelerationMetersPerSecondSquared);

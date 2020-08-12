@@ -22,7 +22,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
     //private Mediator mediator = Mediator.getInstance();
 //    private static final double KP_LIMELIGHT = 0.0225; // 0.015
-    private static final double KP_LIMELIGHT = 0.01;
+    private static final double KP_LIMELIGHT = 0.02;
     //    private static final double KP_ENCODER = 0.0033;
 //    private static final double KP_ENCODER = 0.013;
     private static final double KP_ENCODER = 0.01;
@@ -37,7 +37,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private static final double POT_MIN_VALUE = 7.38e-4;
     private static final double MIN_POSITION = -52.2855;
     private static final double MAX_POSITION = 258.8285;
-    private static final double MIN_OUTPUT = 0.04;
+    private static final double MIN_OUTPUT = 0.045;
 
     private static final double WOF_POSITION = 81.714 - 35.328 - 12.6716;
     boolean ifReachedClosest = false;
@@ -51,8 +51,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private CANEncoder encoder = turretMotor.getEncoder();
     private boolean rotatingClockwise = true;
     private boolean hasZeroed = false;
-    private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 1e-5, 0.0015, 0, 0.35);
-    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 0, 0.00075, 0.0, 0.35);
+    private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 5e-5, 0.001, 0, 0.35);
+    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 1e-5, 0.0009, 0.0, 0.35);
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
     private Pipeline lastPipeline = Pipeline.CLOSE;
@@ -266,11 +266,11 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private Pipeline calculatePipeline(double distance) {
         Pipeline pipeline = limelight.getCurrentPipeline();
         if (pipeline == Pipeline.CLOSE) {
-            if (distance > 170 && limelight.getAdjustedTx() < 4d) {
+            if (distance > 210 && limelight.getAdjustedTx() < 4d) {
                 pipeline = Pipeline.FAR;
             }
         } else {
-            if (distance < 140) {
+            if (distance < 190) {
                 pipeline = Pipeline.CLOSE;
             }
         }
@@ -279,10 +279,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
     private void seekTarget() {
         double output = 0;
-
         if (Math.abs(MIN_POSITION - getPosition()) < Math.abs(MAX_POSITION - getPosition()) && !ifReachedClosest) {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 15) {
-                output = -0.3;
+                output = -0.35;
             }
 
             if (getPosition() <= MIN_POSITION + 18) {
@@ -291,7 +290,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             }
         } else {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 14 && !ifReachedClosest) {
-                output = 0.3;
+                output = 0.35;
             }
 
             if (getPosition() >= MAX_POSITION - 15) {
@@ -302,9 +301,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         if (ifReachedClosest) {
             if (reachedMin && !(getPosition() > MAX_POSITION - 20)) {
-                output = 0.3;
+                output = 0.35;
             } else if (reachedMax && !(getPosition() < MIN_POSITION + 15)) {
-                output = -.3;
+                output = -.35;
             } else {
                 resetReachedClosest();
             }
@@ -325,9 +324,13 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             double output = -pidLimelight.getOutput() + MIN_OUTPUT * Math.signum(limelight.getAdjustedTx());
             if (output > 0 && getPosition() < MIN_POSITION + 10) {
                 requireTurn(true);
-            } else if (output > 0 && getPosition() < MAX_POSITION - 15) {
+                turretMotor.set(output);
+                System.out.println("JASON SUCKS 1");
+            } else if (output < 0 && getPosition() < MAX_POSITION - 15) {
                 requireTurn(false);
+                turretMotor.set(output);
             } else {
+                System.out.println("LIMELIGHT MODE");
                 turretMotor.set(output);
                 adjusted = false;
             }

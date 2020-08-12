@@ -18,6 +18,8 @@ import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.WaitCommand;
 
+import static com.team2073.robot.subsystem.IntakeSubsystem.IntakePositionState.STOW;
+
 public class Shoot3Pick5Straight extends CommandGroup {
 
     private ApplicationContext appCtx = ApplicationContext.getInstance();
@@ -33,14 +35,15 @@ public class Shoot3Pick5Straight extends CommandGroup {
         addSequential(new ShooterCommand(), 4);
         addParallel(new MediatorCommand(Mediator.RobotState.STOW));
         addParallel(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
-        addParallel(new IntakeRollerCommand(), 6);
+        addParallel(new IntakeRollerCommand(), 9);
         addParallel(new HopperStateCommand(HopperSubsystem.HopperState.IDLE));
         addParallel(new TurretCommand(TurretSubsystem.TurretState.GYRO));
         addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.DOWN_THE_TRENCH.getTraj(), drive));
         addSequential(new StopDriveCommand());
         addParallel(new HopperStateCommand(HopperSubsystem.HopperState.IDLE));
-        addParallel(CommandUtil.waitBefore(new MediatorCommand(Mediator.RobotState.PREP_SHOT), 2));
         addSequential(new WaitCommand(.25));
+        addParallel(CommandUtil.waitBefore(new MediatorCommand(Mediator.RobotState.PREP_SHOT), 2));
+        addParallel(CommandUtil.waitBefore(new IntakePositionCommand(STOW), .5));
         addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.LEAVE_THE_TRENCH.getTraj(), drive));
         addSequential(new StopDriveCommand());
         addSequential(new WaitCommand(1));

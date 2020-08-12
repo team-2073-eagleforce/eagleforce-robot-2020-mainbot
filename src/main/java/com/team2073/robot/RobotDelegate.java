@@ -83,7 +83,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
                 } else if (autonomous == AutoRun.SHOOT_THREE){
                     drive.resetPosition(130d, 112d -28, 0d);
-                    new Shoot3Pick5Straight().start();
+//                    new Shoot3Pick5Straight().start();
 
                 } else {
                     System.out.println("NOTHING SET");

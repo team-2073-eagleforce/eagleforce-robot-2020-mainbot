@@ -49,10 +49,10 @@ public class MainBotConstants {
     public double NO_TARGET_RPM = 7000d;
     public double DEFAULT_LONG_RPM = 6250;
     public double ZOOM_RANGE_INCHES = 12 * 20;
-    public double LIMELIGHT_LOW_HEIGHT = 25d;
+    public double LIMELIGHT_LOW_HEIGHT = 24.875d;
     public double LIMELIGHT_HIGH_HEIGHT = LIMELIGHT_LOW_HEIGHT + 11d;
-//    public double LIMELIGHT_LENS_ANGLE = 15d;
-    public double LIMELIGHT_LENS_ANGLE = 16d;
+    public double LIMELIGHT_LENS_ANGLE = 20d;
+//    public double LIMELIGHT_LENS_ANGLE = 16d;
 
     public double TARGET_HEIGHT = 81;
 

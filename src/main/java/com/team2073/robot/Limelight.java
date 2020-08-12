@@ -20,7 +20,7 @@ public class Limelight {
         lastFrames.add(new FrameData(0, 0, 0, 0, 0));
     }
 
-    public boolean isBlind() {
+    public synchronized boolean isBlind() {
         boolean blind = true;
         for (FrameData frame : lastFrames) {
             if (frame.tv != 0) {
@@ -31,7 +31,7 @@ public class Limelight {
         return blind;
     }
 
-    public boolean hasCleanImage() {
+    public synchronized boolean hasCleanImage() {
         boolean blind = false;
         for (FrameData frame : lastFrames) {
             if (frame.tv == 0) {
@@ -42,7 +42,7 @@ public class Limelight {
         return blind;
     }
 
-    public double averageDistance() {
+    public synchronized double averageDistance() {
         double sum = 0;
         int cnt = 0;
         for (FrameData frame : lastFrames) {
@@ -52,7 +52,7 @@ public class Limelight {
         return sum / cnt;
     }
 
-    public void updateFrame(double distance) {
+    public synchronized void updateFrame(double distance) {
         while (lastFrames.size() >= 5) {
             lastFrames.remove(0);
         }
