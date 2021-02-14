@@ -47,7 +47,7 @@ public class AppConstants {
 
     public int PDB_PORT = 0;
     public double MAX_DRIVE_PERCENT_IN_CLIMB = .3;
-    public double NO_TARGET_RPM = 7000d;
+    public double NO_TARGET_RPM = 7500d;
     public double DEFAULT_LONG_RPM = 6250;
     public double ZOOM_RANGE_INCHES = 12 * 20;
     public double LIMELIGHT_LOW_HEIGHT = 25d;
