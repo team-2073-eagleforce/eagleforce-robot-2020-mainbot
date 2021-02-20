@@ -287,6 +287,19 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //        System.out.println("Velocity: " + ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
     }
 
+    public enum atHomePaths {
+        STRAIGHT(TrajectoryGenerator.generateTrajectory(
+                ))
+        private Trajectory traj;
+        atHomePaths(Trajectory traj) {
+            this.traj = traj;
+        }
+
+        public Trajectory getTraj() {
+            return traj;
+        }
+    }
+
     public enum AutoPaths {
         PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
                 List.of(
