@@ -50,6 +50,18 @@ public class AutonSelector {
 //                // Pass config
 //                config
 //        );
+        Trajectory testTraj = DriveSubsystem.atHomePaths.Test.getTraj();
+        RamseteCommand test = new RamseteCommand(
+                testTraj,
+                robotDrive::getPose,
+                new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+                new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+                        DriveConstants.kaVoltSecondsSquaredPerMeter),
+                DriveConstants.DRIVE_KINEMATICS,
+                robotDrive::getWheelSpeeds,
+                new PIDController(DriveConstants.kPDriveVel, 0, 0),
+                new PIDController(DriveConstants.kPDriveVel, 0, 0),
+                robotDrive::tankDriveVolts);
         Trajectory shoot_first_fiveTraj = DriveSubsystem.AutoPaths.SHOOT_FIRST_FIVE.getTraj();
         RamseteCommand shoot5Command = new RamseteCommand(
                 shoot_first_fiveTraj,

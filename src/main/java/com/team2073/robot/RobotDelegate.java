@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
 import com.team2073.robot.command.auton.Shoot3Pick5Straight;
+import com.team2073.robot.command.auton.Test;
 import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
@@ -71,6 +72,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotPeriodic() {
+        drive.getOutput();
         if(isDisabled()) {
             autonomous = autonRun.getSelected();
         }
@@ -79,7 +81,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
             if (!started) {
                 System.out.println("STARTED");
                 if (autonomous == AutoRun.TEST){
-                    drive.resetPosition(100d, 100d, 0d);
+                    drive.resetPosition(20d, -95d, 0d);
+                    new Test().start();
 
                 } else if (autonomous == AutoRun.SHOOT_THREE){
                     drive.resetPosition(130d, 112d -28, 0d);
@@ -92,6 +95,8 @@ public class RobotDelegate extends AbstractRobotDelegate {
                 started = true;
             }
         }
+
+
 
 //        if(RobotState.isEnabled() && !started){
 //            AutonStarter starter = new AutonStarter();
@@ -150,6 +155,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 //        limelight.setLedOn(true);
 //        System.out.println("LOW Distance: " + limelight.getLowDistance() + "\tHIGH Distance: " + limelight.getHighDistance());
     }
+
 
 
     @Override

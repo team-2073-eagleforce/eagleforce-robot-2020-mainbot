@@ -89,6 +89,8 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
         rightSlave2.follow(rightMaster);
         resetEncoders();
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(115d), Rotation2d.fromDegrees(-50d))
 //                , Rotation2d.fromDegrees(getHeading()));
 //        startingHeading = Rotation2d.fromDegrees(getHeading()).getDegrees() - 50;
@@ -101,6 +103,10 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //        m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(228d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(115d-180d))
 //                , Rotation2d.fromDegrees(getHeading()));
 
+    }
+
+    public void getOutput() {
+        System.out.println(rightMaster.getAppliedOutput());
     }
 
     public double getStartingHeading() {
@@ -235,9 +241,9 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
             rawJoystick = 0;
         }
         if (rawJoystick < 0) {
-            return Math.max(-1d, (rawJoystick * 110d) / 90d);
+            return Math.max(-1d, (rawJoystick * 90d) / 90d);
         } else {
-            return Math.min(1d, (rawJoystick * 110d) / 90d);
+            return Math.min(1d, (rawJoystick * 90d) / 90d);
         }
 
     }
@@ -287,18 +293,22 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
 //        System.out.println("Velocity: " + ConversionUtil.metersToFeet(getWheelSpeeds().leftMetersPerSecond));
     }
 
-//    public enum atHomePaths {
-//        STRAIGHT(TrajectoryGenerator.generateTrajectory(
-//                ))
-//        private Trajectory traj;
-//        atHomePaths(Trajectory traj) {
-//            this.traj = traj;
-//        }
-//
-//        public Trajectory getTraj() {
-//            return traj;
-//        }
-//    }
+    public enum atHomePaths {
+        Test(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(20d), ConversionUtil.inchesToMeters(-95d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(70d), ConversionUtil.inchesToMeters(-95d), Rotation2d.fromDegrees(0d))
+                ),
+                config.setReversed(false)));
+        private Trajectory traj;
+        atHomePaths(Trajectory traj) {
+            this.traj = traj;
+        }
+
+        public Trajectory getTraj() {
+            return traj;
+        }
+    }
 
     public enum AutoPaths {
         PICK_FIRST_2(TrajectoryGenerator.generateTrajectory(
