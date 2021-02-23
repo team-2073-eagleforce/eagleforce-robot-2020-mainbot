@@ -237,13 +237,13 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     }
 
     private double adjustWheel(double rawJoystick) {
-        if (rawJoystick < .02 && rawJoystick > -.02) {
+        if (rawJoystick < .04 && rawJoystick > -.04) {
             rawJoystick = 0;
         }
         if (rawJoystick < 0) {
-            return Math.max(-1d, (rawJoystick * 90d) / 90d);
+            return Math.max(-1d, (rawJoystick * 120d) / 90d);
         } else {
-            return Math.min(1d, (rawJoystick * 90d) / 90d);
+            return Math.min(1d, (rawJoystick * 120d) / 90d);
         }
 
     }
