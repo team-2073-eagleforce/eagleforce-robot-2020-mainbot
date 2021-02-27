@@ -72,7 +72,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
     @Override
     public void robotPeriodic() {
-        drive.getOutput();
+        //drive.getOutput();
         if(isDisabled()) {
             autonomous = autonRun.getSelected();
         }
