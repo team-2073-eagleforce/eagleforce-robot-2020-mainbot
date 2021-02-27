@@ -294,10 +294,27 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum atHomePaths {
+        SLALOM(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(60), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(120), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(260), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(300), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(300), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(180)),
+                        new Pose2d(ConversionUtil.inchesToMeters(240), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(180)),
+                        new Pose2d(ConversionUtil.inchesToMeters(120), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(180)),
+                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(90),Rotation2d.fromDegrees(180))
+                ),
+        config.setReversed(false))),
         Test(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(20d), ConversionUtil.inchesToMeters(-95d), Rotation2d.fromDegrees(0d)),
-                        new Pose2d(ConversionUtil.inchesToMeters(70d), ConversionUtil.inchesToMeters(-95d), Rotation2d.fromDegrees(0d))
+                        new Pose2d(ConversionUtil.inchesToMeters(46d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(136d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(45d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(166d), ConversionUtil.inchesToMeters(134d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(166d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(106d), ConversionUtil.inchesToMeters(134d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(0d))
                 ),
                 config.setReversed(false)));
         private Trajectory traj;

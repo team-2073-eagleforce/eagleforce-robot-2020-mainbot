@@ -8,12 +8,12 @@ let wto;
 let change = "propertychange change click keyup input paste";
 let animating = false;
 
-const fieldWidth = 755; // inches
-const fieldHeight = 357; // inches
-const xOffset = 70;
-const yOffset = 200;
-const width = 1134; //pixels
-const height = 540; //pixels
+const fieldWidth = 360; // inches
+const fieldHeight = 180; // inches
+const xOffset = 0;
+const yOffset = 0;
+const width = 812; //pixels
+const height = 406; //pixels
 
 const robotWidth = 28; // inches
 const robotHeight = 33; // inches

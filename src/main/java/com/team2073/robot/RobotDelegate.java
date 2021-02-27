@@ -5,6 +5,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
 import com.team2073.robot.command.auton.Shoot3Pick5Straight;
+import com.team2073.robot.command.auton.Slalom;
 import com.team2073.robot.command.auton.Test;
 import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
@@ -65,6 +66,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
         autonRun.addOption("SHOOT THREE", AutoRun.SHOOT_THREE);
         autonRun.addOption("TOP TEN", AutoRun.TOP_TEN);
         autonRun.addOption("TRENCH", AutoRun.TRENCH);
+        autonRun.addOption("SLALOM", AutoRun.SLALOM);
         SmartDashboard.putData(autonRun);
 //        SmartDashboard.putNumber("servo", servo.getAngle());
 
@@ -81,14 +83,17 @@ public class RobotDelegate extends AbstractRobotDelegate {
             if (!started) {
                 System.out.println("STARTED");
                 if (autonomous == AutoRun.TEST){
-                    drive.resetPosition(20d, -95d, 0d);
+                    drive.resetPosition(46d, 44d, 0d);
                     new Test().start();
 
                 } else if (autonomous == AutoRun.SHOOT_THREE){
                     drive.resetPosition(130d, 112d -28, 0d);
 //                    new Shoot3Pick5Straight().start();
 
-                } else {
+                } else if (autonomous == AutoRun.SLALOM) {
+                    drive.resetPosition(47d, 30d, 0d);
+                    new Slalom().start();
+                }else {
                     System.out.println("NOTHING SET");
                 }
 //                    new TopSide10Ball().start();
@@ -172,6 +177,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
         TEST,
         SHOOT_THREE,
         TOP_TEN,
+        SLALOM,
         TRENCH;
     }
 
