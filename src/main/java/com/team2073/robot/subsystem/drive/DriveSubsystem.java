@@ -124,7 +124,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                 rightEncoder.getPosition());
     }
 
-    public void resetPosition(double x, double y, double angle){
+    public void resetPosition(double x, double y, double angle) {
         m_odometry.resetPosition(new Pose2d(ConversionUtil.inchesToMeters(x), ConversionUtil.inchesToMeters(y), Rotation2d.fromDegrees(angle))
                 , Rotation2d.fromDegrees(getHeading()));
 
@@ -296,17 +296,38 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     public enum atHomePaths {
         SLALOM(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(60), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(120), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(260), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(300), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(300), ConversionUtil.inchesToMeters(120),Rotation2d.fromDegrees(180)),
-                        new Pose2d(ConversionUtil.inchesToMeters(240), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(180)),
-                        new Pose2d(ConversionUtil.inchesToMeters(120), ConversionUtil.inchesToMeters(30),Rotation2d.fromDegrees(180)),
-                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(90),Rotation2d.fromDegrees(180))
+                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(93), ConversionUtil.inchesToMeters(60), Rotation2d.fromDegrees(60)),
+                        new Pose2d(ConversionUtil.inchesToMeters(126), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(18)),
+                        new Pose2d(ConversionUtil.inchesToMeters(210), ConversionUtil.inchesToMeters(95), Rotation2d.fromDegrees(360)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(300)),
+                        new Pose2d(ConversionUtil.inchesToMeters(310), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(335), ConversionUtil.inchesToMeters(40), Rotation2d.fromDegrees(55)),
+                        new Pose2d(ConversionUtil.inchesToMeters(340), ConversionUtil.inchesToMeters(70), Rotation2d.fromDegrees(130)),
+                        new Pose2d(ConversionUtil.inchesToMeters(305), ConversionUtil.inchesToMeters(85), Rotation2d.fromDegrees(205)),
+                        new Pose2d(ConversionUtil.inchesToMeters(275), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(240)),
+                        new Pose2d(ConversionUtil.inchesToMeters(225), ConversionUtil.inchesToMeters(20), Rotation2d.fromDegrees(180)),
+                        new Pose2d(ConversionUtil.inchesToMeters(140), ConversionUtil.inchesToMeters(20), Rotation2d.fromDegrees(170)),
+                        new Pose2d(ConversionUtil.inchesToMeters(93), ConversionUtil.inchesToMeters(60), Rotation2d.fromDegrees(130)),
+                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(180))
                 ),
-        config.setReversed(false))),
+                config.setReversed(false))),
+        BARREL(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(0)),
+                        new Pose2d(ConversionUtil.inchesToMeters(155), ConversionUtil.inchesToMeters(95), Rotation2d.fromDegrees(335)),
+                        new Pose2d(ConversionUtil.inchesToMeters(180), ConversionUtil.inchesToMeters(55), Rotation2d.fromDegrees(260)),
+                        new Pose2d(ConversionUtil.inchesToMeters(130), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(150)),
+                        new Pose2d(ConversionUtil.inchesToMeters(125), ConversionUtil.inchesToMeters(80), Rotation2d.fromDegrees(40)),
+                        new Pose2d(ConversionUtil.inchesToMeters(260), ConversionUtil.inchesToMeters(105), Rotation2d.fromDegrees(45)),
+                        new Pose2d(ConversionUtil.inchesToMeters(220), ConversionUtil.inchesToMeters(150), Rotation2d.fromDegrees(210)),
+                        new Pose2d(ConversionUtil.inchesToMeters(270), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0))
+//                        new Pose2d(ConversionUtil.inchesToMeters(335), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(70)),
+//                        new Pose2d(ConversionUtil.inchesToMeters(310), ConversionUtil.inchesToMeters(100), Rotation2d.fromDegrees(190)),
+//                        new Pose2d(ConversionUtil.inchesToMeters(150), ConversionUtil.inchesToMeters(100), Rotation2d.fromDegrees(180)),
+//                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(180))
+                ),
+                config.setReversed(false))),
         Test(TrajectoryGenerator.generateTrajectory(
                 List.of(
                         new Pose2d(ConversionUtil.inchesToMeters(46d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(0d)),
@@ -318,6 +339,7 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                 ),
                 config.setReversed(false)));
         private Trajectory traj;
+
         atHomePaths(Trajectory traj) {
             this.traj = traj;
         }
