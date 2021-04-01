@@ -64,8 +64,8 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public static final double maxSpeedFeetPerSecond = 10; //14
-        public static final double maxAccelerationMetersPerSecondSquared = 4; //5.5
+        public static final double maxSpeedFeetPerSecond = 10; //14 for barrel and 10 for all the rest
+        public static final double maxAccelerationMetersPerSecondSquared = 4.5; //4 for galactic search, 5 for barrel, and 3 for all the rest
 
         public static final double kMaxSpeedMetersPerSecond = feetToMeters(maxSpeedFeetPerSecond);
         public static final double kMaxAccelerationMetersPerSecondSquared = feetToMeters(maxAccelerationMetersPerSecondSquared);

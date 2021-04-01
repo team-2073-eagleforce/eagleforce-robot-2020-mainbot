@@ -296,36 +296,61 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
     public enum atHomePaths {
         SLALOM(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(93), ConversionUtil.inchesToMeters(60), Rotation2d.fromDegrees(60)),
-                        new Pose2d(ConversionUtil.inchesToMeters(126), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(18)),
-                        new Pose2d(ConversionUtil.inchesToMeters(210), ConversionUtil.inchesToMeters(95), Rotation2d.fromDegrees(360)),
-                        new Pose2d(ConversionUtil.inchesToMeters(280), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(300)),
-                        new Pose2d(ConversionUtil.inchesToMeters(310), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(335), ConversionUtil.inchesToMeters(40), Rotation2d.fromDegrees(55)),
-                        new Pose2d(ConversionUtil.inchesToMeters(340), ConversionUtil.inchesToMeters(70), Rotation2d.fromDegrees(130)),
-                        new Pose2d(ConversionUtil.inchesToMeters(305), ConversionUtil.inchesToMeters(85), Rotation2d.fromDegrees(205)),
-                        new Pose2d(ConversionUtil.inchesToMeters(275), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(240)),
-                        new Pose2d(ConversionUtil.inchesToMeters(225), ConversionUtil.inchesToMeters(20), Rotation2d.fromDegrees(180)),
-                        new Pose2d(ConversionUtil.inchesToMeters(140), ConversionUtil.inchesToMeters(20), Rotation2d.fromDegrees(170)),
-                        new Pose2d(ConversionUtil.inchesToMeters(93), ConversionUtil.inchesToMeters(60), Rotation2d.fromDegrees(130)),
-                        new Pose2d(ConversionUtil.inchesToMeters(47), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(180))
+                        new Pose2d(ConversionUtil.inchesToMeters(44d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(93d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(60d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(126d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(15d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(218d), ConversionUtil.inchesToMeters(97d), Rotation2d.fromDegrees(360d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(257d), ConversionUtil.inchesToMeters(85d), Rotation2d.fromDegrees(325d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280d), ConversionUtil.inchesToMeters(52d), Rotation2d.fromDegrees(290d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(290d), ConversionUtil.inchesToMeters(28d), Rotation2d.fromDegrees(327d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(315d), ConversionUtil.inchesToMeters(20d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(342d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(50d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(353d), ConversionUtil.inchesToMeters(52d), Rotation2d.fromDegrees(78d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(345d), ConversionUtil.inchesToMeters(80d), Rotation2d.fromDegrees(140d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(315d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(190d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(295d), ConversionUtil.inchesToMeters(80d), Rotation2d.fromDegrees(225d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280d), ConversionUtil.inchesToMeters(55d), Rotation2d.fromDegrees(245d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(245d), ConversionUtil.inchesToMeters(20d), Rotation2d.fromDegrees(195d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(15d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(115d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(130d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(90d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(140d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(47d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(180d))
                 ),
                 config.setReversed(false))),
-        BARREL(TrajectoryGenerator.generateTrajectory(
+        BARREL_LOOP_1(TrajectoryGenerator.generateTrajectory(
                 List.of(
-                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(0)),
-                        new Pose2d(ConversionUtil.inchesToMeters(155), ConversionUtil.inchesToMeters(95), Rotation2d.fromDegrees(335)),
-                        new Pose2d(ConversionUtil.inchesToMeters(180), ConversionUtil.inchesToMeters(55), Rotation2d.fromDegrees(260)),
-                        new Pose2d(ConversionUtil.inchesToMeters(130), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(150)),
-                        new Pose2d(ConversionUtil.inchesToMeters(125), ConversionUtil.inchesToMeters(80), Rotation2d.fromDegrees(40)),
-                        new Pose2d(ConversionUtil.inchesToMeters(260), ConversionUtil.inchesToMeters(105), Rotation2d.fromDegrees(45)),
-                        new Pose2d(ConversionUtil.inchesToMeters(220), ConversionUtil.inchesToMeters(150), Rotation2d.fromDegrees(210)),
-                        new Pose2d(ConversionUtil.inchesToMeters(270), ConversionUtil.inchesToMeters(30), Rotation2d.fromDegrees(0))
-//                        new Pose2d(ConversionUtil.inchesToMeters(335), ConversionUtil.inchesToMeters(50), Rotation2d.fromDegrees(70)),
-//                        new Pose2d(ConversionUtil.inchesToMeters(310), ConversionUtil.inchesToMeters(100), Rotation2d.fromDegrees(190)),
-//                        new Pose2d(ConversionUtil.inchesToMeters(150), ConversionUtil.inchesToMeters(100), Rotation2d.fromDegrees(180)),
-//                        new Pose2d(ConversionUtil.inchesToMeters(44), ConversionUtil.inchesToMeters(90), Rotation2d.fromDegrees(180))
+                        new Pose2d(ConversionUtil.inchesToMeters(44d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(125d), ConversionUtil.inchesToMeters(98d), Rotation2d.fromDegrees(359d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(179d), ConversionUtil.inchesToMeters(85d), Rotation2d.fromDegrees(316d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(189d), ConversionUtil.inchesToMeters(48d), Rotation2d.fromDegrees(260d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(154d), ConversionUtil.inchesToMeters(27d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(116d), ConversionUtil.inchesToMeters(48d), Rotation2d.fromDegrees(113d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(119d), ConversionUtil.inchesToMeters(80d), Rotation2d.fromDegrees(57d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(155d), ConversionUtil.inchesToMeters(100d), Rotation2d.fromDegrees(355d))
+                ),
+                config.setReversed(false))),
+        BARREL_LOOP_2(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(200d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(238d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(268d), ConversionUtil.inchesToMeters(96d), Rotation2d.fromDegrees(34d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(280d), ConversionUtil.inchesToMeters(123d), Rotation2d.fromDegrees(102d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(269d), ConversionUtil.inchesToMeters(145d), Rotation2d.fromDegrees(150d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(236d), ConversionUtil.inchesToMeters(150d), Rotation2d.fromDegrees(200d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(210d), ConversionUtil.inchesToMeters(108d), Rotation2d.fromDegrees(277d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(219d), ConversionUtil.inchesToMeters(76d), Rotation2d.fromDegrees(300d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(245d), ConversionUtil.inchesToMeters(45d), Rotation2d.fromDegrees(320d))
+                ),
+                config.setReversed(false))),
+        BARREL_LOOP_3(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(296d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(335d), ConversionUtil.inchesToMeters(42d), Rotation2d.fromDegrees(50d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(340d), ConversionUtil.inchesToMeters(72d), Rotation2d.fromDegrees(121d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(290d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(184d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(200d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(150d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(70d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(180d))
                 ),
                 config.setReversed(false))),
         Test(TrajectoryGenerator.generateTrajectory(
@@ -337,7 +362,73 @@ public class DriveSubsystem implements AsyncPeriodicRunnable {
                         new Pose2d(ConversionUtil.inchesToMeters(106d), ConversionUtil.inchesToMeters(134d), Rotation2d.fromDegrees(180d)),
                         new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(44d), Rotation2d.fromDegrees(0d))
                 ),
-                config.setReversed(false)));
+                config.setReversed(false))),
+        GALACTIC_SEARCH_lEG_1(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(15d), ConversionUtil.inchesToMeters(150d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(65d), ConversionUtil.inchesToMeters(144d), Rotation2d.fromDegrees(329d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(85d), ConversionUtil.inchesToMeters(118d), Rotation2d.fromDegrees(294d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(97d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(300d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(116d), ConversionUtil.inchesToMeters(72d), Rotation2d.fromDegrees(335d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(147d), ConversionUtil.inchesToMeters(65d), Rotation2d.fromDegrees(355d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(175d), ConversionUtil.inchesToMeters(54d), Rotation2d.fromDegrees(312d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(188d), ConversionUtil.inchesToMeters(28d), Rotation2d.fromDegrees(286d))
+                ),
+        config.setReversed(false))),
+        GALACTIC_SEARCH_LEG_2(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(192d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(295d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(177d), ConversionUtil.inchesToMeters(60d), Rotation2d.fromDegrees(297d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(157d), ConversionUtil.inchesToMeters(95d), Rotation2d.fromDegrees(302d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(136d), ConversionUtil.inchesToMeters(127d), Rotation2d.fromDegrees(309d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(110d), ConversionUtil.inchesToMeters(145d), Rotation2d.fromDegrees(350d))
+                ),
+        config.setReversed(true))),
+        GALACTIC_SEARCH_LEG_3(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(147d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(164d), ConversionUtil.inchesToMeters(147d), Rotation2d.fromDegrees(355d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(220d), ConversionUtil.inchesToMeters(125d), Rotation2d.fromDegrees(323d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(260d), ConversionUtil.inchesToMeters(100d), Rotation2d.fromDegrees(320d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(288d), ConversionUtil.inchesToMeters(74d), Rotation2d.fromDegrees(319d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(328d), ConversionUtil.inchesToMeters(39d), Rotation2d.fromDegrees(318d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(348d), ConversionUtil.inchesToMeters(21d), Rotation2d.fromDegrees(318d))
+                ),
+                config.setReversed(false))),
+        BOUNCE_TO_FIRST_CONE(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(44d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(100d), ConversionUtil.inchesToMeters(144d), Rotation2d.fromDegrees(90d))
+                ),
+                config.setReversed(false))),
+        BOUNCE_TO_SECOND_CONE(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(99d), ConversionUtil.inchesToMeters(140d), Rotation2d.fromDegrees(90d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(125d), ConversionUtil.inchesToMeters(85d), Rotation2d.fromDegrees(105d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(140d), ConversionUtil.inchesToMeters(40d), Rotation2d.fromDegrees(130d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(170d), ConversionUtil.inchesToMeters(25d), Rotation2d.fromDegrees(180d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(195d), ConversionUtil.inchesToMeters(45d), Rotation2d.fromDegrees(250)),
+                        new Pose2d(ConversionUtil.inchesToMeters(195d), ConversionUtil.inchesToMeters(160d), Rotation2d.fromDegrees(270d))
+                ),
+                config.setReversed(true))),
+        BOUNCE_TO_THIRD_CONE(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(180d), ConversionUtil.inchesToMeters(80d), Rotation2d.fromDegrees(270d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(190d), ConversionUtil.inchesToMeters(50d), Rotation2d.fromDegrees(310d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(240d), ConversionUtil.inchesToMeters(30d), Rotation2d.fromDegrees(0d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(305d), ConversionUtil.inchesToMeters(70d), Rotation2d.fromDegrees(90d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(305d), ConversionUtil.inchesToMeters(160d), Rotation2d.fromDegrees(90d))
+                ),
+                config.setReversed(false))),
+        BOUNCE_TO_END(TrajectoryGenerator.generateTrajectory(
+                List.of(
+                        new Pose2d(ConversionUtil.inchesToMeters(305d), ConversionUtil.inchesToMeters(140d), Rotation2d.fromDegrees(90d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(315d), ConversionUtil.inchesToMeters(100d), Rotation2d.fromDegrees(120d)),
+                        new Pose2d(ConversionUtil.inchesToMeters(330d), ConversionUtil.inchesToMeters(90d), Rotation2d.fromDegrees(180d))
+                ),
+                config.setReversed(true)));
+
+
         private Trajectory traj;
 
         atHomePaths(Trajectory traj) {
