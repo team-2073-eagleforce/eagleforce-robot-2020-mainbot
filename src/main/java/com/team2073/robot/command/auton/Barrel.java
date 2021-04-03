@@ -12,8 +12,8 @@ public class Barrel extends CommandGroup {
 
     public Barrel(){
         addSequential(new RamseteCommand(DriveSubsystem.atHomePaths.BARREL_LOOP_1.getTraj(), drive));
-        addSequential(new RamseteCommand(DriveSubsystem.atHomePaths.BARREL_LOOP_2.getTraj(), drive));
-        addSequential(new RamseteCommand(DriveSubsystem.atHomePaths.BARREL_LOOP_3.getTraj(), drive));
+//            addSequential(new RamseteCommand(DriveSubsystem.atHomePaths.BARREL_LOOP_2.getTraj(), drive));
+//            addSequential(new RamseteCommand(DriveSubsystem.atHomePaths.BARREL_LOOP_3.getTraj(), drive));
         addSequential(new StopDriveCommand());
     }
 }

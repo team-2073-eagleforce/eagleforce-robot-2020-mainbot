@@ -95,11 +95,11 @@ public class RobotDelegate extends AbstractRobotDelegate {
                     drive.resetPosition(44d, 30d, 0d);
                     new Slalom().start();
                 } else if (autonomous == AutoRun.BARREL) {
-                    drive.resetPosition(44d, 90d, 0d);
+                    drive.resetPosition(47d, 90d, 0d);
                     new Barrel().start();
                 } else if (autonomous == AutoRun.BOUNCE) {
-                    drive.resetPosition(44d, 90d, 0d);
-//                    drive.resetPosition(195d, 150d, 260);
+                    drive.resetPosition(45d, 90d, 0d);
+////                    drive.resetPosition(195d, 150d, 260);
                     new Bounce().start();
                 } else if (autonomous == AutoRun.GALACTIC_SEARCH){
                     drive.resetPosition(15d, 150d, 0d);
