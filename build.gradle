@@ -4,10 +4,11 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2020.3.2"
 }
 
+
 group 'com.team2073'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.9
 
 repositories {
     mavenLocal()

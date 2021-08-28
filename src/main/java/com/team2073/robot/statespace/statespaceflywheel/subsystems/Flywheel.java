@@ -12,8 +12,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.team2073.robot.ApplicationContext;
-import edu.wpi.first.wpilibj.*;
-import org.graalvm.compiler.lir.amd64.AMD64MathIntrinsicBinaryOp;
+//import edu.wpi.first.wpilibj.*;
+//import org.graalvm.compiler.lir.amd64.AMD64MathIntrinsicBinaryOp;
 
 public class Flywheel {
 //  private ApplicationContext appCtx = ApplicationContext.getInstance();

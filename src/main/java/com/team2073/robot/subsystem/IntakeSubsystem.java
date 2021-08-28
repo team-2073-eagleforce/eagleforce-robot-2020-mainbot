@@ -76,7 +76,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum IntakeRollerState {
-        INTAKE(1d),
+        INTAKE(.8d),
         OUTTAKE(-.9d),
         STOP(0d),
         DISABLED(0d);
