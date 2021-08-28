@@ -86,7 +86,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         autoRegisterWithPeriodicRunner(10);
         turretMotor.setInverted(true);
         turretMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        limelight.setxOffset(1.4);
+        limelight.setxOffset(0d);
         pidLimelight.setPositionSupplier(() -> limelight.getAdjustedTx());
         pidEncoder.setPositionSupplier(this::getPosition);
         encoder.setPositionConversionFactor(360 / 30d);
@@ -104,8 +104,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //       Recording on 2/17/2020
         lowDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(5300d));
         lowDistanceToRPM.put(new InterpolatingDouble(192d), new InterpolatingDouble(5375d));
-        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(5450d));
-        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(5500d));
+        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(5400d));
+        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(5425d));
         lowDistanceToRPM.put(new InterpolatingDouble(228d), new InterpolatingDouble(5545d));
         lowDistanceToRPM.put(new InterpolatingDouble(240d), new InterpolatingDouble(5675d));
         lowDistanceToRPM.put(new InterpolatingDouble(252d), new InterpolatingDouble(5700d));
@@ -123,14 +123,15 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         highDistanceToRPM.put(new InterpolatingDouble(72d), new InterpolatingDouble(6475d));
         highDistanceToRPM.put(new InterpolatingDouble(84d), new InterpolatingDouble(6000d));
-        highDistanceToRPM.put(new InterpolatingDouble(92d), new InterpolatingDouble(6000d));
-        highDistanceToRPM.put(new InterpolatingDouble(113d), new InterpolatingDouble(5900d));
+        highDistanceToRPM.put(new InterpolatingDouble(92d), new InterpolatingDouble(5300d));
+        highDistanceToRPM.put(new InterpolatingDouble(113d), new InterpolatingDouble(4750d));
         highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(4805d));
         highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(4800d));
         highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(4800d));
-        highDistanceToRPM.put(new InterpolatingDouble(160d), new InterpolatingDouble(4850d));
-        highDistanceToRPM.put(new InterpolatingDouble(168d), new InterpolatingDouble(4900d));
-        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(4870d));
+        highDistanceToRPM.put(new InterpolatingDouble(160d), new InterpolatingDouble(4750d));
+        highDistanceToRPM.put(new InterpolatingDouble(168d), new InterpolatingDouble(4975d));
+        highDistanceToRPM.put(new InterpolatingDouble(172d), new InterpolatingDouble(4975d));
+        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(4945d));
         highDistanceToRPM.put(new InterpolatingDouble(200d), new InterpolatingDouble(4980d));
         highDistanceToRPM.put(new InterpolatingDouble(220d), new InterpolatingDouble(5075d));
         highDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6050d));
@@ -181,7 +182,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
                 break;
             case FACE_FRONT:
                 limelight.setLedOn(false);
-                setpoint = 0d;
+                setpoint = 4d;
                 pidControlloop();
                 break;
             case SEEK:
