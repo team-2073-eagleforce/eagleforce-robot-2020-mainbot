@@ -64,6 +64,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
         autonRun.addOption("SHOOT THREE", AutoRun.SHOOT_THREE);
         autonRun.addOption("TOP TEN", AutoRun.TOP_TEN);
         autonRun.addOption("TRENCH", AutoRun.TRENCH);
+        autonRun.addOption("SHOOT 3 PICK 3", AutoRun.SHOOT_3_PICK_3);
         autonRun.addOption("SLALOM", AutoRun.SLALOM);
         autonRun.addOption("BARREL", AutoRun.BARREL);
         autonRun.addOption("BOUNCE", AutoRun.BOUNCE);
@@ -89,9 +90,17 @@ public class RobotDelegate extends AbstractRobotDelegate {
 
                 } else if (autonomous == AutoRun.SHOOT_THREE) {
                     drive.resetPosition(130d, 112d - 28, 0d);
-//                    new Shoot3Pick5Straight().start();
-
-                } else if (autonomous == AutoRun.SLALOM) {
+                    new Shoot3Pick5Straight().start();
+                } else if (autonomous == AutoRun.TOP_TEN) {
+                    drive.resetPosition(115,115,-20);
+                    new TopSide10Ball().start();
+                }else if (autonomous == AutoRun.TRENCH) {
+                    drive.resetPosition(130,112,0);
+                    new Trench().start();
+                }else if (autonomous == AutoRun.SHOOT_3_PICK_3) {
+                    drive.resetPosition(130, 112, 0);
+                    new Shoot3Pick3().start();
+                }else if (autonomous == AutoRun.SLALOM) {
                     drive.resetPosition(44d, 30d, 0d);
                     new Slalom().start();
                 } else if (autonomous == AutoRun.BARREL) {
@@ -99,7 +108,6 @@ public class RobotDelegate extends AbstractRobotDelegate {
                     new Barrel().start();
                 } else if (autonomous == AutoRun.BOUNCE) {
                     drive.resetPosition(45d, 90d, 0d);
-////                    drive.resetPosition(195d, 150d, 260);
                     new Bounce().start();
                 } else if (autonomous == AutoRun.GALACTIC_SEARCH){
                     drive.resetPosition(15d, 150d, 0d);
@@ -192,6 +200,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
         BARREL,
         BOUNCE,
         GALACTIC_SEARCH,
+        SHOOT_3_PICK_3,
         TRENCH;
     }
 }

@@ -14,7 +14,7 @@ public class AppConstants {
     public int INTAKE_SOLENOID_TOP_PORT = 1;
     public int INTAKE_SOLENOID_BOTTOM_PORT = 0;
     //Hopper
-    public int HOPPER_MOTOR_ID = 4;
+    public int HOPPER_MOTOR_ID = 21;
     public int HOPPER_SENSOR_DIO_PORT = 3; // check
     //Drive
     public int DRIVE_LEFT_MASTER = 2;

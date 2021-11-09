@@ -101,7 +101,7 @@ public class ApplicationContext {
 
     public CANSparkMax getHopperMotor() {
         if (hopperMotor == null) {
-            hopperMotor = new CANSparkMax(constants.HOPPER_MOTOR_ID, MotorType.kBrushless);
+            hopperMotor = new CANSparkMax(21, MotorType.kBrushless);
         }
         return hopperMotor;
     }
