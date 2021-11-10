@@ -32,12 +32,12 @@ public class Trench extends CommandGroup {
         addParallel(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.STOW));
         addParallel(new HopperIdleCommand());
         addSequential(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
-//        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.EXIT_2_BALL.getTraj(), drive));
+        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.EXIT_2_BALL.getTraj(), drive));
         addSequential(new StopDriveCommand());
         addSequential(new WaitCommand(1.5));
         addSequential(new ShooterCommand(), 3);
         addParallel(new MediatorCommand(Mediator.RobotState.STOW));
-//        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.RETURN_2_BALL.getTraj(), drive));
+        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.RETURN_2_BALL.getTraj(), drive));
         addSequential(new StopDriveCommand());
     }
 

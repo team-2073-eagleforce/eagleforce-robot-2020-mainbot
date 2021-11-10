@@ -124,12 +124,17 @@ public class FlywheelSubsystem implements AsyncPeriodicRunnable {
         m_wheel.setVelocityReference(angularVelocity);
     }
 
+    public Double getReference(){
+        return reference;
+    }
+
+
     public void setRPM(Double rpm) {
         if(rpm == null){
             reference = null;
             return;
         }
-        reference = rpm * (2 * Math.PI / 60d);;
+        reference = rpm * (2 * Math.PI / 60d);
     }
 
     public boolean atReference() {

@@ -67,7 +67,7 @@ public class Mediator implements AsyncPeriodicRunnable {
         switch (desiredState) {
             case STARTING_CONFIG:
                 if (lastState != desiredState) {
-                    hopper.setState(HopperState.IDLE);
+                    hopper.setState(HopperState.STOP);
                     intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
 //                    intake.setPosition(IntakePositionState.STARTING_CONFIG);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
@@ -81,13 +81,17 @@ public class Mediator implements AsyncPeriodicRunnable {
                 }
                 break;
             case PREP_SHOT:
-//                hopper.setState(HopperState.PREP_SHOT);
                 if (!closeShot) {
+                    hopper.setState(HopperState.STOP);
                     hood.setHood(HoodSubsystem.HoodState.EXTENDED);
                     elevator.setElevatorState(calcElevatorShotHeight());
                     turret.setState(TurretSubsystem.TurretState.SEEK);
-                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+//                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+                    flywheel.setRPM(500d);
+                    System.out.println(limelight.getLowDistance());
+                    System.out.println(flywheel.getReference());
                 } else {
+                    hopper.setState(HopperState.STOP);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
                     turret.setState(TurretSubsystem.TurretState.FACE_FRONT);
                     flywheel.setRPM(constants.NO_TARGET_RPM);
@@ -100,6 +104,8 @@ public class Mediator implements AsyncPeriodicRunnable {
 
                 break;
             case SHOOTING:
+                hopper.setState(HopperState.IDLE);
+                intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
                 drive.capTeleopOutput(0);
 //                if (!flywheel.atReference()) {
 //                    if (!closeShot) {
@@ -109,30 +115,29 @@ public class Mediator implements AsyncPeriodicRunnable {
 //                    }
 //                    break;
 //                }
-                if (elevator.getSetpoint() == null) {
-                    hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
-                } else if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
-                    hopper.setState(HopperState.ELEVATOR_UP_SHOOT);
-                } else {
-                    hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
-                }
-                if (hopper.isShotReady()) {
-                    intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
-                }
+//                if (elevator.getSetpoint() == null) {
+//                    hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
+//                } else if (elevator.getSetpoint() > ElevatorSubsytem.ElevatorState.TOP.getHeight() / 2) {
+//                    hopper.setState(HopperState.ELEVATOR_UP_SHOOT);
+//                } else {
+//                    hopper.setState(HopperState.ELEVATOR_DOWN_SHOOT);
+//                }
+//                if (hopper.isShotReady()) {
+//                    intermediate.set(IntermediateSubsystem.IntermediateState.SHOOT);
+//                }
                 break;
             case STOW:
                 if (lastState != desiredState) {
                     System.out.println("Mediator STOW");
                     drive.capTeleopOutput(1);
                     hood.determineHoodAngle(false);
-//                    intake.setPosition(IntakePositionState.STOW);
+                    intake.setPosition(IntakePositionState.STOW);
                     hopper.setState(HopperState.IDLE);
                     hood.setHood(HoodSubsystem.HoodState.RETRACTED);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
                     turret.setState(TurretSubsystem.TurretState.GYRO);
                     intermediate.set(IntermediateSubsystem.IntermediateState.IDLE);
                     flywheel.setRPM(null);
-                    hopper.setShotReady(false);
                     turret.resetReachedClosest();
                 }
 

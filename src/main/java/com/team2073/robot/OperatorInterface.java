@@ -9,6 +9,8 @@ import com.team2073.robot.command.WOF.ResetWOFCommand;
 import com.team2073.robot.command.WOF.WOFPositionCommand;
 import com.team2073.robot.command.WOF.WOFRotationCommand;
 import com.team2073.robot.command.WOFModeTrigger;
+import com.team2073.robot.command.hopper.HopperReverseCommand;
+import com.team2073.robot.command.hopper.HopperStopCommand;
 import com.team2073.robot.command.hopper.HopperToggleCommand;
 import com.team2073.robot.command.intake.IntakeRollerCommand;
 import com.team2073.robot.command.intake.OuttakeCommand;
@@ -81,8 +83,9 @@ public class OperatorInterface {
         dPadLeft.whenActive(new MediatorCommand(Mediator.RobotState.STOW));
 
         a.whileHeld(new IntakeRollerCommand());
-        this.b.whileHeld(new OuttakeCommand());
-        x.toggleWhenPressed(new HopperToggleCommand());
+        b.whileHeld(new OuttakeCommand());
+        x.whileHeld(new HopperToggleCommand());
+        y.whileHeld(new HopperReverseCommand());
 //        lb.whenPressed(new MediatorCommand(Mediator.RobotState.INTAKE_BALL));
         lb.toggleWhenActive(new ToggleIntakePositionCommand());
         rb.toggleWhenActive(new ToggleFeederStationCommand());

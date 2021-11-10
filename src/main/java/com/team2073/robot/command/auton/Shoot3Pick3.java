@@ -34,18 +34,18 @@ public class Shoot3Pick3 extends CommandGroup {
         addParallel(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.INTAKE_OUT));
         addParallel(new IntakeCommand());
         addParallel(new TurretCommand(TurretSubsystem.TurretState.GYRO));
-//        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.PICK_First_3.getTraj(), drive));
+        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.PICK_First_3.getTraj(), drive));
         addSequential(new StopDriveCommand());
         addParallel(new IntakeStopCommand());
         addParallel(new IntakePositionCommand(IntakeSubsystem.IntakePositionState.STOW));
         addParallel(new HopperIdleCommand());
         addSequential(CommandUtil.waitBefore(new MediatorCommand(Mediator.RobotState.PREP_SHOT), .5));
-//        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.EXIT_3_BALL.getTraj(), drive));
+        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.EXIT_3_BALL.getTraj(), drive));
         addSequential(new StopDriveCommand());
         addSequential(new WaitCommand(1));
         addSequential(new ShooterCommand(), 2);
         addParallel(new MediatorCommand(Mediator.RobotState.STOW));
-//        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.RETURN_3_BALL.getTraj(), drive));
+        addSequential(new RamseteCommand(DriveSubsystem.AutoPathTrench.RETURN_3_BALL.getTraj(), drive));
         addSequential(new StopDriveCommand());
     }
 }

@@ -140,6 +140,42 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         highDistanceToRPM.put(new InterpolatingDouble(408d), new InterpolatingDouble(7100d));
 
     }
+//        lowDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(5300d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(192d), new InterpolatingDouble(5375d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(5400d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(5425d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(228d), new InterpolatingDouble(5545d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(240d), new InterpolatingDouble(5675d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(252d), new InterpolatingDouble(5700d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(264d), new InterpolatingDouble(5775d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(276d), new InterpolatingDouble(5850d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(288d), new InterpolatingDouble(5960d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(300d), new InterpolatingDouble(6025d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(312d), new InterpolatingDouble(6065d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(324d), new InterpolatingDouble(6150d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6300d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(348d), new InterpolatingDouble(6450d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(360d), new InterpolatingDouble(6650d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(408d), new InterpolatingDouble(7300d));
+//        lowDistanceToRPM.put(new InterpolatingDouble(450d), new InterpolatingDouble(8300d));
+//
+//        highDistanceToRPM.put(new InterpolatingDouble(72d), new InterpolatingDouble(6475d));
+//        highDistanceToRPM.put(new InterpolatingDouble(84d), new InterpolatingDouble(6000d));
+//        highDistanceToRPM.put(new InterpolatingDouble(92d), new InterpolatingDouble(5300d));
+//        highDistanceToRPM.put(new InterpolatingDouble(113d), new InterpolatingDouble(4750d));
+//        highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(4800d));
+//        highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(4800d));
+//        highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(4800d));
+//        highDistanceToRPM.put(new InterpolatingDouble(160d), new InterpolatingDouble(4750d));
+//        highDistanceToRPM.put(new InterpolatingDouble(168d), new InterpolatingDouble(4975d));
+//        highDistanceToRPM.put(new InterpolatingDouble(172d), new InterpolatingDouble(4975d));
+//        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(4945d));
+//        highDistanceToRPM.put(new InterpolatingDouble(200d), new InterpolatingDouble(4980d));
+//        highDistanceToRPM.put(new InterpolatingDouble(220d), new InterpolatingDouble(5075d));
+//        highDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6050d));
+//        highDistanceToRPM.put(new InterpolatingDouble(348d), new InterpolatingDouble(6150d));
+//        highDistanceToRPM.put(new InterpolatingDouble(360d), new InterpolatingDouble(6350d));
+//        highDistanceToRPM.put(new InterpolatingDouble(408d), new InterpolatingDouble(7100d));
 
     @Override
     public void onPeriodicAsync() {
@@ -282,7 +318,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         double output = 0;
         if (Math.abs(MIN_POSITION - getPosition()) < Math.abs(MAX_POSITION - getPosition()) && !ifReachedClosest) {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 15) {
-                output = -0.35;
+                output = -0.4;
             }
 
             if (getPosition() <= MIN_POSITION + 18) {
@@ -291,7 +327,7 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
             }
         } else {
             if (getPosition() > MIN_POSITION + 17 && getPosition() < MAX_POSITION - 14 && !ifReachedClosest) {
-                output = 0.35;
+                output = 0.4;
             }
 
             if (getPosition() >= MAX_POSITION - 15) {
@@ -302,9 +338,9 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 
         if (ifReachedClosest) {
             if (reachedMin && !(getPosition() > MAX_POSITION - 20)) {
-                output = 0.35;
+                output = 0.4;
             } else if (reachedMax && !(getPosition() < MIN_POSITION + 15)) {
-                output = -.35;
+                output = -.4;
             } else {
                 resetReachedClosest();
             }

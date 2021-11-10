@@ -15,7 +15,7 @@ public class HopperReverseCommand extends AbstractLoggingCommand {
 
     @Override
     protected void executeDelegate() {
-//        hopper.setState(HopperSubsystem.HopperState.REVERSE);
+        hopper.setState(HopperSubsystem.HopperState.REVERSE);
     }
 
     @Override

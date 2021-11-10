@@ -34,7 +34,7 @@ public class IntakeSubsystem implements AsyncPeriodicRunnable {
                 togglePistons(false, false);
                 break;
             case STOW:
-                togglePistons(true, false);
+                togglePistons(false, false);
                 break;
             case INTAKE_OUT:
                 togglePistons(true, true);

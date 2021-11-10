@@ -2,20 +2,29 @@ package com.team2073.robot.command.intake;
 
 import com.team2073.common.command.AbstractLoggingCommand;
 import com.team2073.robot.ApplicationContext;
+import com.team2073.robot.Mediator;
+import com.team2073.robot.subsystem.HopperSubsystem;
 import com.team2073.robot.subsystem.IntakeSubsystem;
+import com.team2073.robot.subsystem.IntermediateSubsystem;
 
 public class OuttakeCommand extends AbstractLoggingCommand {
     private final ApplicationContext appCtx = ApplicationContext.getInstance();
-    private final IntakeSubsystem intake = appCtx.getIntakeSubsystem();
+    private IntakeSubsystem intakeSubsystem = appCtx.getIntakeSubsystem();
+    private HopperSubsystem hopperSubsystem = appCtx.getHopperSubsystem();
+    private IntermediateSubsystem intermediateSubsystem = appCtx.getIntermediateSubsystem();
 
     @Override
-    protected void initializeDelegate() {
-        intake.setRollerState(IntakeSubsystem.IntakeRollerState.OUTTAKE);
+    protected void executeDelegate() {
+        intakeSubsystem.setRollerState(IntakeSubsystem.IntakeRollerState.OUTTAKE);
+        intermediateSubsystem.set(IntermediateSubsystem.IntermediateState.STOP);
+        hopperSubsystem.setState(HopperSubsystem.HopperState.STOP);
     }
 
     @Override
     protected void endDelegate() {
-        intake.setRollerState(IntakeSubsystem.IntakeRollerState.STOP);
+        intakeSubsystem.setRollerState(IntakeSubsystem.IntakeRollerState.STOP);
+        intermediateSubsystem.set(IntermediateSubsystem.IntermediateState.IDLE);
+        hopperSubsystem.setState(HopperSubsystem.HopperState.IDLE);
     }
 
     @Override
