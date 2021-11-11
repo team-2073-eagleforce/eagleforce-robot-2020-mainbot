@@ -82,8 +82,8 @@ public class HoodSubsystem implements PeriodicRunnable {
 //        Practice Bot:
 //        RETRACTED(158.0),
 //        EXTENDED(45.0),
-        RETRACTED(158.0),
-        EXTENDED(43.0),
+        RETRACTED(170.0),
+        EXTENDED(2.0),
         CLOSE_SHOT(145d),
         CALCULATED(null);
 

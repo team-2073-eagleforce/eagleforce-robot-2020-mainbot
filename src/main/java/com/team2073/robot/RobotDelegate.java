@@ -10,6 +10,7 @@ import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,20 +25,26 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private HopperSubsystem hopper;
     private Joystick controller = appCtx.getController();
     private FlywheelSubsystem flywheel;
-    private HoodSubsystem hood;
+    private HoodSubsystem hood = appCtx.getHoodSubsystem();
     private TurretSubsystem turret;
     private Limelight limelight;
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
     private DriveSubsystem drive;
-    //    private Servo servo = appCtx.getServo();
+    private Servo servo = appCtx.getServo();
     private boolean started = false;
     private boolean end = false;
     private AutoRun autonomous;
     private SendableChooser<AutoRun> autonRun;
 
+
     public RobotDelegate(double period) {
         super(period);
+    }
+
+    @Override
+    public void disabledPeriodic() {
+        System.out.println("Servo angle:" + servo.getAngle());
     }
 
     @Override
@@ -59,7 +66,6 @@ public class RobotDelegate extends AbstractRobotDelegate {
         drive = appCtx.getDriveSubsystem();
 //        SmartDashboard.putNumber("servo", 0);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
-
         autonRun.addOption("TEST", AutoRun.TEST);
         autonRun.addOption("SHOOT THREE", AutoRun.SHOOT_THREE);
         autonRun.addOption("TOP TEN", AutoRun.TOP_TEN);
@@ -70,6 +76,7 @@ public class RobotDelegate extends AbstractRobotDelegate {
         autonRun.addOption("BOUNCE", AutoRun.BOUNCE);
         autonRun.addOption("GalaticSearch", AutoRun.GALACTIC_SEARCH);
         SmartDashboard.putData(autonRun);
+
 //        SmartDashboard.putNumber("servo", servo.getAngle());
 
     }

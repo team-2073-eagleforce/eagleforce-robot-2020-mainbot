@@ -85,11 +85,14 @@ public class Mediator implements AsyncPeriodicRunnable {
                     hopper.setState(HopperState.STOP);
                     hood.setHood(HoodSubsystem.HoodState.EXTENDED);
                     elevator.setElevatorState(calcElevatorShotHeight());
-                    turret.setState(TurretSubsystem.TurretState.SEEK);
-//                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
-                    flywheel.setRPM(500d);
+//                    turret.setState(TurretSubsystem.TurretState.SEEK);
+                    turret.setState(TurretSubsystem.TurretState.FACE_FRONT);
+                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+//                    flywheel.setRPM(100d);
                     System.out.println(limelight.getLowDistance());
+                    System.out.println(limelight.getHighDistance());
                     System.out.println(flywheel.getReference());
+                    System.out.println(flywheel.getEstimatedVelocity());
                 } else {
                     hopper.setState(HopperState.STOP);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.TOP);
