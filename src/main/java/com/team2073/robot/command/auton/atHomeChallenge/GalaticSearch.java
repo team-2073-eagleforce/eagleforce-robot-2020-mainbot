@@ -1,4 +1,4 @@
-package com.team2073.robot.command.auton;
+package com.team2073.robot.command.auton.atHomeChallenge;
 
 import com.team2073.robot.ApplicationContext;
 import com.team2073.robot.command.drive.RamseteCommand;

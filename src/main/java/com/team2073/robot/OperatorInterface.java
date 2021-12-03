@@ -2,13 +2,10 @@ package com.team2073.robot;
 
 import com.team2073.common.trigger.ControllerTriggerTrigger;
 import com.team2073.common.trigger.MultiTrigger;
-import com.team2073.robot.command.ElevatorHeightsCommand;
-import com.team2073.robot.command.InverseTrigger;
-import com.team2073.robot.command.MediatorCommand;
+import com.team2073.robot.command.*;
 import com.team2073.robot.command.WOF.ResetWOFCommand;
 import com.team2073.robot.command.WOF.WOFPositionCommand;
 import com.team2073.robot.command.WOF.WOFRotationCommand;
-import com.team2073.robot.command.WOFModeTrigger;
 import com.team2073.robot.command.hopper.HopperReverseCommand;
 import com.team2073.robot.command.hopper.HopperStopCommand;
 import com.team2073.robot.command.hopper.HopperToggleCommand;
@@ -78,7 +75,7 @@ public class OperatorInterface {
         resetWofTrigger = new WOFModeTrigger(() -> !Mediator.getInstance().getCurrentState().equals(Mediator.RobotState.WHEEL_OF_FORTUNE));
         resetAndNotStart = new MultiTrigger(resetWofTrigger, new InverseTrigger(controllerStart), new InverseTrigger(controllerBack));
         dPadUp.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.TOP));
-        dPadRight.whenActive(new MediatorCommand(Mediator.RobotState.WHEEL_OF_FORTUNE));
+        dPadRight.whileHeld(new ElevatorUnjamCommand());
         dPadDown.whenActive(new ElevatorHeightsCommand(ElevatorSubsytem.ElevatorState.BOTTOM));
         dPadLeft.whenActive(new MediatorCommand(Mediator.RobotState.STOW));
 
@@ -96,7 +93,6 @@ public class OperatorInterface {
 
         stickThree.whenActive(new CloseShotCommand(true));
         stickThree.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
-
         stickTwo.whenActive(new CloseShotCommand(false));
         stickTwo.whenActive(new MediatorCommand(Mediator.RobotState.PREP_SHOT));
         backTrigger.whenActive(new MediatorCommand(Mediator.RobotState.SHOOTING));

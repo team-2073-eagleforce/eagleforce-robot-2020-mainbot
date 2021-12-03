@@ -60,6 +60,7 @@ public class ElevatorSubsytem implements AsyncPeriodicRunnable {
     public enum ElevatorState {
         BOTTOM(.25),
         TOP(11.25d),
+        UNJAM_HEIGHT(2d),
         WOF_HEIGHT(8.25);
 
         private Double height;

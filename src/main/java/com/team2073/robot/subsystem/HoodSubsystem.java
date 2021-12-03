@@ -24,7 +24,7 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
     private void buildMap(){
         hoodToServo.put(new InterpolatingDouble(RETRACTED_HOOD_ANGLE), new InterpolatingDouble(HoodState.RETRACTED.getServoDegree()));
-        hoodToServo.put(new InterpolatingDouble(EXTENDED_HOOD_ANGLE), new InterpolatingDouble(HoodState.EXTENDED.getServoDegree()));
+        hoodToServo.put(new InterpolatingDouble(EXTENDED_HOOD_ANGLE), new InterpolatingDouble(HoodState.EXTENDED_HIGH.getServoDegree()));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class HoodSubsystem implements PeriodicRunnable {
 
     public void determineHoodAngle(boolean shooting){
         if(!limelight.isBlind()) {
-            setHood(HoodState.EXTENDED);
+            setHood(HoodState.EXTENDED_HIGH);
         }else {
             setHood(HoodState.RETRACTED);
         }
@@ -61,7 +61,7 @@ public class HoodSubsystem implements PeriodicRunnable {
         }
         if (state == HoodState.RETRACTED) {
             if (distance > 132) {
-                state = HoodState.EXTENDED;
+                state = HoodState.EXTENDED_HIGH;
             }
         } else {
             if (distance < 108) {
@@ -79,12 +79,13 @@ public class HoodSubsystem implements PeriodicRunnable {
     }
 
     public enum HoodState {
-//        Practice Bot:
+        //        Practice Bot:
 //        RETRACTED(158.0),
 //        EXTENDED(45.0),
-        RETRACTED(158.0),
-        EXTENDED(43.0),
-        CLOSE_SHOT(145d),
+        RETRACTED(170.0),
+        EXTENDED_HIGH(25.0),
+        EXTENDED_LOW(25.0),
+        CLOSE_SHOT(160d),
         CALCULATED(null);
 
         private Double servoDegree;

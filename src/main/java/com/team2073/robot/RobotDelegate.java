@@ -5,11 +5,16 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.team2073.common.ctx.RobotContext;
 import com.team2073.common.robot.AbstractRobotDelegate;
 import com.team2073.robot.command.auton.*;
+import com.team2073.robot.command.auton.atHomeChallenge.Barrel;
+import com.team2073.robot.command.auton.atHomeChallenge.Bounce;
+import com.team2073.robot.command.auton.atHomeChallenge.GalaticSearch;
+import com.team2073.robot.command.auton.atHomeChallenge.Slalom;
 import com.team2073.robot.constants.MainBotConstants;
 import com.team2073.robot.subsystem.*;
 import com.team2073.robot.subsystem.drive.DriveSubsystem;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,26 +29,28 @@ public class RobotDelegate extends AbstractRobotDelegate {
     private HopperSubsystem hopper;
     private Joystick controller = appCtx.getController();
     private FlywheelSubsystem flywheel;
-    private HoodSubsystem hood;
+    private HoodSubsystem hood = appCtx.getHoodSubsystem();
     private TurretSubsystem turret;
     private Limelight limelight;
     private ElevatorSubsytem elevator;
     private PigeonIMU gryo;
     private DriveSubsystem drive;
-    //    private Servo servo = appCtx.getServo();
+    private Servo servo = appCtx.getServo();
     private boolean started = false;
     private boolean end = false;
     private AutoRun autonomous;
     private SendableChooser<AutoRun> autonRun;
 
+
     public RobotDelegate(double period) {
         super(period);
     }
 
+
     @Override
     public void robotInit() {
         autonRun = new SendableChooser<>();
-        autonomous = AutoRun.SHOOT_THREE;
+        autonomous = AutoRun.DRIVE_OFF_LINE;
         CameraServer.getInstance().startAutomaticCapture();
         if (isMain) {
             try {
@@ -59,17 +66,15 @@ public class RobotDelegate extends AbstractRobotDelegate {
         drive = appCtx.getDriveSubsystem();
 //        SmartDashboard.putNumber("servo", 0);
         SmartDashboard.putNumber("Flywheel RPM", 5000);
-
-        autonRun.addOption("TEST", AutoRun.TEST);
-        autonRun.addOption("SHOOT THREE", AutoRun.SHOOT_THREE);
-        autonRun.addOption("TOP TEN", AutoRun.TOP_TEN);
         autonRun.addOption("TRENCH", AutoRun.TRENCH);
         autonRun.addOption("SHOOT 3 PICK 3", AutoRun.SHOOT_3_PICK_3);
+        autonRun.addOption("DRIVE OFF LINE", AutoRun.DRIVE_OFF_LINE);
         autonRun.addOption("SLALOM", AutoRun.SLALOM);
         autonRun.addOption("BARREL", AutoRun.BARREL);
         autonRun.addOption("BOUNCE", AutoRun.BOUNCE);
         autonRun.addOption("GalaticSearch", AutoRun.GALACTIC_SEARCH);
         SmartDashboard.putData(autonRun);
+
 //        SmartDashboard.putNumber("servo", servo.getAngle());
 
     }
@@ -84,18 +89,11 @@ public class RobotDelegate extends AbstractRobotDelegate {
         if (isAutonomous() && isEnabled()) {
             if (!started) {
                 System.out.println("STARTED");
-                if (autonomous == AutoRun.TEST) {
-                    drive.resetPosition(46d, 44d, 0d);
-                    new Test().start();
-
-                } else if (autonomous == AutoRun.SHOOT_THREE) {
-                    drive.resetPosition(130d, 112d - 28, 0d);
-                    new Shoot3Pick5Straight().start();
-                } else if (autonomous == AutoRun.TOP_TEN) {
-                    drive.resetPosition(115,115,-20);
-                    new TopSide10Ball().start();
-                }else if (autonomous == AutoRun.TRENCH) {
+                if (autonomous == AutoRun.DRIVE_OFF_LINE) {
                     drive.resetPosition(130,112,0);
+                    new Shoot3Drive().start();
+                }else if (autonomous == AutoRun.TRENCH) {
+                    drive.resetPosition(130,-152,0);
                     new Trench().start();
                 }else if (autonomous == AutoRun.SHOOT_3_PICK_3) {
                     drive.resetPosition(130, 112, 0);
@@ -193,17 +191,12 @@ public class RobotDelegate extends AbstractRobotDelegate {
     }
 
     public enum AutoRun {
-        TEST,
-        SHOOT_THREE,
-        TOP_TEN,
         SLALOM,
         BARREL,
         BOUNCE,
         GALACTIC_SEARCH,
         SHOOT_3_PICK_3,
+        DRIVE_OFF_LINE,
         TRENCH;
     }
 }
-
-
-

@@ -83,12 +83,14 @@ public class Mediator implements AsyncPeriodicRunnable {
             case PREP_SHOT:
                 if (!closeShot) {
                     hopper.setState(HopperState.STOP);
-                    hood.setHood(HoodSubsystem.HoodState.EXTENDED);
+                    hood.setHood(calcHoodAngle());
                     elevator.setElevatorState(calcElevatorShotHeight());
                     turret.setState(TurretSubsystem.TurretState.SEEK);
-//                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
-                    flywheel.setRPM(500d);
-                    System.out.println(limelight.getLowDistance());
+//                    turret.setState(TurretSubsystem.TurretState.FACE_FRONT);
+                    flywheel.setRPM(turret.calcRPMGoal(elevator.getCurrentState()));
+//                    flywheel.setRPM(100d);
+                    System.out.println("LOW: " + limelight.getLowDistance());
+                    System.out.println("HIGH: " + limelight.getHighDistance());
                     System.out.println(flywheel.getReference());
                 } else {
                     hopper.setState(HopperState.STOP);
@@ -132,7 +134,7 @@ public class Mediator implements AsyncPeriodicRunnable {
                     drive.capTeleopOutput(1);
                     hood.determineHoodAngle(false);
                     intake.setPosition(IntakePositionState.STOW);
-                    hopper.setState(HopperState.IDLE);
+                    hopper.setState(HopperState.STOP);
                     hood.setHood(HoodSubsystem.HoodState.RETRACTED);
                     elevator.setElevatorState(ElevatorSubsytem.ElevatorState.BOTTOM);
                     turret.setState(TurretSubsystem.TurretState.GYRO);
@@ -174,7 +176,7 @@ public class Mediator implements AsyncPeriodicRunnable {
             return ElevatorSubsytem.ElevatorState.BOTTOM;
         }
         if (elevator.getCurrentState() == ElevatorSubsytem.ElevatorState.TOP) {
-            if (smoothTargetDistance() > 210 /*&& targetDistance() < 280*/) {
+            if (smoothTargetDistance() > 200 /*&& targetDistance() < 280*/) {
                 return ElevatorSubsytem.ElevatorState.BOTTOM;
             } else {
                 return ElevatorSubsytem.ElevatorState.TOP;
@@ -184,6 +186,26 @@ public class Mediator implements AsyncPeriodicRunnable {
                 return ElevatorSubsytem.ElevatorState.TOP;
             } else {
                 return ElevatorSubsytem.ElevatorState.BOTTOM;
+            }
+        }
+
+    }
+
+    private HoodSubsystem.HoodState calcHoodAngle() {
+        if (limelight.getCurrentPipeline() == Limelight.Pipeline.FAR) {
+            return HoodSubsystem.HoodState.EXTENDED_LOW;
+        }
+        if (elevator.getCurrentState() == ElevatorSubsytem.ElevatorState.TOP) {
+            if (smoothTargetDistance() > 210 /*&& targetDistance() < 280*/) {
+                return HoodSubsystem.HoodState.EXTENDED_LOW;
+            } else {
+                return HoodSubsystem.HoodState.EXTENDED_HIGH;
+            }
+        } else {
+            if (smoothTargetDistance() < 190 /*|| targetDistance() > 300d*/) {
+                return HoodSubsystem.HoodState.EXTENDED_HIGH;
+            } else {
+                return HoodSubsystem.HoodState.EXTENDED_LOW;
             }
         }
 

@@ -58,7 +58,7 @@ public class HopperSubsystem implements AsyncPeriodicRunnable {
 
     public enum HopperState {
         STOP(0),
-        IDLE(75d),
+        IDLE(50d),
         REVERSE(-75d);
 
         private double rpm;

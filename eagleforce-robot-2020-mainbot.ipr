@@ -11,16 +11,13 @@
       <entry name="!?*.groovy" />
       <entry name="!?*.java" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="1.8" />
+    <bytecodeTargetLevel target="1.9" />
   </component>
   <component name="CopyrightManager" default="" />
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$" />
-  </component>
   <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
@@ -48,6 +45,11 @@
     </profile>
     <version value="1.0" />
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="IdeaProjects.eagleforce-robot-2020-mainbot.main" options="--add-modules java.base" />
+    </option>
+  </component>
   <component name="JavadocGenerationManager">
     <option name="OUTPUT_DIRECTORY" />
     <option name="OPTION_SCOPE" value="protected" />
@@ -65,14 +67,136 @@
     <option name="LOCALE" />
     <option name="OPEN_IN_BROWSER" value="true" />
   </component>
+  <component name="Palette2">
+    <group name="Swing">
+      <item class="com.intellij.uiDesigner.HSpacer" tooltip-text="Horizontal Spacer" icon="/com/intellij/uiDesigner/icons/hspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="1" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="com.intellij.uiDesigner.VSpacer" tooltip-text="Vertical Spacer" icon="/com/intellij/uiDesigner/icons/vspacer.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="1" anchor="0" fill="2" />
+      </item>
+      <item class="javax.swing.JPanel" icon="/com/intellij/uiDesigner/icons/panel.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JScrollPane" icon="/com/intellij/uiDesigner/icons/scrollPane.png" removable="false" auto-create-binding="false" can-attach-label="true">
+        <default-constraints vsize-policy="7" hsize-policy="7" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JButton" icon="/com/intellij/uiDesigner/icons/button.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="0" fill="1" />
+        <initial-values>
+          <property name="text" value="Button" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JRadioButton" icon="/com/intellij/uiDesigner/icons/radioButton.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="RadioButton" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JCheckBox" icon="/com/intellij/uiDesigner/icons/checkBox.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="3" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="CheckBox" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JLabel" icon="/com/intellij/uiDesigner/icons/label.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="8" fill="0" />
+        <initial-values>
+          <property name="text" value="Label" />
+        </initial-values>
+      </item>
+      <item class="javax.swing.JTextField" icon="/com/intellij/uiDesigner/icons/textField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JPasswordField" icon="/com/intellij/uiDesigner/icons/passwordField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JFormattedTextField" icon="/com/intellij/uiDesigner/icons/formattedTextField.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1">
+          <preferred-size width="150" height="-1" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextArea" icon="/com/intellij/uiDesigner/icons/textArea.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTextPane" icon="/com/intellij/uiDesigner/icons/textPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JEditorPane" icon="/com/intellij/uiDesigner/icons/editorPane.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JComboBox" icon="/com/intellij/uiDesigner/icons/comboBox.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="2" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JTable" icon="/com/intellij/uiDesigner/icons/table.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JList" icon="/com/intellij/uiDesigner/icons/list.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="2" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTree" icon="/com/intellij/uiDesigner/icons/tree.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3">
+          <preferred-size width="150" height="50" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JTabbedPane" icon="/com/intellij/uiDesigner/icons/tabbedPane.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSplitPane" icon="/com/intellij/uiDesigner/icons/splitPane.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="3" hsize-policy="3" anchor="0" fill="3">
+          <preferred-size width="200" height="200" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JSpinner" icon="/com/intellij/uiDesigner/icons/spinner.png" removable="false" auto-create-binding="true" can-attach-label="true">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSlider" icon="/com/intellij/uiDesigner/icons/slider.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="8" fill="1" />
+      </item>
+      <item class="javax.swing.JSeparator" icon="/com/intellij/uiDesigner/icons/separator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="6" anchor="0" fill="3" />
+      </item>
+      <item class="javax.swing.JProgressBar" icon="/com/intellij/uiDesigner/icons/progressbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JToolBar" icon="/com/intellij/uiDesigner/icons/toolbar.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="6" anchor="0" fill="1">
+          <preferred-size width="-1" height="20" />
+        </default-constraints>
+      </item>
+      <item class="javax.swing.JToolBar$Separator" icon="/com/intellij/uiDesigner/icons/toolbarSeparator.png" removable="false" auto-create-binding="false" can-attach-label="false">
+        <default-constraints vsize-policy="0" hsize-policy="0" anchor="0" fill="1" />
+      </item>
+      <item class="javax.swing.JScrollBar" icon="/com/intellij/uiDesigner/icons/scrollbar.png" removable="false" auto-create-binding="true" can-attach-label="false">
+        <default-constraints vsize-policy="6" hsize-policy="0" anchor="0" fill="2" />
+      </item>
+    </group>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.iml" filepath="$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.iml" />
       <module fileurl="file://$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.main.iml" filepath="$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.test.iml" filepath="$PROJECT_DIR$/IdeaProjects.eagleforce-robot-2020-mainbot.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eagleforce-robot-2020-mainbot.iml" filepath="$PROJECT_DIR$/eagleforce-robot-2020-mainbot.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_9" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="RemoteRepositoriesConfiguration">
@@ -85,11 +209,6 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="MavenLocal" />
-      <option name="name" value="MavenLocal" />
-      <option name="url" value="file:/$MAVEN_REPOSITORY$/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="MavenRepo" />
@@ -117,15 +236,32 @@
       <option name="url" value="http://www.revrobotics.com/content/sw/color-sensor-v3/sdk/maven/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="WPILocal" />
+      <option name="name" value="WPILocal" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../Public/wpilib/2020/maven" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="MavenLocal" />
+      <option name="name" value="MavenLocal" />
+      <option name="url" value="file:/$MAVEN_REPOSITORY$/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="WPIlibcufrc-e6e8-4db6-89f0-copperforge0_0Release" />
+      <option name="name" value="WPIlibcufrc-e6e8-4db6-89f0-copperforge0_0Release" />
+      <option name="url" value="https://copperforge.cc/dev/files/maven" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="WPIlibcufrc-e6e8-4db6-89f0-copperforge0_0Release" />
       <option name="name" value="WPIlibcufrc-e6e8-4db6-89f0-copperforge0_0Release" />
       <option name="url" value="https://copperforge.cc/files/dev/maven" />
     </remote-repository>
-    <remote-repository>
-      <option name="id" value="WPILocal" />
-      <option name="name" value="WPILocal" />
-      <option name="url" value="file:/$PROJECT_DIR$/../../../Public/wpilib/2020/maven/" />
-    </remote-repository>
+  </component>
+  <component name="RunConfigurationProducerService">
+    <option name="ignoredProducers">
+      <set>
+        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+      </set>
+    </option>
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="mySupportsUserInfoFilter" value="true" />
@@ -325,35 +461,45 @@
         <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-guice/0.5.0-SNAPSHOT/common-guice-0.5.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-guice/0.5.0-SNAPSHOT/common-guice-0.5.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: com.team2073:common-util:0.5.0-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-util/0.5.0-SNAPSHOT/common-util-0.5.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-util/0.5.0-SNAPSHOT/common-util-0.5.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: com.team2073:common-wpi-simulation-stubs:0.5.0-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-simulation-stubs/0.5.0-SNAPSHOT/common-wpi-simulation-stubs-0.5.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-simulation-stubs/0.5.0-SNAPSHOT/common-wpi-simulation-stubs-0.5.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: com.team2073:common-wpi-simulation:0.5.0-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-simulation/0.5.0-SNAPSHOT/common-wpi-simulation-0.5.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-simulation/0.5.0-SNAPSHOT/common-wpi-simulation-0.5.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: com.team2073:common-wpi-util:0.5.0-SNAPSHOT">
       <CLASSES>
         <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-util/0.5.0-SNAPSHOT/common-wpi-util-0.5.0-SNAPSHOT.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="jar://$MAVEN_REPOSITORY$/com/team2073/common-wpi-util/0.5.0-SNAPSHOT/common-wpi-util-0.5.0-SNAPSHOT-sources.jar!/" />
+      </SOURCES>
     </library>
     <library name="Gradle: commons-beanutils:commons-beanutils:1.9.4">
       <CLASSES>
@@ -427,11 +573,11 @@
     </library>
     <library name="Gradle: edu.wpi.first.thirdparty.frc2020.opencv:opencv-java:3.4.7-2">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2020/maven/edu/wpi/first/thirdparty/frc2020/opencv/opencv-java/3.4.7-2/opencv-java-3.4.7-2.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.thirdparty.frc2020.opencv/opencv-java/3.4.7-2/567376dfff9299972841aa5bf84116dacb931016/opencv-java-3.4.7-2.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/../../../Public/wpilib/2020/maven/edu/wpi/first/thirdparty/frc2020/opencv/opencv-java/3.4.7-2/opencv-java-3.4.7-2-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/edu.wpi.first.thirdparty.frc2020.opencv/opencv-java/3.4.7-2/9b91344d286110ed348652e12d3b6bc2df38c748/opencv-java-3.4.7-2-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2020.3.2">

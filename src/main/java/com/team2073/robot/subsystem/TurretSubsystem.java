@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class TurretSubsystem implements AsyncPeriodicRunnable {
+public class  TurretSubsystem implements AsyncPeriodicRunnable {
 
 
     //    private CANSparkMax turretMotor = appCtx.getTurretMotor();
@@ -51,8 +51,8 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
     private CANEncoder encoder = turretMotor.getEncoder();
     private boolean rotatingClockwise = true;
     private boolean hasZeroed = false;
-    private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 5e-5, 0.001, 0, 0.35);
-    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 1e-5, 0.0009, 0.0, 0.35);
+    private PidfControlLoop pidLimelight = new PidfControlLoop(KP_LIMELIGHT, 6e-5, 0.001, 0, 0.35);
+    private PidfControlLoop pidEncoder = new PidfControlLoop(KP_ENCODER, 3e-5, 0.0009, 0.0, 0.35);
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> lowDistanceToRPM = new InterpolatingTreeMap<>();
     private InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> highDistanceToRPM = new InterpolatingTreeMap<>();
     private Pipeline lastPipeline = Pipeline.CLOSE;
@@ -104,10 +104,10 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
 //       Recording on 2/17/2020
         lowDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(5300d));
         lowDistanceToRPM.put(new InterpolatingDouble(192d), new InterpolatingDouble(5375d));
-        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(5400d));
-        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(5425d));
+        lowDistanceToRPM.put(new InterpolatingDouble(204d), new InterpolatingDouble(7000d));
+        lowDistanceToRPM.put(new InterpolatingDouble(216d), new InterpolatingDouble(7500d));
         lowDistanceToRPM.put(new InterpolatingDouble(228d), new InterpolatingDouble(5545d));
-        lowDistanceToRPM.put(new InterpolatingDouble(240d), new InterpolatingDouble(5675d));
+        lowDistanceToRPM.put(new InterpolatingDouble(240d), new InterpolatingDouble(10000d));
         lowDistanceToRPM.put(new InterpolatingDouble(252d), new InterpolatingDouble(5700d));
         lowDistanceToRPM.put(new InterpolatingDouble(264d), new InterpolatingDouble(5775d));
         lowDistanceToRPM.put(new InterpolatingDouble(276d), new InterpolatingDouble(5850d));
@@ -124,14 +124,14 @@ public class TurretSubsystem implements AsyncPeriodicRunnable {
         highDistanceToRPM.put(new InterpolatingDouble(72d), new InterpolatingDouble(6475d));
         highDistanceToRPM.put(new InterpolatingDouble(84d), new InterpolatingDouble(6000d));
         highDistanceToRPM.put(new InterpolatingDouble(92d), new InterpolatingDouble(5300d));
-        highDistanceToRPM.put(new InterpolatingDouble(113d), new InterpolatingDouble(4750d));
-        highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(4805d));
-        highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(4800d));
-        highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(4800d));
-        highDistanceToRPM.put(new InterpolatingDouble(160d), new InterpolatingDouble(4750d));
-        highDistanceToRPM.put(new InterpolatingDouble(168d), new InterpolatingDouble(4975d));
-        highDistanceToRPM.put(new InterpolatingDouble(172d), new InterpolatingDouble(4975d));
-        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(4945d));
+        highDistanceToRPM.put(new InterpolatingDouble(113d), new InterpolatingDouble(5700d));
+        highDistanceToRPM.put(new InterpolatingDouble(120d), new InterpolatingDouble(5200d));
+        highDistanceToRPM.put(new InterpolatingDouble(132d), new InterpolatingDouble(5000d));
+        highDistanceToRPM.put(new InterpolatingDouble(144d), new InterpolatingDouble(5100d));
+        highDistanceToRPM.put(new InterpolatingDouble(160d), new InterpolatingDouble(5400d));
+        highDistanceToRPM.put(new InterpolatingDouble(166d), new InterpolatingDouble(5400d));
+        highDistanceToRPM.put(new InterpolatingDouble(172d), new InterpolatingDouble(6000d));
+        highDistanceToRPM.put(new InterpolatingDouble(180d), new InterpolatingDouble(6000d));
         highDistanceToRPM.put(new InterpolatingDouble(200d), new InterpolatingDouble(4980d));
         highDistanceToRPM.put(new InterpolatingDouble(220d), new InterpolatingDouble(5075d));
         highDistanceToRPM.put(new InterpolatingDouble(336d), new InterpolatingDouble(6050d));

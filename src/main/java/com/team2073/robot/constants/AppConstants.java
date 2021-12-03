@@ -7,7 +7,7 @@ public class AppConstants {
     public int JOYSTICK_PORT = 1;
     public int CONTROLLER_PORT = 2;
     //Elevator
-    public int ELEVATOR_BOTTOM_DIO_PORT = 2;
+    public int ELEVATOR_BOTTOM_DIO_PORT = 6;
     public int ELEVATOR_MOTOR_PORT = 54;
     //Intake
     public int INTAKE_MOTOR_PORT = 7;
@@ -47,7 +47,7 @@ public class AppConstants {
 
     public int PDB_PORT = 0;
     public double MAX_DRIVE_PERCENT_IN_CLIMB = .3;
-    public double NO_TARGET_RPM = 7250d;
+    public double NO_TARGET_RPM = 6000d;
     public double DEFAULT_LONG_RPM = 6250;
     public double ZOOM_RANGE_INCHES = 12 * 20;
     public double LIMELIGHT_LOW_HEIGHT = 25d;

@@ -50,7 +50,7 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
     }
 
     public enum IntermediateState {
-        SHOOT(2000d, 1),
+        SHOOT(6000, 1),
         IDLE(-200d, 0),
         STOP(0d, 0),
         DISABLED(0d, 0),
@@ -73,6 +73,3 @@ public class IntermediateSubsystem implements AsyncPeriodicRunnable {
         }
     }
 }
-
-
-

@@ -23,8 +23,6 @@ public class OuttakeCommand extends AbstractLoggingCommand {
     @Override
     protected void endDelegate() {
         intakeSubsystem.setRollerState(IntakeSubsystem.IntakeRollerState.STOP);
-        intermediateSubsystem.set(IntermediateSubsystem.IntermediateState.IDLE);
-        hopperSubsystem.setState(HopperSubsystem.HopperState.IDLE);
     }
 
     @Override
